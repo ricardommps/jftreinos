@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="44.818" height="44.817" viewBox="0 0 44.818 44.817">
+  <g id="ico-very-sad" transform="translate(-1149.483 -1099)">
+    <g id="Group_4863" data-name="Group 4863" transform="translate(-1091 6351)">
+      <g id="Group_4991" data-name="Group 4991" transform="translate(2240.483 -5252)">
+        <g id="Group_667" data-name="Group 667" transform="translate(0 0)">
+          <path id="Path_871" data-name="Path 871" d="M143.686,67.743a22.409,22.409,0,1,1-22.41-22.409A22.409,22.409,0,0,1,143.686,67.743Z" transform="translate(-98.868 -45.334)" fill="#ed1d58"/>
+        </g>
+        <path id="Path_9815" data-name="Path 9815" d="M471.272,93.921s-1.41-5.129-6.7-5.129-6.642,5.089-6.642,5.089" transform="translate(-442.324 -61.144)" fill="rgba(0,0,0,0)" stroke="#400824" stroke-linecap="round" stroke-width="2"/>
+        <path id="Path_9816" data-name="Path 9816" d="M7.422,3.765c-.159.862-2.237,1.721-3.7,1.721C1.968,5.487,0,3.963,0,2.214c0-.892-.112-2.4,1.445-2.2S7.581,2.9,7.422,3.765Z" transform="translate(9.754 20.242) rotate(-60)" fill="#400824"/>
+        <path id="Path_9817" data-name="Path 9817" d="M7.422,1.721C7.262.86,5.184,0,3.717,0,1.968,0,0,1.523,0,3.272c0,.892-.112,2.4,1.445,2.2S7.581,2.583,7.422,1.721Z" transform="translate(30.204 22.985) rotate(-120)" fill="#400824"/>
+      </g>
+    </g>
+  </g>
+</svg>
