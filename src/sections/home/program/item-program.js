@@ -131,6 +131,7 @@ export default function ItemProgram({ program, onView }) {
           Ver treino
         </MenuItem>
         <MenuItem
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           onClick={(e) => {
             viewPdf.onTrue();
             popover.onClose();
@@ -146,4 +147,3 @@ export default function ItemProgram({ program, onView }) {
     </>
   );
 }
-// http://localhost:8080/api/v2/program/viewPdf/

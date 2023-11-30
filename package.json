@@ -41,6 +41,7 @@
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
+    "encoding": "^0.1.13",
     "framer-motion": "^10.12.16",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
