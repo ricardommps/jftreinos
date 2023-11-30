@@ -1,11 +1,11 @@
 import { format, formatDistanceToNow, getTime } from 'date-fns';
-
+import ptBR from 'date-fns/locale/pt-BR';
 // ----------------------------------------------------------------------
 
 export function fDate(date, newFormat) {
   const fm = newFormat || 'dd MMM yyyy';
 
-  return date ? format(new Date(date), fm) : '';
+  return date ? format(new Date(date), fm, { locale: ptBR }) : '';
 }
 
 export function fDateTime(date, newFormat) {
@@ -24,4 +24,10 @@ export function fToNow(date) {
         addSuffix: true,
       })
     : '';
+}
+
+export function fDateCalender(date, newFormat) {
+  const fm = newFormat || 'dd MMMM yyyy';
+
+  return date ? format(new Date(date), fm, { locale: ptBR }) : '';
 }

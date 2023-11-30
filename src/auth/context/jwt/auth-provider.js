@@ -52,17 +52,16 @@ const reducer = (state, action) => {
 
 // ----------------------------------------------------------------------
 
-const STORAGE_KEY = 'accessToken';
+const STORAGE_KEY = 'jftreinosaccessToken';
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const initialize = useCallback(async () => {
     try {
-      const accessToken = sessionStorage.getItem(STORAGE_KEY);
-
-      if (accessToken && isValidToken(accessToken)) {
-        setSession(accessToken);
+      const jftreinosaccessToken = localStorage.getItem(STORAGE_KEY);
+      if (jftreinosaccessToken && isValidToken(jftreinosaccessToken)) {
+        setSession(jftreinosaccessToken);
 
         const response = await axios.get(API_ENDPOINTS.auth.me);
 
@@ -131,7 +130,7 @@ export function AuthProvider({ children }) {
 
     const { accessToken, user } = response.data;
 
-    sessionStorage.setItem(STORAGE_KEY, accessToken);
+    localStorage.setItem(STORAGE_KEY, accessToken);
 
     dispatch({
       type: 'REGISTER',

@@ -1,51 +1,65 @@
-import { useTheme } from '@emotion/react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { useEffect, useState } from 'react';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import FinishTraining from './ finish-training';
 import TrainingDetails from './training-details';
-export default function TrainingItem({ expired, finished, current, title, date }) {
-  const theme = useTheme();
+export default function TrainingItem({ training, finished = false }) {
   const finishedTraining = useBoolean();
 
-  const getBorderItem = () => {
-    if (finished) {
-      return `2px solid ${theme.palette.success.main}`;
-    }
-    if (expired) {
-      return `2px solid ${theme.palette.error.main}`;
-    }
-    if (current) {
-      return `2px solid ${theme.palette.warning.main}`;
-    }
-    return 'none';
+  const [isFinished, setIsFinished] = useState(finished);
+
+  Date.prototype.withoutTime = function () {
+    var d = new Date(this);
+    d.setHours(0, 0, 0, 0);
+    return d;
   };
+
+  useEffect(() => {
+    if (training.finished[0] !== null) {
+      setIsFinished(true);
+    }
+  }, []);
+
   return (
     <>
-      <Card
-        sx={{
-          border: getBorderItem(),
-          borderRadius: 2,
-        }}
-        variant="outlined"
-      >
+      <Card variant="outlined">
         <Button
           sx={{ position: 'absolute', top: 8, right: 8 }}
           variant="outlined"
-          color={finished ? 'warning' : 'success'}
+          color={isFinished ? 'warning' : 'success'}
           onClick={finishedTraining.onTrue}
         >
-          {finished ? 'Editar' : 'Finalizar'}
+          {isFinished ? 'Editar' : 'Finalizar'}
         </Button>
         <Stack sx={{ p: 2, pb: 2 }}>
           <ListItemText
             sx={{ mb: 1 }}
-            primary={title}
-            secondary={`Data do treino: ${date}`}
+            primary={training.name}
+            secondary={
+              <Stack>
+                <>
+                  {' '}
+                  {training.date_published &&
+                    format(new Date(training.date_published), 'dd/MM/yyyy', { locale: ptBR })}
+                  {training.training_date_other && (
+                    <>
+                      {' ou '}
+                      {training.training_date_other &&
+                        format(new Date(training.training_date_other), 'dd/MM/yyyy', {
+                          locale: ptBR,
+                        })}
+                    </>
+                  )}
+                </>
+              </Stack>
+            }
             primaryTypographyProps={{
               typography: 'subtitle1',
             }}
@@ -59,10 +73,14 @@ export default function TrainingItem({ expired, finished, current, title, date }
         </Stack>
         <Divider sx={{ borderStyle: 'dashed' }} />
         <Stack>
-          <TrainingDetails />
+          <TrainingDetails description={training.description} />
         </Stack>
       </Card>
-      <FinishTraining open={finishedTraining.value} onClose={finishedTraining.onFalse} />
+      <FinishTraining
+        open={finishedTraining.value}
+        onClose={finishedTraining.onFalse}
+        trainingId={training.id}
+      />
     </>
   );
 }

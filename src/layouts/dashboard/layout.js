@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
+import PasswordAlert from 'src/components/password-alert/password-alert';
 
 import Header from './header';
 import Main from './main';
@@ -16,6 +17,7 @@ export default function DashboardLayout({ children }) {
         }}
       >
         <Main>{children}</Main>
+        <PasswordAlert />
       </Box>
     </>
   );

@@ -10,6 +10,9 @@ import MotionLazy from 'src/components/animate/motion-lazy';
 // components
 import ProgressBar from 'src/components/progress-bar';
 import { SettingsDrawer, SettingsProvider } from 'src/components/settings';
+import SnackbarProvider from 'src/components/snackbar/snackbar-provider';
+import { LocalizationProvider } from 'src/locales';
+import ReduxProvider from 'src/redux/redux-provider';
 // ----------------------------------------------------------------------
 // theme
 import ThemeProvider from 'src/theme';
@@ -18,10 +21,9 @@ import { primaryFont } from 'src/theme/typography';
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Minimal UI Kit',
-  description:
-    'The starting point for your next project with Minimal UI Kit, built on the newest version of Material-UI ©, ready to be customized to your style',
-  keywords: 'react,material,kit,application,dashboard,admin,template',
+  title: 'Joana Foltz',
+  description: 'App de assessoria',
+  keywords: 'assessoria, corrida, personalS',
   themeColor: '#000000',
   manifest: '/manifest.json',
   icons: [
@@ -54,24 +56,30 @@ export default function RootLayout({ children }) {
     <html lang="en" className={primaryFont.className}>
       <body>
         <AuthProvider>
-          <SettingsProvider
-            defaultSettings={{
-              themeMode: 'dark', // 'light' | 'dark'
-              themeDirection: 'ltr', //  'rtl' | 'ltr'
-              themeContrast: 'default', // 'default' | 'bold'
-              themeLayout: 'mini', // 'vertical' | 'horizontal' | 'mini'
-              themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-              themeStretch: false,
-            }}
-          >
-            <ThemeProvider>
-              <MotionLazy>
-                <SettingsDrawer />
-                <ProgressBar />
-                <AuthConsumer>{children}</AuthConsumer>
-              </MotionLazy>
-            </ThemeProvider>
-          </SettingsProvider>
+          <ReduxProvider>
+            <LocalizationProvider>
+              <SettingsProvider
+                defaultSettings={{
+                  themeMode: 'dark', // 'light' | 'dark'
+                  themeDirection: 'ltr', //  'rtl' | 'ltr'
+                  themeContrast: 'default', // 'default' | 'bold'
+                  themeLayout: 'mini', // 'vertical' | 'horizontal' | 'mini'
+                  themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+                  themeStretch: false,
+                }}
+              >
+                <ThemeProvider>
+                  <MotionLazy>
+                    <SnackbarProvider>
+                      <SettingsDrawer />
+                      <ProgressBar />
+                      <AuthConsumer>{children}</AuthConsumer>
+                    </SnackbarProvider>
+                  </MotionLazy>
+                </ThemeProvider>
+              </SettingsProvider>
+            </LocalizationProvider>
+          </ReduxProvider>
         </AuthProvider>
       </body>
     </html>

@@ -23,13 +23,9 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/home`,
       details: (id) => `${ROOTS.DASHBOARD}/home/${id}`,
     },
-    one: `${ROOTS.DASHBOARD}/one`,
-    two: `${ROOTS.DASHBOARD}/two`,
-    three: `${ROOTS.DASHBOARD}/three`,
-    group: {
-      root: `${ROOTS.DASHBOARD}/group`,
-      five: `${ROOTS.DASHBOARD}/group/five`,
-      six: `${ROOTS.DASHBOARD}/group/six`,
+    metrics: {
+      root: () => `${ROOTS.DASHBOARD}/metrics/`,
     },
+    security: `${ROOTS.DASHBOARD}/security`,
   },
 };

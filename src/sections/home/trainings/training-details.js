@@ -7,9 +7,10 @@ import Typography from '@mui/material/Typography';
 
 export const StyledPre = styled('pre')(() => ({
   marginTop: 0,
+  wordWrap: 'break-word',
 }));
 
-export default function TrainingDetails() {
+export default function TrainingDetails({ description }) {
   return (
     <Accordion>
       <AccordionSummary
@@ -20,12 +21,7 @@ export default function TrainingDetails() {
         <Typography>Detalhes do treino</Typography>
       </AccordionSummary>
       <AccordionDetails sx={{ paddingTop: 0 }}>
-        <StyledPre>
-          {`AQUEC: 2KM ~ 7
-4 x 4' (>6) : 2' rec passiva
-2KM ~ 7
-ALONG PAS E/OU ROLO`}
-        </StyledPre>
+        <StyledPre>{description}</StyledPre>
       </AccordionDetails>
     </Accordion>
   );

@@ -19,6 +19,16 @@ export const API_ENDPOINTS = {
     login: '/api/v2/auth/customer/login',
   },
   home: {
-    profile: '',
+    programs: '/api/v2/program/myPrograms',
+    programDetail: '/api/v2/program/myProgram',
+    finishedtraining: '/api/v2/finishedtraining',
+    trainingsByProgramId: '/api/v2/training/list',
+    finishedList: '/api/v2/finishedtraining/listByProgramId',
+    metrics: '/api/v2/metrics/myMetrics',
+    viewedFeedback: '/api/v2/trainingfeedback/viewed',
+    viewPdf: '/api/v2/program/viewPdf',
+  },
+  user: {
+    changePassword: '/api/v2/user',
   },
 };
