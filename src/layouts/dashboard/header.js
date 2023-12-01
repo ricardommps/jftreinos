@@ -9,12 +9,11 @@ import { AccountPopover } from '../_common';
 export default function Header() {
   const renderContent = (
     <>
-      <Box sx={{ flex: 1 }} />
       <Image
         disabledEffect
         alt={'home'}
         src={`/assets/logo/logo-header.png`}
-        style={{ width: 'auto', height: 60 }}
+        style={{ width: 'auto', height: 40 }}
       />
       <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
         <AccountPopover />
@@ -23,7 +22,7 @@ export default function Header() {
   );
 
   return (
-    <AppBar position="fixed" color="primary" sx={{ padding: '10px 0' }}>
+    <AppBar position="fixed" color="primary" sx={{ padding: '5px 0' }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>{renderContent}</Toolbar>
     </AppBar>
   );

@@ -6,7 +6,7 @@ import useHome from 'src/hooks/use-home';
 
 import FinishedItem from './finished-item';
 
-export default function FinishedList({ id }) {
+export default function FinishedList({ id, type }) {
   const { finishedList, finishedListStatus, onFinishedList } = useHome();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function FinishedList({ id }) {
       {!finishedListStatus.loading && finishedList && (
         <>
           {finishedList.map((item) => (
-            <FinishedItem key={item.id} finishedItem={item} refreshList={refreshList} />
+            <FinishedItem key={item.id} finishedItem={item} refreshList={refreshList} type={type} />
           ))}
         </>
       )}

@@ -5,7 +5,6 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
 import { useCallback } from 'react';
 import { useRouter } from 'src/routes/hook';
 import { paths } from 'src/routes/paths';
@@ -46,10 +45,7 @@ export default function HomeView() {
           mt: 1,
           width: 1,
           height: 'auto',
-          borderRadius: 2,
           padding: '10px 0',
-          bgcolor: (theme) => alpha(theme.palette.grey[500], 0.04),
-          border: (theme) => `dashed 1px ${theme.palette.divider}`,
         }}
       >
         <ListProgram />

@@ -105,8 +105,13 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
                 type="number"
                 helperText={`${Number(values.distance) / 1000} km`}
               />
-              <RHFTextField name="duration" label="Tempo total em minutos *" variant="standard" />
-              <RHFTextField name="pace" label="Pace *" variant="standard" />
+              <RHFTextField
+                name="duration"
+                label="Tempo total em minutos *"
+                variant="standard"
+                type="number"
+              />
+              <RHFTextField name="pace" label="Pace *" variant="standard" type="number" />
               <RPSSlider control={control} />
               <Stack>
                 <Typography>{`Trimp: ${values.trimp}`}</Typography>

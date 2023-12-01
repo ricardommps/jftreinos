@@ -10,7 +10,7 @@ import { fShortenNumber } from 'src/utils/format-number';
 import { fDate } from 'src/utils/format-time';
 
 import FeedbackTraining from '../feedback-training/feedback-training';
-export default function FinishedItem({ finishedItem, refreshList }) {
+export default function FinishedItem({ finishedItem, refreshList, type }) {
   const openFeedback = useBoolean();
   const formatedPace = (pace) => {
     const paceStr = pace.replace(',', '.').replace(' ', '');
@@ -52,37 +52,39 @@ export default function FinishedItem({ finishedItem, refreshList }) {
               disabled
             />
           </Stack>
-          <Stack direction="row" alignItems="center" pt={2}>
-            <Stack
-              spacing={1.5}
-              flexGrow={1}
-              direction="row"
-              justifyContent="flex-end"
-              sx={{
-                typography: 'caption',
-              }}
-            >
-              <Stack direction="row" alignItems="center">
-                <Iconify icon="game-icons:path-distance" width={20} sx={{ mr: 0.5 }} />
-                {fShortenNumber(finishedItem.distance)}
-              </Stack>
+          {(!type || type === 1) && (
+            <Stack direction="row" alignItems="center" pt={2}>
+              <Stack
+                spacing={1.5}
+                flexGrow={1}
+                direction="row"
+                justifyContent="flex-end"
+                sx={{
+                  typography: 'caption',
+                }}
+              >
+                <Stack direction="row" alignItems="center">
+                  <Iconify icon="game-icons:path-distance" width={20} sx={{ mr: 0.5 }} />
+                  {fShortenNumber(finishedItem.distance)}
+                </Stack>
 
-              <Stack direction="row" alignItems="center">
-                <Iconify icon="material-symbols:timer-outline" width={20} sx={{ mr: 0.5 }} />
-                {fShortenNumber(finishedItem.duration)}
-              </Stack>
+                <Stack direction="row" alignItems="center">
+                  <Iconify icon="material-symbols:timer-outline" width={20} sx={{ mr: 0.5 }} />
+                  {fShortenNumber(finishedItem.duration)}
+                </Stack>
 
-              <Stack direction="row" alignItems="center">
-                <Iconify icon="material-symbols:speed-outline" width={20} sx={{ mr: 0.5 }} />
-                {fShortenNumber(formatedPace(finishedItem.pace))}
-              </Stack>
+                <Stack direction="row" alignItems="center">
+                  <Iconify icon="material-symbols:speed-outline" width={20} sx={{ mr: 0.5 }} />
+                  {fShortenNumber(formatedPace(finishedItem.pace))}
+                </Stack>
 
-              <Stack direction="row" alignItems="center">
-                <Iconify icon="fluent:emoji-16-regular" width={20} sx={{ mr: 0.5 }} />
-                {fShortenNumber(finishedItem.rpe)}
+                <Stack direction="row" alignItems="center">
+                  <Iconify icon="fluent:emoji-16-regular" width={20} sx={{ mr: 0.5 }} />
+                  {fShortenNumber(finishedItem.rpe)}
+                </Stack>
               </Stack>
             </Stack>
-          </Stack>
+          )}
         </Stack>
       </Card>
       {openFeedback.value && (

@@ -95,7 +95,7 @@ export default function ProgramDetails() {
               {!finishedList.value ? ' Treinos pendentes' : ' Treinos finalizados'}
             </Typography>
             {!finishedList.value && <Calendar id={id} type={programDetail.type} />}
-            {finishedList.value && <FinishedList id={id} />}
+            {finishedList.value && <FinishedList id={id} type={programDetail.type} />}
           </>
         )}
       </Stack>

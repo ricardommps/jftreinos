@@ -35,7 +35,7 @@ export default function CalendarDetails({ event, onClose, handleOpenFinishedTrai
           id="outlined-multiline-static"
           label="Descrição"
           multiline
-          rows={4}
+          rows={15}
           value={event.description}
           disabled
         />

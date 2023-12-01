@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import PropTypes from 'prop-types'; // @mui
 import { useResponsive } from 'src/hooks/use-responsive';
 
@@ -27,7 +26,7 @@ export default function Main({ children, sx, ...other }) {
       }}
       {...other}
     >
-      <Container maxWidth="md">{children}</Container>
+      <>{children}</>
     </Box>
   );
 }

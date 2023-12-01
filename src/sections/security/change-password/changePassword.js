@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -126,12 +127,6 @@ export default function ChangePassword() {
               </InputAdornment>
             ),
           }}
-          helperText={
-            <Stack component="span" direction="row" alignItems="center">
-              <Iconify icon="eva:info-fill" width={16} sx={{ mr: 0.5 }} /> Password must be minimum
-              6+
-            </Stack>
-          }
         />
 
         <RHFTextField
@@ -148,15 +143,19 @@ export default function ChangePassword() {
             ),
           }}
         />
-
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          loading={changePasswordStatus.loading}
-          sx={{ ml: 'auto' }}
-        >
-          Salvar
-        </LoadingButton>
+        <Stack alignItems="flex-end" sx={{ mt: 3 }} spacing={2} flexDirection={'row'}>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            loading={changePasswordStatus.loading}
+            sx={{ ml: 'auto' }}
+          >
+            Salvar
+          </LoadingButton>
+          <Button variant="outlined" color="inherit" onClick={() => router.back()}>
+            Cancelar
+          </Button>
+        </Stack>
       </Stack>
     </FormProvider>
   );
