@@ -30,23 +30,37 @@ export default function CalendarDetails({ event, onClose, handleOpenFinishedTrai
           )}
         </Stack>
       </Stack>
-      {type === 2 || event.name === 'FORCA' ? (
-        <GymList />
-      ) : (
+      {false && (
         <>
-          <Stack spacing={3} sx={{ px: 3 }}>
-            <TextField
-              id="outlined-multiline-static"
-              label="Descrição"
-              multiline
-              rows={15}
-              value={event.description}
-              disabled
-            />
-          </Stack>
-          {event.videos.length > 0 && <RenderVideos videos={event.videos} />}
+          {type === 2 || event.name === 'FORCA' ? (
+            <GymList />
+          ) : (
+            <>
+              <Stack spacing={3} sx={{ px: 3 }}>
+                <TextField
+                  id="outlined-multiline-static"
+                  label="Descrição"
+                  multiline
+                  rows={15}
+                  value={event.description}
+                  disabled
+                />
+              </Stack>
+              {event.videos.length > 0 && <RenderVideos videos={event.videos} />}
+            </>
+          )}
         </>
       )}
+      <Stack spacing={3} sx={{ px: 3 }}>
+        <TextField
+          id="outlined-multiline-static"
+          label="Descrição"
+          multiline
+          rows={15}
+          value={event.description}
+          disabled
+        />
+      </Stack>
 
       <DialogActions>
         <Button variant="outlined" color="inherit" onClick={onClose}>
