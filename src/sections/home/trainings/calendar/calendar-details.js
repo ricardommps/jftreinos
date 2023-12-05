@@ -60,6 +60,7 @@ export default function CalendarDetails({ event, onClose, handleOpenFinishedTrai
           value={event.description}
           disabled
         />
+        {event.videos.length > 0 && <RenderVideos videos={event.videos} />}
       </Stack>
 
       <DialogActions>
