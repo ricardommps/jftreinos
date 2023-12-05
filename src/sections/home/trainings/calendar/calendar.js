@@ -134,6 +134,7 @@ export default function Calendar({ id, type }) {
             event={initialEvent()}
             onClose={onCloseForm}
             handleOpenFinishedTraining={onOpenFinishTraining}
+            type={type}
           />
         </Dialog>
       )}

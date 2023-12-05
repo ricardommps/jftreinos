@@ -19,7 +19,6 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
   const NewTrainingSchema = Yup.object().shape({
     distance: Yup.string().required('Campo distância obrigatório'),
     duration: Yup.string().required('Campo tempo total obrigatório'),
-    pace: Yup.string().required('Campo pace obrigatório'),
     rpe: Yup.string().required('Campo rpe obrigatório'),
   });
 
@@ -111,7 +110,12 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
                 variant="standard"
                 type="number"
               />
-              <RHFTextField name="pace" label="Pace *" variant="standard" type="number" />
+              <RHFTextField
+                name="pace"
+                label="Pace médio da sessão"
+                variant="standard"
+                type="number"
+              />
               <RPSSlider control={control} />
               <Stack>
                 <Typography>{`Trimp: ${values.trimp}`}</Typography>

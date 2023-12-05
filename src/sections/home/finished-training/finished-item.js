@@ -72,12 +72,12 @@ export default function FinishedItem({ finishedItem, refreshList, type }) {
                   <Iconify icon="material-symbols:timer-outline" width={20} sx={{ mr: 0.5 }} />
                   {fShortenNumber(finishedItem.duration)}
                 </Stack>
-
-                <Stack direction="row" alignItems="center">
-                  <Iconify icon="material-symbols:speed-outline" width={20} sx={{ mr: 0.5 }} />
-                  {fShortenNumber(formatedPace(finishedItem.pace))}
-                </Stack>
-
+                {finishedItem.pace && (
+                  <Stack direction="row" alignItems="center">
+                    <Iconify icon="material-symbols:speed-outline" width={20} sx={{ mr: 0.5 }} />
+                    {fShortenNumber(formatedPace(finishedItem.pace))}
+                  </Stack>
+                )}
                 <Stack direction="row" alignItems="center">
                   <Iconify icon="fluent:emoji-16-regular" width={20} sx={{ mr: 0.5 }} />
                   {fShortenNumber(finishedItem.rpe)}

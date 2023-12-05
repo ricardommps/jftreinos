@@ -7,9 +7,10 @@ import Typography from '@mui/material/Typography';
 import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
 
+import GymList from '../gym/gym-list';
 import RenderVideos from '../render-videos';
 
-export default function CalendarDetails({ event, onClose, handleOpenFinishedTraining }) {
+export default function CalendarDetails({ event, onClose, handleOpenFinishedTraining, type }) {
   return (
     <>
       <DialogTitle>{getModuleName(event.title)}</DialogTitle>
@@ -29,18 +30,24 @@ export default function CalendarDetails({ event, onClose, handleOpenFinishedTrai
           )}
         </Stack>
       </Stack>
+      {type === 2 || event.name === 'FORCA' ? (
+        <GymList />
+      ) : (
+        <>
+          <Stack spacing={3} sx={{ px: 3 }}>
+            <TextField
+              id="outlined-multiline-static"
+              label="Descrição"
+              multiline
+              rows={15}
+              value={event.description}
+              disabled
+            />
+          </Stack>
+          {event.videos.length > 0 && <RenderVideos videos={event.videos} />}
+        </>
+      )}
 
-      <Stack spacing={3} sx={{ px: 3 }}>
-        <TextField
-          id="outlined-multiline-static"
-          label="Descrição"
-          multiline
-          rows={15}
-          value={event.description}
-          disabled
-        />
-      </Stack>
-      {event.videos.length > 0 && <RenderVideos videos={event.videos} />}
       <DialogActions>
         <Button variant="outlined" color="inherit" onClick={onClose}>
           Fechar

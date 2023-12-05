@@ -12,9 +12,11 @@ import Iconify from 'src/components/iconify/iconify';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { extrapolation } from 'src/utils/extrapolation';
 
+import DialogTablePaceSpeed from '../dialog-table-pace-speed/dialog-table-pace-speed';
 import ExtrapolativeValidity from '../extrapolative-validity/extrapolative-validity';
 export default function ProgramInfo({ programDetail }) {
   const extrapolativeValidity = useBoolean();
+  const openTable = useBoolean();
 
   const [currentExtrapolation, setCurrentExtrapolation] = useState(null);
 
@@ -46,7 +48,7 @@ export default function ProgramInfo({ programDetail }) {
       </Stack>
       <Stack spacing={1.5} direction="row">
         <Typography>Tabela Pace/Km</Typography>
-        <IconButton sx={{ padding: 0 }}>
+        <IconButton sx={{ padding: 0 }} onClick={openTable.onTrue}>
           <Iconify icon="eva:info-outline" />
         </IconButton>
       </Stack>
@@ -93,6 +95,9 @@ export default function ProgramInfo({ programDetail }) {
         onClose={extrapolativeValidity.onFalse}
         currentExtrapolation={currentExtrapolation}
       />
+      {openTable.value && (
+        <DialogTablePaceSpeed open={openTable.value} onClose={openTable.onFalse} />
+      )}
     </>
   );
 }
