@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import ReactPlayer from 'react-player/youtube';
 export default function RenderVideos({ videos }) {
   return (
-    <Stack spacing={1} sx={{ px: 2 }} pt={3}>
+    <Stack spacing={1} pt={3}>
       {videos.map((video, index) => (
         <Accordion key={index}>
           <AccordionSummary
