@@ -30,6 +30,7 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
       rpe: 0,
       trimp: 0,
       link: '',
+      comments: '',
       trainingId,
     }),
     [],
@@ -67,6 +68,7 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
       payload.duration = Number(payload.duration);
       payload.rpe = Number(payload.rpe);
       payload.trainingId = Number(payload.trainingId);
+      payload.pace = String(payload.pace);
       onFinishedTraining(payload);
     } catch (error) {
       console.error(error);
@@ -121,6 +123,13 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
                 <Typography>{`Trimp: ${values.trimp}`}</Typography>
               </Stack>
               <RHFTextField name="link" label="Link" variant="standard" />
+              <RHFTextField
+                name="comments"
+                label="Comentários"
+                variant="standard"
+                multiline
+                rows={6}
+              />
             </Box>
             <Stack pt={2} sx={{ width: '100%' }} spacing={2}>
               {renderErros}
