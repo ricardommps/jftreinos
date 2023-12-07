@@ -123,13 +123,7 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
                 <Typography>{`Trimp: ${values.trimp}`}</Typography>
               </Stack>
               <RHFTextField name="link" label="Link" variant="standard" />
-              <RHFTextField
-                name="comments"
-                label="Comentários"
-                variant="standard"
-                multiline
-                rows={6}
-              />
+              <RHFTextField name="comments" label="Comentários" multiline rows={6} />
             </Box>
             <Stack pt={2} sx={{ width: '100%' }} spacing={2}>
               {renderErros}
