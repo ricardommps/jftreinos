@@ -74,13 +74,13 @@ export default function JwtLoginView() {
   );
 
   const renderHead = (
-    <Stack p={2}>
+    <Stack p={8}>
       <Stack alignItems="center">
         <Image
           disabledEffect
           alt={'home'}
           src={`/assets/logo/logo.png`}
-          style={{ width: 300, height: 'auto' }}
+          style={{ width: 200, height: 'auto' }}
         />
       </Stack>
     </Stack>

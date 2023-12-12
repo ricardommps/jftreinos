@@ -12,7 +12,7 @@ export default function Header() {
       <Image
         disabledEffect
         alt={'home'}
-        src={`/assets/logo/logo-header.png`}
+        src={`/assets/logo/joana.png`}
         style={{ width: 'auto', height: 40 }}
       />
       <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
