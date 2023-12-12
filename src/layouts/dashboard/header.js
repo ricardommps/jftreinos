@@ -13,7 +13,7 @@ export default function Header() {
         disabledEffect
         alt={'home'}
         src={`/assets/logo/joana.png`}
-        style={{ width: 'auto', height: 40 }}
+        style={{ width: 'auto', height: 30 }}
       />
       <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
         <AccountPopover />
