@@ -31,6 +31,7 @@ const Image = forwardRef(
       visibleByDefault,
       wrapperClassName,
       useIntersectionObserver,
+      width,
       sx,
       ...other
     },
@@ -43,7 +44,7 @@ const Image = forwardRef(
         content: "''",
         top: 0,
         left: 0,
-        width: 1,
+        width: 'auto',
         height: 1,
         zIndex: 1,
         position: 'absolute',
@@ -72,7 +73,7 @@ const Image = forwardRef(
         placeholderSrc={disabledEffect ? '/assets/transparent.png' : '/assets/placeholder.svg'}
         //
         sx={{
-          width: 1,
+          width: width ? width : 1,
           height: 1,
           objectFit: 'cover',
           verticalAlign: 'bottom',

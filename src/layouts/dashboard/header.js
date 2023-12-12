@@ -14,6 +14,7 @@ export default function Header() {
         alt={'home'}
         src={`/assets/logo/joana.png`}
         style={{ width: 'auto', height: 30 }}
+        width={'auto'}
       />
       <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
         <AccountPopover />
