@@ -29,6 +29,6 @@ export const API_ENDPOINTS = {
     viewPdf: '/api/v2/program/viewPdf',
   },
   user: {
-    changePassword: '/api/v2/user',
+    changePassword: '/api/v2/customer/resetPassword',
   },
 };
