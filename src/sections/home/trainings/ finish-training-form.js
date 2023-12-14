@@ -14,7 +14,7 @@ import * as Yup from 'yup';
 
 import RPSSlider from './rpe-slider';
 export default function FinishTrainingForm({ trainingId, onClose }) {
-  const { onFinishedTraining } = useHome();
+  const { onFinishedTraining, finishedtrainingDetailStatus } = useHome();
 
   const NewTrainingSchema = Yup.object().shape({
     distance: Yup.string().required('Campo distância obrigatório'),
@@ -129,10 +129,21 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
               {renderErros}
             </Stack>
             <Stack alignItems="flex-end" sx={{ mt: 3 }} spacing={2}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting} fullWidth>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={finishedtrainingDetailStatus.loading}
+                fullWidth
+              >
                 Salvar
               </LoadingButton>
-              <Button fullWidth variant="outlined" color="warning" onClick={onClose}>
+              <Button
+                fullWidth
+                variant="outlined"
+                color="warning"
+                onClick={onClose}
+                disabled={finishedtrainingDetailStatus.loading}
+              >
                 Cancelar
               </Button>
             </Stack>

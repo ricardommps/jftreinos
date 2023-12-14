@@ -12,7 +12,7 @@ import useHome from 'src/hooks/use-home';
 import * as Yup from 'yup';
 
 export default function FinishGymTrainingForm({ trainingId, onClose }) {
-  const { onFinishedTraining } = useHome();
+  const { onFinishedTraining, finishedtrainingDetailStatus } = useHome();
   const NewGymTrainingSchema = Yup.object().shape({});
   const defaultValues = useMemo(
     () => ({
@@ -74,10 +74,21 @@ export default function FinishGymTrainingForm({ trainingId, onClose }) {
               {renderErros}
             </Stack>
             <Stack alignItems="flex-end" sx={{ mt: 3 }} spacing={2}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting} fullWidth>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={finishedtrainingDetailStatus.loading}
+                fullWidth
+              >
                 Salvar
               </LoadingButton>
-              <Button fullWidth variant="outlined" color="warning" onClick={onClose}>
+              <Button
+                fullWidth
+                variant="outlined"
+                color="warning"
+                onClick={onClose}
+                disabled={finishedtrainingDetailStatus.loading}
+              >
                 Cancelar
               </Button>
             </Stack>

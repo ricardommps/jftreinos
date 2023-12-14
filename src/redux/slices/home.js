@@ -140,6 +140,8 @@ const slice = createSlice({
       state.finishedListStatus.loading = true;
       state.finishedListStatus.error = null;
       state.finishedListStatus.empty = false;
+      state.viewedSuccess = false;
+      state.viewedError = false;
     },
     getFinishedListFailure(state, action) {
       const error = action.payload;
