@@ -9,7 +9,7 @@ import Card from '@mui/material/Card';
 import Dialog from '@mui/material/Dialog';
 import Stack from '@mui/material/Stack';
 import { alpha, useTheme } from '@mui/material/styles';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useResponsive } from 'src/hooks/use-responsive';
 import { getEvents } from 'src/redux/slices/calendar';
 import { useDispatch } from 'src/redux/store';
@@ -62,6 +62,8 @@ export default function Calendar({ id, type }) {
     onCloseFinishTraining,
   } = useCalendar();
 
+  const [unrealizedTraining, setUnrealizedTraining] = useState(false);
+
   const renderEventContent = (eventInfo) => {
     return (
       <Stack
@@ -85,6 +87,12 @@ export default function Calendar({ id, type }) {
       </Stack>
     );
   };
+
+  useEffect(() => {
+    if (unrealizedTraining) {
+      onOpenFinishTraining();
+    }
+  }, [unrealizedTraining]);
 
   return (
     <>
@@ -135,6 +143,7 @@ export default function Calendar({ id, type }) {
             onClose={onCloseForm}
             handleOpenFinishedTraining={onOpenFinishTraining}
             type={type}
+            setUnrealizedTraining={setUnrealizedTraining}
           />
         </Dialog>
       )}
@@ -145,6 +154,7 @@ export default function Calendar({ id, type }) {
           trainingId={currentEventId}
           event={initialEvent()}
           type={type}
+          unrealizedTraining={unrealizedTraining}
         />
       )}
     </>

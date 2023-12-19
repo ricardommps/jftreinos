@@ -20,11 +20,38 @@ export default function FinishedItem({ finishedItem, refreshList, type }) {
     openFeedback.onFalse();
     refreshList();
   };
+  const renderPrice = (
+    <Stack
+      direction="row"
+      alignItems="center"
+      sx={{
+        top: 8,
+        right: 8,
+        zIndex: 9,
+        borderRadius: 1,
+        position: 'absolute',
+        p: '2px 6px 2px 4px',
+        typography: 'subtitle2',
+        bgcolor: 'error.main',
+      }}
+    >
+      <Box component="span" sx={{ mr: 0.25 }}>
+        Não realizado
+      </Box>
+    </Stack>
+  );
   return (
     <>
       <Card>
         <Stack sx={{ p: 3, pb: 2 }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+          {finishedItem?.unrealized && <>{renderPrice}</>}
+
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 2, mt: finishedItem?.unrealized ? 2 : 0 }}
+          >
             {finishedItem.review && (
               <Button
                 variant="outlined"

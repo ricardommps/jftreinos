@@ -15,7 +15,14 @@ import { getModuleName } from 'src/utils/modules';
 import FinishTrainingForm from './ finish-training-form';
 import FinishGymTrainingForm from './finish-gym-training-form';
 
-export default function FinishTraining({ open, onClose, trainingId, event, type }) {
+export default function FinishTraining({
+  open,
+  onClose,
+  trainingId,
+  event,
+  type,
+  unrealizedTraining,
+}) {
   const { finishedtraining, finishedtrainingDetailStatus } = useHome();
 
   useEffect(() => {
@@ -57,8 +64,12 @@ export default function FinishTraining({ open, onClose, trainingId, event, type 
           />
         </Stack>
         <Stack pt={2}>
-          {type === 2 ? (
-            <FinishGymTrainingForm trainingId={trainingId} onClose={onClose} />
+          {type === 2 || unrealizedTraining ? (
+            <FinishGymTrainingForm
+              trainingId={trainingId}
+              onClose={onClose}
+              unrealizedTraining={unrealizedTraining}
+            />
           ) : (
             <>
               <Typography>Métricas do treino</Typography>

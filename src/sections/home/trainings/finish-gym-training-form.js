@@ -11,7 +11,7 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import useHome from 'src/hooks/use-home';
 import * as Yup from 'yup';
 
-export default function FinishGymTrainingForm({ trainingId, onClose }) {
+export default function FinishGymTrainingForm({ trainingId, onClose, unrealizedTraining }) {
   const { onFinishedTraining, finishedtrainingDetailStatus } = useHome();
   const NewGymTrainingSchema = Yup.object().shape({});
   const defaultValues = useMemo(
@@ -29,13 +29,14 @@ export default function FinishGymTrainingForm({ trainingId, onClose }) {
 
   const {
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = methods;
 
   const onSubmit = useCallback(async (data) => {
     try {
       const payload = Object.assign({}, data);
       payload.trainingId = Number(payload.trainingId);
+      payload.unrealized = unrealizedTraining;
       onFinishedTraining(payload);
     } catch (error) {
       console.error(error);
@@ -59,6 +60,9 @@ export default function FinishGymTrainingForm({ trainingId, onClose }) {
   return (
     <>
       <Stack>
+        <Alert variant="outlined" severity="warning">
+          Treino não realizado
+        </Alert>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <>
             <Box rowGap={3} columnGap={2} display="grid" pt={2}>

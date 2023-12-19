@@ -10,7 +10,13 @@ import { getModuleName } from 'src/utils/modules';
 import GymList from '../gym/gym-list';
 import RenderVideos from '../render-videos';
 
-export default function CalendarDetails({ event, onClose, handleOpenFinishedTraining, type }) {
+export default function CalendarDetails({
+  event,
+  onClose,
+  handleOpenFinishedTraining,
+  type,
+  setUnrealizedTraining,
+}) {
   return (
     <>
       <DialogTitle>{getModuleName(event.title)}</DialogTitle>
@@ -62,7 +68,16 @@ export default function CalendarDetails({ event, onClose, handleOpenFinishedTrai
         />
         {event.videos.length > 0 && <RenderVideos videos={event.videos} />}
       </Stack>
-
+      <Stack p={3}>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={() => setUnrealizedTraining(true)}
+          fullWidth
+        >
+          Treino não realizado
+        </Button>
+      </Stack>
       <DialogActions>
         <Button variant="outlined" color="inherit" onClick={onClose}>
           Fechar
