@@ -36,7 +36,10 @@ export default function FinishGymTrainingForm({ trainingId, onClose, unrealizedT
     try {
       const payload = Object.assign({}, data);
       payload.trainingId = Number(payload.trainingId);
-      payload.unrealized = unrealizedTraining;
+      if (unrealizedTraining) {
+        payload.unrealized = unrealizedTraining;
+      }
+
       onFinishedTraining(payload);
     } catch (error) {
       console.error(error);
@@ -60,9 +63,12 @@ export default function FinishGymTrainingForm({ trainingId, onClose, unrealizedT
   return (
     <>
       <Stack>
-        <Alert variant="outlined" severity="warning">
-          Treino não realizado
-        </Alert>
+        {unrealizedTraining && (
+          <Alert variant="outlined" severity="warning">
+            Treino não realizado
+          </Alert>
+        )}
+
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <>
             <Box rowGap={3} columnGap={2} display="grid" pt={2}>
