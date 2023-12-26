@@ -1,22 +1,10 @@
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
-import { useEffect } from 'react';
-import useHome from 'src/hooks/use-home';
 
 import FinishedItem from './finished-item';
 
-export default function FinishedList({ id, type }) {
-  const { finishedList, finishedListStatus, onFinishedList } = useHome();
-
-  useEffect(() => {
-    onFinishedList(id);
-  }, []);
-
-  const refreshList = () => {
-    onFinishedList(id);
-  };
-
+export default function FinishedList({ type, refreshList, finishedList, finishedListStatus }) {
   return (
     <Box
       gap={3}

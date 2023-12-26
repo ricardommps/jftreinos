@@ -1,4 +1,5 @@
 import { Typography } from '@mui/material';
+import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -17,17 +18,30 @@ import Calendar from '../trainings/calendar/calendar';
 import ProgramInfo from './program-info';
 
 export default function ProgramDetails() {
-  const { onProgramDetail, programDetailStatus, programDetail, finishedtraining, trainingsStatus } =
-    useHome();
+  const {
+    onProgramDetail,
+    programDetailStatus,
+    programDetail,
+    finishedtraining,
+    trainingsStatus,
+    onFinishedList,
+    finishedList,
+    finishedListStatus,
+  } = useHome();
   const params = useParams();
-  const finishedList = useBoolean();
+  const finishedListOpen = useBoolean();
   const { id } = params;
 
   useEffect(() => {
     if (id) {
       onProgramDetail(id);
+      onFinishedList(id);
     }
   }, []);
+
+  const refreshList = () => {
+    onFinishedList(id);
+  };
 
   useEffect(() => {
     if (finishedtraining) {
@@ -36,6 +50,11 @@ export default function ProgramDetails() {
   }, [finishedtraining]);
 
   const loading = programDetailStatus.loading || trainingsStatus.loading;
+
+  const itensReview = () => {
+    const review = finishedList?.filter((item) => item?.review === true && !item?.fed_viewed);
+    return review?.length || null;
+  };
   return (
     <Container maxWidth={'lg'}>
       <Stack
@@ -79,23 +98,32 @@ export default function ProgramDetails() {
         {!loading && programDetail && (
           <>
             <Box>
-              {!finishedList.value && (
-                <Button variant="outlined" onClick={finishedList.onToggle}>
-                  Meus treinos finalizados
-                </Button>
+              {!finishedListOpen.value && (
+                <Badge badgeContent={itensReview()} color="warning">
+                  <Button variant="outlined" onClick={finishedListOpen.onToggle}>
+                    Meus treinos finalizados
+                  </Button>
+                </Badge>
               )}
-              {finishedList.value && (
-                <Button variant="outlined" onClick={finishedList.onFalse}>
+              {finishedListOpen.value && (
+                <Button variant="outlined" onClick={finishedListOpen.onFalse}>
                   Meus treinos pendentes
                 </Button>
               )}
             </Box>
             <ProgramInfo programDetail={programDetail} />
             <Typography variant="h6" align="center">
-              {!finishedList.value ? ' Treinos pendentes' : ' Treinos finalizados'}
+              {!finishedListOpen.value ? ' Treinos pendentes' : ' Treinos finalizados'}
             </Typography>
-            {!finishedList.value && <Calendar id={id} type={programDetail.type} />}
-            {finishedList.value && <FinishedList id={id} type={programDetail.type} />}
+            {!finishedListOpen.value && <Calendar id={id} type={programDetail.type} />}
+            {finishedListOpen.value && (
+              <FinishedList
+                type={programDetail.type}
+                refreshList={refreshList}
+                finishedList={finishedList}
+                finishedListStatus={finishedListStatus}
+              />
+            )}
           </>
         )}
       </Stack>
