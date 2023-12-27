@@ -30,7 +30,6 @@ export default function ProgramInfo({ programDetail }) {
       getExtrapolationByPv();
     }
   }, [programDetail]);
-
   const renderTitle = <Typography variant="h4">Informações do Programa</Typography>;
   const renderContent = (
     <Stack spacing={2}>
@@ -52,27 +51,59 @@ export default function ProgramInfo({ programDetail }) {
           <Iconify icon="eva:info-outline" />
         </IconButton>
       </Stack>
-      <Divider />
-      <Typography>{`Objetivo: ${programDetail.goal}`}</Typography>
-      <Divider />
-      <Typography>{`Vo2 Max: ${currentExtrapolation?.VO2}`}</Typography>
-      <Divider />
-      <Typography>{`PV: ${programDetail.pv}`}</Typography>
-      <Divider />
-      <Typography>{`Pace: ${programDetail.pace}`}</Typography>
-      <Divider />
-      <Stack flexDirection={'row'} spacing={5}>
-        <Typography>{`Vla: ${programDetail.vla}`}</Typography>
-        <Typography>{`Pace Vla: ${programDetail.paceVla}`}</Typography>
-      </Stack>
-      <Divider />
-      <Stack flexDirection={'row'} spacing={5}>
-        <Typography>{`Vlan: ${programDetail.vlan}`}</Typography>
-        <Typography>{`Pace Vlan: ${programDetail.paceVlan}`}</Typography>
-      </Stack>
-      <Divider />
-      <Typography>FCM: 180</Typography>
-      <Divider />
+
+      {programDetail.goal && (
+        <>
+          <Divider />
+          <Typography>{`Objetivo: ${programDetail.goal}`}</Typography>
+        </>
+      )}
+      {currentExtrapolation?.VO2 && (
+        <>
+          <Divider />
+          <Typography>{`Vo2 Max: ${currentExtrapolation?.VO2}`}</Typography>
+        </>
+      )}
+      {programDetail.pv && (
+        <>
+          <Divider />
+          <Typography>{`PV: ${programDetail.pv}`}</Typography>
+        </>
+      )}
+      {programDetail.pace && (
+        <>
+          <Divider />
+          <Typography>{`Pace: ${programDetail.pace}`}</Typography>
+        </>
+      )}
+      {programDetail.vla && (
+        <>
+          <Divider />
+          <Stack flexDirection={'row'} spacing={5}>
+            <Typography>{`Vla: ${programDetail.vla}`}</Typography>
+            {programDetail.paceVla && (
+              <Typography>{`Pace Vla: ${programDetail.paceVla}`}</Typography>
+            )}
+          </Stack>
+        </>
+      )}
+      {programDetail.vlan && (
+        <>
+          <Divider />
+          <Stack flexDirection={'row'} spacing={5}>
+            <Typography>{`Vlan: ${programDetail.vlan}`}</Typography>
+            {programDetail.paceVlan && (
+              <Typography>{`Pace Vlan: ${programDetail.paceVlan}`}</Typography>
+            )}
+          </Stack>
+        </>
+      )}
+      {programDetail.fcmValue && (
+        <>
+          <Divider />
+          <Typography>FCM: {programDetail.fcmValue}</Typography>
+        </>
+      )}
     </Stack>
   );
 
