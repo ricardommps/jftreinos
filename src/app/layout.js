@@ -23,6 +23,7 @@ import { primaryFont } from 'src/theme/typography';
 export const metadata = {
   title: 'Joana Foltz',
   description: 'App de assessoria',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1', // <-- here
   keywords: 'assessoria, corrida, personalS',
   themeColor: '#000000',
   manifest: '/manifest.json',
@@ -54,6 +55,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={primaryFont.className}>
+      <meta
+        name="viewport"
+        content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+      />
       <body>
         <AuthProvider>
           <ReduxProvider>
