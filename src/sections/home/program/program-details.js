@@ -46,6 +46,7 @@ export default function ProgramDetails() {
   useEffect(() => {
     if (finishedtraining) {
       onProgramDetail(id);
+      onFinishedList(id);
     }
   }, [finishedtraining]);
 
