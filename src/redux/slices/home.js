@@ -193,6 +193,11 @@ const slice = createSlice({
       state.viewPdfStatus.error = null;
       state.viewPdfStatus.loading = false;
     },
+    clearFinishedtraining(state) {
+      state.finishedtraining = null;
+      state.finishedtrainingDetailStatus.loading = false;
+      state.finishedtrainingDetailStatus.error = null;
+    },
   },
 });
 
@@ -286,5 +291,11 @@ export function getViewPdf(programId) {
 export function clearViewPdf() {
   return async (dispatch) => {
     dispatch(slice.actions.clearViewPdf());
+  };
+}
+
+export function clearFinishedtraining() {
+  return async (dispatch) => {
+    dispatch(slice.actions.clearFinishedtraining());
   };
 }

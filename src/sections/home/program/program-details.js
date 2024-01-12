@@ -27,6 +27,7 @@ export default function ProgramDetails() {
     onFinishedList,
     finishedList,
     finishedListStatus,
+    onClearFinishedtraining,
   } = useHome();
   const params = useParams();
   const finishedListOpen = useBoolean();
@@ -47,6 +48,7 @@ export default function ProgramDetails() {
     if (finishedtraining) {
       onProgramDetail(id);
       onFinishedList(id);
+      onClearFinishedtraining();
     }
   }, [finishedtraining]);
 

@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import {
+  clearFinishedtraining,
   clearViewPdf,
   finishedtrainingReq,
   getAllPrograms,
@@ -71,6 +72,10 @@ export default function useHome() {
     dispatch(clearViewPdf());
   }, [dispatch]);
 
+  const onClearFinishedtraining = useCallback(() => {
+    dispatch(clearFinishedtraining());
+  }, [dispatch]);
+
   return {
     onListPrograms,
     programs,
@@ -93,5 +98,6 @@ export default function useHome() {
     viewPdf,
     viewPdfStatus,
     onClearViewPdf,
+    onClearFinishedtraining,
   };
 }

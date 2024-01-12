@@ -17,6 +17,7 @@ import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
 
 import FinishTraining from '../ finish-training';
+import TypeTraining from '../type-training';
 import CalendarDetails from './calendar-details';
 import CalendarToolbar from './calendar-toolbar';
 import { useCalendar } from './hooks';
@@ -60,6 +61,11 @@ export default function Calendar({ id, type }) {
     onCloseForm,
     onOpenFinishTraining,
     onCloseFinishTraining,
+    openTypeTraining,
+    onCloseTypeTraining,
+    onOpenTypeTraining,
+    typeTrainingSelected,
+    setTypeTrainingSelected,
   } = useCalendar();
 
   const [unrealizedTraining, setUnrealizedTraining] = useState(false);
@@ -86,6 +92,14 @@ export default function Calendar({ id, type }) {
         )}
       </Stack>
     );
+  };
+
+  const handleOpenFinishTraining = () => {
+    if (type === 2) {
+      onOpenFinishTraining();
+    } else {
+      onOpenTypeTraining();
+    }
   };
 
   useEffect(() => {
@@ -141,7 +155,7 @@ export default function Calendar({ id, type }) {
           <CalendarDetails
             event={initialEvent()}
             onClose={onCloseForm}
-            handleOpenFinishedTraining={onOpenFinishTraining}
+            handleOpenFinishedTraining={handleOpenFinishTraining}
             type={type}
             setUnrealizedTraining={setUnrealizedTraining}
           />
@@ -155,6 +169,16 @@ export default function Calendar({ id, type }) {
           event={initialEvent()}
           type={type}
           unrealizedTraining={unrealizedTraining}
+          typeTrainingSelected={typeTrainingSelected}
+        />
+      )}
+      {openTypeTraining && (
+        <TypeTraining
+          open={openTypeTraining}
+          onClose={onCloseTypeTraining}
+          typeTrainingSelected={typeTrainingSelected}
+          setTypeTrainingSelected={setTypeTrainingSelected}
+          onOpenFinishTraining={onOpenFinishTraining}
         />
       )}
     </>

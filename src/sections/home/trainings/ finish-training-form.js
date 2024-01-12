@@ -3,18 +3,26 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { RHFTextField } from 'src/components/hook-form';
+import { RHFRadioGroup, RHFTextField } from 'src/components/hook-form';
 import FormProvider from 'src/components/hook-form/form-provider';
 import useHome from 'src/hooks/use-home';
 import * as Yup from 'yup';
 
+import IntensityForm from './intensity-form';
 import RPSSlider from './rpe-slider';
-export default function FinishTrainingForm({ trainingId, onClose }) {
+
+export const OPTIONS = [
+  { label: 'Pace', value: 'pace' },
+  { label: 'Km', value: 'km' },
+];
+
+export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSelected }) {
   const theme = useTheme();
   const { onFinishedTraining, finishedtrainingDetailStatus } = useHome();
 
@@ -34,6 +42,9 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
       link: '',
       comments: '',
       trainingId,
+      unitmeasurement: typeTrainingSelected === 'indoor' ? OPTIONS[0].value : null,
+      intensities: null,
+      typetraining: typeTrainingSelected,
     }),
     [],
   );
@@ -48,7 +59,7 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
     control,
     setValue,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = methods;
 
   const values = watch();
@@ -66,6 +77,9 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
   const onSubmit = useCallback(async (data) => {
     try {
       const payload = Object.assign({}, data);
+      if (payload.intensities) {
+        payload.intensities = payload.intensities.filter((intensitie) => intensitie.value !== '');
+      }
       payload.distance = Number(payload.distance);
       payload.duration = Number(payload.duration);
       payload.rpe = Number(payload.rpe);
@@ -116,10 +130,27 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
     return `${hours}h${minutes > 0 ? ` ${minutes}m` : ''}`;
   }
 
+  const calculateAverage = () => {
+    if (values?.intensities?.length > 0) {
+      const intensitiesValues = values.intensities.map((intensities) => intensities.value);
+      const noEmptyValues = intensitiesValues.filter((str) => str !== '');
+      const average = noEmptyValues.reduce((p, c) => p + c, 0) / noEmptyValues.length;
+      if (isNaN(average)) {
+        return 0;
+      }
+      return Math.floor(average * 100) / 100;
+    }
+    return 0;
+  };
+
+  const handleChangePace = useCallback((event) => {
+    const paceValue = event.target.value;
+    setValue('pace', paceValue.replace(',', '.'));
+  }, []);
+
   useEffect(() => {
     getTrimp();
   }, [values.duration, values.rpe]);
-
   return (
     <>
       <Stack>
@@ -140,13 +171,44 @@ export default function FinishTrainingForm({ trainingId, onClose }) {
                 type="number"
                 helperText={toHoursAndMinutes(Number(values.duration))}
               />
-              <RHFTextField
-                name="pace"
-                label="Pace médio da sessão"
-                variant="outlined"
-                type="number"
-                helperText={paceInfo}
-              />
+              {typeTrainingSelected === 'outdoor' && (
+                <>
+                  <RHFTextField
+                    name="pace"
+                    label="Pace médio da sessão"
+                    variant="outlined"
+                    type="number"
+                    helperText={paceInfo}
+                    onChange={handleChangePace}
+                  />
+                </>
+              )}
+
+              {typeTrainingSelected === 'indoor' && (
+                <Box>
+                  <Paper
+                    variant="outlined"
+                    sx={{
+                      p: 2,
+                      textAlign: 'left',
+                    }}
+                  >
+                    <Typography variant="subtitle1">Intensidade dos esforços</Typography>
+                    <Stack spacing={1} pt={2}>
+                      <Typography variant="subtitle2">Selecione a unidade de medida</Typography>
+                      <RHFRadioGroup row name="unitmeasurement" spacing={2} options={OPTIONS} />
+                    </Stack>
+                    <IntensityForm unitMeasurement={values.unitmeasurement} />
+
+                    <Stack>
+                      <Typography sx={{ textTransform: 'capitalize', m: 1 }}>{`${
+                        values.unitmeasurement
+                      } medio : ${calculateAverage()}`}</Typography>
+                    </Stack>
+                  </Paper>
+                </Box>
+              )}
+
               <RHFTextField name="link" label="Link" variant="outlined" />
               <RPSSlider control={control} />
               <Stack>

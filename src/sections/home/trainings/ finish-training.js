@@ -23,6 +23,7 @@ export default function FinishTraining({
   event,
   type,
   unrealizedTraining,
+  typeTrainingSelected,
 }) {
   const { finishedtraining, finishedtrainingDetailStatus } = useHome();
   const openTable = useBoolean();
@@ -46,7 +47,11 @@ export default function FinishTraining({
 
   return (
     <Dialog fullScreen open={open}>
-      <CardHeader title={'Finalizar Treino'} action={onClose} onOpenTable={openTable.onTrue} />
+      <CardHeader
+        title={`Finalizar Treino ${typeTrainingSelected}`}
+        action={onClose}
+        onOpenTable={openTable.onTrue}
+      />
       <Box mt={12}>
         <DialogContent dividers sx={{ pt: 1, pb: 0, border: 'none' }}>
           <Stack>
@@ -75,7 +80,11 @@ export default function FinishTraining({
             ) : (
               <>
                 <Typography>Métricas do treino</Typography>
-                <FinishTrainingForm trainingId={trainingId} onClose={onClose} />
+                <FinishTrainingForm
+                  trainingId={trainingId}
+                  onClose={onClose}
+                  typeTrainingSelected={typeTrainingSelected}
+                />
               </>
             )}
           </Stack>

@@ -25,6 +25,10 @@ export default function useCalendar() {
 
   const [openForm, setOpenForm] = useState(false);
 
+  const [openTypeTraining, setOpenTypeTraining] = useState(false);
+
+  const [typeTrainingSelected, setTypeTrainingSelected] = useState('indoor');
+
   const [openFinishTraining, setOpenFinishTraining] = useState(false);
 
   const [currentEventId, setCurrentEventId] = useState(null);
@@ -46,6 +50,15 @@ export default function useCalendar() {
     return null;
   });
 
+  const onOpenTypeTraining = useCallback(() => {
+    setOpenTypeTraining(true);
+  }, []);
+
+  const onCloseTypeTraining = useCallback(() => {
+    setOpenTypeTraining(false);
+    setTypeTrainingSelected('indoor');
+  }, []);
+
   const onOpenForm = useCallback(() => {
     setOpenForm(true);
   }, []);
@@ -65,6 +78,8 @@ export default function useCalendar() {
     setOpenFinishTraining(false);
     setSelectedRange(null);
     setCurrentEventId(null);
+    setOpenTypeTraining(false);
+    setTypeTrainingSelected('indoor');
   }, []);
 
   const onInitialView = useCallback(() => {
@@ -253,5 +268,10 @@ export default function useCalendar() {
     openFinishTraining,
     onOpenFinishTraining,
     onCloseFinishTraining,
+    onOpenTypeTraining,
+    onCloseTypeTraining,
+    openTypeTraining,
+    typeTrainingSelected,
+    setTypeTrainingSelected,
   };
 }
