@@ -3,7 +3,6 @@
 // @mui
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
 import CircularProgress from '@mui/material/CircularProgress';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
@@ -118,7 +117,7 @@ export default function MetricsView() {
             </Typography>
           </Box>
         </Stack>
-        <Card>
+        <Box>
           {metricsStatus.loading && (
             <Stack spacing={2} sx={{ px: 2, py: 2.5, position: 'relative' }}>
               <Box
@@ -138,43 +137,46 @@ export default function MetricsView() {
           )}
           {!metricsStatus.loading && metrics && filters && (
             <>
-              <Tabs
-                value={filters.type}
-                onChange={handleFilterType}
-                sx={{
-                  px: 2.5,
-                  boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-                }}
-              >
-                {TYPE_OPTIONS.map((tab) => (
-                  <Tab
-                    key={tab.value}
-                    iconPosition="end"
-                    value={tab.value}
-                    label={tab.label}
-                    icon={
-                      <Label
-                        variant={
-                          ((tab.value === 'all' || tab.value === filters.type) && 'filled') ||
-                          'soft'
-                        }
-                        color={
-                          (tab.value === 1 && 'success') ||
-                          (tab.value === 2 && 'warning') ||
-                          (tab.value === 3 && 'error') ||
-                          'default'
-                        }
-                      >
-                        {tab.value === 'all' && metrics.length}
-                        {tab.value === 1 && metrics.filter((item) => item.type === '1').length}
+              <Box pb={2}>
+                <Tabs
+                  value={filters.type}
+                  onChange={handleFilterType}
+                  sx={{
+                    px: 2.5,
+                    boxShadow: (theme) =>
+                      `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+                  }}
+                >
+                  {TYPE_OPTIONS.map((tab) => (
+                    <Tab
+                      key={tab.value}
+                      iconPosition="end"
+                      value={tab.value}
+                      label={tab.label}
+                      icon={
+                        <Label
+                          variant={
+                            ((tab.value === 'all' || tab.value === filters.type) && 'filled') ||
+                            'soft'
+                          }
+                          color={
+                            (tab.value === 1 && 'success') ||
+                            (tab.value === 2 && 'warning') ||
+                            (tab.value === 3 && 'error') ||
+                            'default'
+                          }
+                        >
+                          {tab.value === 'all' && metrics.length}
+                          {tab.value === 1 && metrics.filter((item) => item.type === '1').length}
 
-                        {tab.value === 2 && metrics.filter((item) => item.type === '2').length}
-                        {tab.value === 3 && metrics.filter((item) => item.type === '3').length}
-                      </Label>
-                    }
-                  />
-                ))}
-              </Tabs>
+                          {tab.value === 2 && metrics.filter((item) => item.type === '2').length}
+                          {tab.value === 3 && metrics.filter((item) => item.type === '3').length}
+                        </Label>
+                      }
+                    />
+                  ))}
+                </Tabs>
+              </Box>
               {metricsStatus.empty || !metrics ? (
                 <Stack></Stack>
               ) : (
@@ -195,7 +197,7 @@ export default function MetricsView() {
               )}
             </>
           )}
-        </Card>
+        </Box>
       </Container>
       {chartView.value && (
         <ChartView

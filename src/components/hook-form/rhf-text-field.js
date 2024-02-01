@@ -6,7 +6,6 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 export default function RHFTextField({ name, helperText, type, ...other }) {
   const { control } = useFormContext();
-
   return (
     <Controller
       name={name}

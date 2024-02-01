@@ -21,7 +21,7 @@ export const trainingModules = [
   { value: 'LONGAO', label: 'Longão' },
   { value: 'PROGRASSIVO', label: 'Progressivo' },
   { value: 'RODAGEM', label: 'Rodagem' },
-  { value: 'SPRINT', label: 'Sprint' },
+  { value: 'SPRINT', label: 'Sprint', metrics: true },
   { value: 'TESTE_FISICO', label: 'Teste Físico' },
   { value: 'FORCA', label: 'Força' },
 ];

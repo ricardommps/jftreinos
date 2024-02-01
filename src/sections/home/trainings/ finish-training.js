@@ -60,17 +60,17 @@ export default function FinishTraining({
               primary={getModuleName(event.title)}
               secondary={fDateCalender(event.start)}
               primaryTypographyProps={{
-                typography: 'subtitle1',
+                typography: 'h6',
               }}
               secondaryTypographyProps={{
                 mt: 1,
                 component: 'span',
                 typography: 'subtitle2',
-                color: 'text.disabled',
+                color: 'text.secondary',
               }}
             />
           </Stack>
-          <Stack pt={2}>
+          <Stack pt={2} pb={2}>
             {type === 2 || unrealizedTraining ? (
               <FinishGymTrainingForm
                 trainingId={trainingId}
@@ -84,6 +84,7 @@ export default function FinishTraining({
                   trainingId={trainingId}
                   onClose={onClose}
                   typeTrainingSelected={typeTrainingSelected}
+                  event={event}
                 />
               </>
             )}

@@ -6,6 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Iconify from 'src/components/iconify';
 export default function TypeTraining({
@@ -15,6 +16,7 @@ export default function TypeTraining({
   setTypeTrainingSelected,
   onOpenFinishTraining,
 }) {
+  const theme = useTheme();
   return (
     <Dialog fullWidth maxWidth="xs" open={open}>
       <DialogTitle>Finalizar treino</DialogTitle>
@@ -28,28 +30,28 @@ export default function TypeTraining({
             sx={{
               py: 2.5,
               textAlign: 'center',
-              borderColor: typeTrainingSelected === 'indoor' && 'green',
+              bgcolor: typeTrainingSelected === 'indoor' && theme.palette.info.main,
             }}
             onClick={() => setTypeTrainingSelected('indoor')}
           >
             <Typography variant="h6" sx={{ mt: 0.5 }}>
               Indoor
             </Typography>
-            <Iconify icon={'tabler:treadmill'} color={'#1877F2'} width={32} mt={2} />
+            <Iconify icon={'tabler:treadmill'} width={32} mt={2} />
           </Paper>
           <Paper
             variant="outlined"
             sx={{
               py: 2.5,
               textAlign: 'center',
-              borderColor: typeTrainingSelected === 'outdoor' && 'green',
+              bgcolor: typeTrainingSelected === 'outdoor' && theme.palette.info.main,
             }}
             onClick={() => setTypeTrainingSelected('outdoor')}
           >
             <Typography variant="h6" sx={{ mt: 0.5 }}>
               Outdoor
             </Typography>
-            <Iconify icon={'fa-solid:road'} color={'#1877F2'} width={32} mt={2} />
+            <Iconify icon={'fa-solid:road'} width={32} mt={2} />
           </Paper>
         </Box>
       </DialogContent>
@@ -57,7 +59,7 @@ export default function TypeTraining({
         <Button variant="outlined" color="inherit" onClick={onClose}>
           Fechar
         </Button>
-        <Button variant="outlined" color="inherit" onClick={onOpenFinishTraining}>
+        <Button variant="contained" onClick={onOpenFinishTraining}>
           Continuar
         </Button>
       </DialogActions>

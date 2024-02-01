@@ -23,7 +23,7 @@ export const API_ENDPOINTS = {
     programDetail: '/api/v2/program/myProgram',
     finishedtraining: '/api/v2/finishedtraining',
     trainingsByProgramId: '/api/v2/training/list',
-    finishedList: '/api/v2/finishedtraining/listByProgramId',
+    finishedList: '/api/v2/finishedtraining/listByUser',
     metrics: '/api/v2/metrics/myMetrics',
     viewedFeedback: '/api/v2/trainingfeedback/viewed',
     viewPdf: '/api/v2/program/viewPdf',

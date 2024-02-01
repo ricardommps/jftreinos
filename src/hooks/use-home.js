@@ -48,8 +48,8 @@ export default function useHome() {
   );
 
   const onFinishedList = useCallback(
-    (id) => {
-      dispatch(getFinishedListReq(id));
+    (timestampFrom, timestampTo) => {
+      dispatch(getFinishedListReq(timestampFrom, timestampTo));
     },
     [dispatch],
   );

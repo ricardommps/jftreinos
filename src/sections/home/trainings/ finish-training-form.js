@@ -1,8 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
+import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
@@ -14,15 +16,15 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import useHome from 'src/hooks/use-home';
 import * as Yup from 'yup';
 
-import IntensityForm from './intensity-form';
+import MetricsForm from './forms/metrics-form';
 import RPSSlider from './rpe-slider';
 
 export const OPTIONS = [
   { label: 'Pace', value: 'pace' },
-  { label: 'Km', value: 'km' },
+  { label: 'Km/h', value: 'km' },
 ];
 
-export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSelected }) {
+export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSelected, event }) {
   const theme = useTheme();
   const { onFinishedTraining, finishedtrainingDetailStatus } = useHome();
 
@@ -43,8 +45,9 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
       comments: '',
       trainingId,
       unitmeasurement: typeTrainingSelected === 'indoor' ? OPTIONS[0].value : null,
-      intensities: null,
+      intensities: [{ intensitie: 0 }],
       typetraining: typeTrainingSelected,
+      quantity: 1,
     }),
     [],
   );
@@ -78,13 +81,16 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
     try {
       const payload = Object.assign({}, data);
       if (payload.intensities) {
-        payload.intensities = payload.intensities.filter((intensitie) => intensitie.value !== '');
+        payload.intensities = payload.intensities.filter(
+          (item) => item.intensitie !== '' && item.intensitie > 0,
+        );
       }
       payload.distance = Number(payload.distance);
       payload.duration = Number(payload.duration);
       payload.rpe = Number(payload.rpe);
       payload.trainingId = Number(payload.trainingId);
       payload.pace = String(payload.pace);
+      delete payload.quantity;
       onFinishedTraining(payload);
     } catch (error) {
       console.error(error);
@@ -132,8 +138,8 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
 
   const calculateAverage = () => {
     if (values?.intensities?.length > 0) {
-      const intensitiesValues = values.intensities.map((intensities) => intensities.value);
-      const noEmptyValues = intensitiesValues.filter((str) => str !== '');
+      const intensitiesValues = values.intensities.map((intensitie) => intensitie.intensitie);
+      const noEmptyValues = intensitiesValues.filter((str) => str !== '' && str > 0);
       const average = noEmptyValues.reduce((p, c) => p + c, 0) / noEmptyValues.length;
       if (isNaN(average)) {
         return 0;
@@ -148,29 +154,38 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
     setValue('pace', paceValue.replace(',', '.'));
   }, []);
 
+  const updateIntensitiesItems = () => {
+    const newIntensities = [];
+    for (var i = 0; i < values.quantity; i++) {
+      newIntensities.push({
+        intensitie: 0,
+      });
+    }
+    setValue('intensities', [...newIntensities]);
+  };
+
+  const enableIntensities =
+    event.title === 'HIIT_CURTO' ||
+    event.title === 'HIITT_LONGO' ||
+    event.title === 'LL2_INTERVALADO' ||
+    event.title === 'SPRINT' ||
+    event.title === 'HIT_ELEVACAO';
+
   useEffect(() => {
     getTrimp();
   }, [values.duration, values.rpe]);
+
+  useEffect(() => {
+    updateIntensitiesItems();
+  }, [values.quantity]);
+
   return (
     <>
       <Stack>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <>
             <Box rowGap={3} columnGap={2} display="grid" pt={2}>
-              <RHFTextField
-                name="distance"
-                label="Distância em metros *"
-                variant="outlined"
-                type="number"
-                helperText={`${Number(values.distance) / 1000} km`}
-              />
-              <RHFTextField
-                name="duration"
-                label="Tempo total em minutos *"
-                variant="outlined"
-                type="number"
-                helperText={toHoursAndMinutes(Number(values.duration))}
-              />
+              <MetricsForm />
               {typeTrainingSelected === 'outdoor' && (
                 <>
                   <RHFTextField
@@ -184,7 +199,7 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
                 </>
               )}
 
-              {typeTrainingSelected === 'indoor' && (
+              {typeTrainingSelected === 'indoor' && enableIntensities && (
                 <Box>
                   <Paper
                     variant="outlined"
@@ -194,12 +209,83 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
                     }}
                   >
                     <Typography variant="subtitle1">Intensidade dos esforços</Typography>
+                    <Stack pt={2}>
+                      <RHFTextField
+                        size="small"
+                        type="number"
+                        name="quantity"
+                        label="Quantidade de esforços"
+                        InputLabelProps={{ shrink: true }}
+                        sx={{ maxWidth: { md: 96 } }}
+                      />
+                    </Stack>
                     <Stack spacing={1} pt={2}>
                       <Typography variant="subtitle2">Selecione a unidade de medida</Typography>
                       <RHFRadioGroup row name="unitmeasurement" spacing={2} options={OPTIONS} />
                     </Stack>
-                    <IntensityForm unitMeasurement={values.unitmeasurement} />
-
+                    <Stack pt={2}>
+                      <Stack sx={{ backgroundColor: theme.palette.warning.light }} mb={2} p={1}>
+                        <Typography variant="subtitle2" color={theme.palette.grey[900]}>
+                          Clique nas caixas para adicionar o valor desejado
+                        </Typography>
+                      </Stack>
+                      <Box
+                        display="grid"
+                        gap={2}
+                        gridTemplateColumns="repeat(3, 1fr)"
+                        width={'40px'}
+                      >
+                        {values.intensities.map((_, index) => (
+                          <Badge
+                            badgeContent={index + 1}
+                            color="info"
+                            key={`intensities-badge-key-${index}`}
+                          >
+                            <Box
+                              sx={{
+                                color: 'rgb(33, 43, 54)',
+                                backgroundColor: 'white',
+                                boxSizing: 'border-box',
+                                display: 'inline-flex',
+                                borderRadius: '8px',
+                                maxWidth: '100%',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                whiteSpace: 'nowrap',
+                                verticalAlign: 'middle',
+                                width: '100px',
+                              }}
+                            >
+                              <RHFTextField
+                                sx={{
+                                  input: {
+                                    color: 'rgb(33, 43, 54)',
+                                  },
+                                }}
+                                hiddenLabel
+                                size="small"
+                                variant="filled"
+                                name={`intensities[${index}].intensitie`}
+                                type="number"
+                                InputLabelProps={{
+                                  shrink: true,
+                                }}
+                                InputProps={{
+                                  endAdornment: (
+                                    <InputAdornment position="start" sx={{ fontSize: '12px' }}>
+                                      <Typography sx={{ fontSize: '12px', fontWeight: 'bold' }}>{`${
+                                        values.unitmeasurement === 'pace' ? 'min' : 'km/h'
+                                      }`}</Typography>
+                                    </InputAdornment>
+                                  ),
+                                  inputProps: { min: 0, max: 1000, step: 0.5 },
+                                }}
+                              />
+                            </Box>
+                          </Badge>
+                        ))}
+                      </Box>
+                    </Stack>
                     <Stack>
                       <Typography sx={{ textTransform: 'capitalize', m: 1 }}>{`${
                         values.unitmeasurement
@@ -244,3 +330,7 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
     </>
   );
 }
+
+// label={`${0} ${values.unitmeasurement === 'pace' ? 'min' : 'km/h'}`}
+
+// label={`${values.unitmeasurement === 'pace' ? 'min' : 'km/h'}`}

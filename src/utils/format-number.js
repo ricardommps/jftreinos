@@ -30,6 +30,11 @@ export function fData(number) {
   return result(format, '.0');
 }
 
+export function formatedPace(pace) {
+  const paceStr = pace.replace(',', '.').replace(' ', '');
+  return Number(paceStr);
+}
+
 function result(format, key = '.00') {
   const isInteger = format.includes(key);
 
