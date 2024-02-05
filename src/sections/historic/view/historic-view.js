@@ -152,8 +152,8 @@ const applyFilter = ({ inputData, filters }) => {
   if (name) {
     console.log('--inputData--', inputData);
     inputData = inputData.filter((item) => {
-      console.log('--filter--trainingname-', item?.trainingname);
-      console.log('--filter--trainingsubtitle-', item?.trainingsubtitle);
+      console.log('--filter--trainingname-', item?.trainingname.toLowerCase());
+      console.log('--filter--trainingsubtitle-', item?.trainingsubtitle.toLowerCase());
       return (
         getModuleName(item?.trainingname)?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         item?.trainingsubtitle?.toLowerCase().indexOf(name.toLowerCase()) !== -1
