@@ -14,12 +14,14 @@ import useHome from 'src/hooks/use-home';
 import { RouterLink } from 'src/routes/components';
 import { useRouter } from 'src/routes/hook';
 import { paths } from 'src/routes/paths';
+import { getModuleName } from 'src/utils/modules';
 
 import HistoricFilter from '../historic-filter';
 import HistoricList from '../historic.list';
 
 const defaultFilters = {
   type: 'all',
+  name: '',
 };
 
 const PER_PAGE = 5;
@@ -44,6 +46,17 @@ export default function HistoricView() {
       [name]: value,
     }));
   }, []);
+
+  const handleFilterName = useCallback(
+    (event) => {
+      handleFilters('name', event.target.value);
+    },
+    [handleFilters],
+  );
+
+  const handleResetFilterName = useCallback(() => {
+    handleFilters('name', '');
+  }, [handleFilters]);
 
   const getFinishedList = useCallback(() => {
     const timestampFrom = new Date();
@@ -121,6 +134,8 @@ export default function HistoricView() {
                   handleFilters={handleFilters}
                   finishedList={finishedList}
                   getFinishedList={getFinishedList}
+                  handleFilterName={handleFilterName}
+                  handleResetFilterName={handleResetFilterName}
                 />
               )}
             </>
@@ -132,8 +147,14 @@ export default function HistoricView() {
 }
 
 const applyFilter = ({ inputData, filters }) => {
-  const { type } = filters;
-
+  const { type, name } = filters;
+  if (name) {
+    inputData = inputData.filter(
+      (item) =>
+        getModuleName(item?.trainingname).toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        item?.trainingsubtitle.toLowerCase().indexOf(name.toLowerCase()) !== -1,
+    );
+  }
   if (inputData) {
     if (type === 'corrida') {
       inputData = inputData.filter((item) => item.type === 1);

@@ -1,8 +1,12 @@
+import InputAdornment from '@mui/material/InputAdornment';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
+import TextField from '@mui/material/TextField';
 import { useCallback } from 'react';
+import Iconify from 'src/components/iconify';
 import Label from 'src/components/label';
 import Scrollbar from 'src/components/scrollbar';
 import usePagination from 'src/hooks/use-pagination';
@@ -18,6 +22,8 @@ export default function HistoricList({
   handleFilters,
   finishedList,
   getFinishedList,
+  handleFilterName,
+  handleResetFilterName,
 }) {
   const STATUS_OPTIONS = [
     { value: 'all', label: 'Todos' },
@@ -35,6 +41,7 @@ export default function HistoricList({
   const handleFilterType = useCallback(
     (event, newValue) => {
       setPage(1);
+      handleResetFilterName();
       data.resetPage();
       handleFilters('type', newValue);
     },
@@ -86,27 +93,52 @@ export default function HistoricList({
           />
         ))}
       </Tabs>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={2}
+        flexGrow={1}
+        sx={{ width: 1 }}
+        pt={3}
+        pb={3}
+      >
+        <TextField
+          fullWidth
+          type="search"
+          value={filters.name}
+          onChange={handleFilterName}
+          placeholder="Buscar nome do treino ou subtítulo"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Stack>
+
       <Scrollbar sx={{ maxHeight: 500 }}>
         {data.currentData().map((historic) => (
           <HistoricItem historic={historic} key={historic.id} refreshList={refreshList} />
         ))}
+        {historics.length > perPage && (
+          <Pagination
+            count={count}
+            size="large"
+            page={page}
+            variant="outlined"
+            shape="rounded"
+            onChange={handleChange}
+            sx={{
+              mt: 8,
+              [`& .${paginationClasses.ul}`]: {
+                justifyContent: 'center',
+              },
+            }}
+          />
+        )}
       </Scrollbar>
-      {historics.length > perPage && (
-        <Pagination
-          count={count}
-          size="large"
-          page={page}
-          variant="outlined"
-          shape="rounded"
-          onChange={handleChange}
-          sx={{
-            mt: 8,
-            [`& .${paginationClasses.ul}`]: {
-              justifyContent: 'center',
-            },
-          }}
-        />
-      )}
     </>
   );
 }

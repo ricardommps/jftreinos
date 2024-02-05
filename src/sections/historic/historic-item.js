@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import IconButton from '@mui/material/IconButton';
+import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -111,10 +112,18 @@ export default function HistoricItem({ historic, refreshList }) {
 
         <Box sx={{ p: 2 }} display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={1}>
           <Stack>
-            <Stack spacing={1} direction="row" alignItems="center" sx={{ typography: 'h6' }}>
-              {getModuleName(historic.trainingname)}
-              <Iconify icon="material-symbols:info" onClick={handleOpenInfoTraining} />
-            </Stack>
+            <ListItemText
+              primary={
+                <Stack spacing={1} direction="row" alignItems="center" sx={{ typography: 'h6' }}>
+                  {getModuleName(historic.trainingname)}
+                  <Iconify icon="material-symbols:info" onClick={handleOpenInfoTraining} />
+                </Stack>
+              }
+              secondary={historic.trainingsubtitle}
+              primaryTypographyProps={{ typography: 'subtitle1' }}
+              secondaryTypographyProps={{ typography: 'subtitle2' }}
+            />
+
             <Typography variant="subtitle1" color="text.secondary" component="div">
               {format(new Date(historic.trainingdatepublished), 'dd/MM/yyyy', { locale: ptBR })}
             </Typography>

@@ -88,7 +88,7 @@ export default function ProgramDetails() {
           <>
             <ProgramInfo programDetail={programDetail} />
             <Typography variant="h6" align="center">
-              {!finishedListOpen.value ? ' Treinos pendentes' : ' Treinos finalizados'}
+              Meus treinos
             </Typography>
             {!finishedListOpen.value && <Calendar id={id} type={programDetail.type} />}
           </>
