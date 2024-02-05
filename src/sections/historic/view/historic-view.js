@@ -150,9 +150,10 @@ export default function HistoricView() {
 const applyFilter = ({ inputData, filters }) => {
   const { type, name } = filters;
   if (name) {
-    console.log('--inputData--', inputData);
     inputData = inputData.filter(
-      (item) => getModuleName(item?.trainingname)?.toLowerCase().indexOf(name.toLowerCase()) !== -1,
+      (item) =>
+        (getModuleName(item?.trainingname) || '').toLowerCase().indexOf(name.toLowerCase()) !==
+          -1 || (item?.trainingsubtitle || '').toLowerCase().indexOf(name.toLowerCase()) !== -1,
     );
   }
   if (inputData) {
