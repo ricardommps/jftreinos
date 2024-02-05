@@ -151,8 +151,8 @@ const applyFilter = ({ inputData, filters }) => {
   if (name) {
     inputData = inputData.filter(
       (item) =>
-        getModuleName(item?.trainingname).toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        item?.trainingsubtitle.toLowerCase().indexOf(name.toLowerCase()) !== -1,
+        getModuleName(item?.trainingname)?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        item?.trainingsubtitle?.toLowerCase().indexOf(name.toLowerCase()) !== -1,
     );
   }
   if (inputData) {
