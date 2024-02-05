@@ -85,6 +85,7 @@ export default function HistoricView() {
     setPage(1);
     setFilters(defaultFilters);
   }, [period]);
+
   return (
     <>
       <Stack spacing={1} direction="row">
@@ -149,6 +150,7 @@ export default function HistoricView() {
 const applyFilter = ({ inputData, filters }) => {
   const { type, name } = filters;
   if (name) {
+    console.log('--inputData--', inputData);
     inputData = inputData.filter(
       (item) =>
         getModuleName(item?.trainingname)?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
