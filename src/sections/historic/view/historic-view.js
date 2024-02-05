@@ -151,14 +151,9 @@ const applyFilter = ({ inputData, filters }) => {
   const { type, name } = filters;
   if (name) {
     console.log('--inputData--', inputData);
-    inputData = inputData.filter((item) => {
-      console.log('--filter--trainingname-', item?.trainingname.toLowerCase());
-      console.log('--filter--trainingsubtitle-', item?.trainingsubtitle.toLowerCase());
-      return (
-        getModuleName(item?.trainingname)?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        item?.trainingsubtitle?.toLowerCase().indexOf(name.toLowerCase()) !== -1
-      );
-    });
+    inputData = inputData.filter(
+      (item) => getModuleName(item?.trainingname)?.toLowerCase().indexOf(name.toLowerCase()) !== -1,
+    );
   }
   if (inputData) {
     if (type === 'corrida') {
