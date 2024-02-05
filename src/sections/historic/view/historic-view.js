@@ -47,13 +47,6 @@ export default function HistoricView() {
     }));
   }, []);
 
-  const handleFilterName = useCallback(
-    (event) => {
-      handleFilters('name', event.target.value);
-    },
-    [handleFilters],
-  );
-
   const handleResetFilterName = useCallback(() => {
     handleFilters('name', '');
   }, [handleFilters]);
@@ -135,7 +128,6 @@ export default function HistoricView() {
                   handleFilters={handleFilters}
                   finishedList={finishedList}
                   getFinishedList={getFinishedList}
-                  handleFilterName={handleFilterName}
                   handleResetFilterName={handleResetFilterName}
                 />
               )}
@@ -158,12 +150,11 @@ const applyFilter = ({ inputData, filters }) => {
   }
   if (inputData) {
     if (type === 'corrida') {
-      inputData = inputData.filter((item) => item.type === 1);
+      inputData = inputData.filter((item) => item.type === 1 || !item.type);
     }
     if (type === 'forca') {
       inputData = inputData.filter((item) => item.type === 2);
     }
   }
-
   return inputData;
 };
