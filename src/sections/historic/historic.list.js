@@ -8,7 +8,6 @@ import TextField from '@mui/material/TextField';
 import { useCallback } from 'react';
 import Iconify from 'src/components/iconify';
 import Label from 'src/components/label';
-import Scrollbar from 'src/components/scrollbar';
 import usePagination from 'src/hooks/use-pagination';
 
 import HistoricItem from './historic-item';
@@ -22,7 +21,6 @@ export default function HistoricList({
   handleFilters,
   finishedList,
   getFinishedList,
-  handleFilterName,
   handleResetFilterName,
 }) {
   const STATUS_OPTIONS = [
@@ -48,11 +46,21 @@ export default function HistoricList({
     [handleFilters],
   );
 
+  const handleFilterName = useCallback(
+    (event) => {
+      setPage(1);
+      data.resetPage();
+      handleFilters('name', event.target.value);
+    },
+    [handleFilters],
+  );
+
   const refreshList = () => {
     setPage(1);
     data.resetPage();
     getFinishedList();
   };
+
   return (
     <>
       <Tabs
@@ -118,7 +126,7 @@ export default function HistoricList({
         />
       </Stack>
 
-      <Scrollbar sx={{ maxHeight: 500 }}>
+      <>
         {data.currentData().map((historic) => (
           <HistoricItem historic={historic} key={historic.id} refreshList={refreshList} />
         ))}
@@ -138,7 +146,7 @@ export default function HistoricList({
             }}
           />
         )}
-      </Scrollbar>
+      </>
     </>
   );
 }
