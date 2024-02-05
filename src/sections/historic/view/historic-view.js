@@ -149,7 +149,7 @@ export default function HistoricView() {
 
 const applyFilter = ({ inputData, filters }) => {
   const { type, name } = filters;
-  if (name) {
+  if (name && inputData) {
     inputData = inputData.filter(
       (item) =>
         (getModuleName(item?.trainingname) || '').toLowerCase().indexOf(name.toLowerCase()) !==
