@@ -26,6 +26,12 @@ export const paths = {
     metrics: {
       root: () => `${ROOTS.DASHBOARD}/metrics/`,
     },
+    programs: {
+      root: () => `${ROOTS.DASHBOARD}/programs/`,
+    },
+    historic: {
+      root: () => `${ROOTS.DASHBOARD}/historic/`,
+    },
     security: `${ROOTS.DASHBOARD}/security`,
   },
 };

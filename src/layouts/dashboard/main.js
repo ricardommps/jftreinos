@@ -6,7 +6,7 @@ import { HEADER, NAV } from '../config-layout';
 
 // ----------------------------------------------------------------------
 
-const SPACING = 30;
+const SPACING = 5;
 
 export default function Main({ children, sx, ...other }) {
   const lgUp = useResponsive('up', 'lg');

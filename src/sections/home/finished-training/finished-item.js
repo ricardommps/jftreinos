@@ -2,6 +2,7 @@ import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import { styled, useTheme } from '@mui/material/styles';
@@ -71,14 +72,25 @@ export default function FinishedItem({ finishedItem, refreshList, type }) {
 
   const renderIntensities = () => {
     const intensities = finishedItem.intensities.map((intensities) => JSON.parse(intensities));
-    const intensitiesValues = intensities.map((intensities) => intensities.value);
+    const intensitiesValues = intensities.map((item) => {
+      if (item.value) {
+        return item.value;
+      }
+      return item.intensitie;
+    });
     const noEmptyValues = intensitiesValues.filter((str) => str !== '');
     return (
-      <>
+      <Box display="grid" gap={2} gridTemplateColumns="repeat(3, 1fr)" width={'30px'}>
         {noEmptyValues.map((item, index) => (
-          <Typography key={`intensities-key-${index}`}>{item}</Typography>
+          <Badge badgeContent={index + 1} color="info" key={`intensities-badge-key-${index}`}>
+            <Chip
+              label={`${item} ${finishedItem.unitmeasurement === 'pace' ? 'min' : 'km/h'}`}
+              key={`intensities-key-${index}`}
+              sx={{ width: '100px' }}
+            />
+          </Badge>
         ))}
-      </>
+      </Box>
     );
   };
 

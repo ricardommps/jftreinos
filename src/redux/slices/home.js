@@ -156,7 +156,7 @@ const slice = createSlice({
       state.finishedList = finishedList;
 
       state.finishedListStatus.loading = false;
-      state.finishedListStatus.empty = false;
+      state.finishedListStatus.empty = !finishedList.length || finishedList.length === 0;
       state.finishedListStatus.error = null;
     },
     viewedFeedBackStart(state) {
@@ -252,11 +252,13 @@ export function getTrainings(programId) {
   };
 }
 
-export function getFinishedListReq(id) {
+export function getFinishedListReq(timestampFrom, timestampTo) {
   return async (dispatch) => {
     dispatch(slice.actions.getFinishedListStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.home.finishedList}/${id}`);
+      const response = await axios.get(
+        `${API_ENDPOINTS.home.finishedList}?timestampFrom=${timestampFrom}&timestampTo=${timestampTo}`,
+      );
       dispatch(slice.actions.getFinishedListSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getFinishedListFailure(error));
