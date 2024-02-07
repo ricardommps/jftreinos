@@ -8,6 +8,7 @@ export default function Template1({ imgSrc }) {
     <Paper
       sx={{
         textAlign: 'center',
+        height: 'fit-content',
       }}
     >
       <Stack direction="row">

@@ -1,15 +1,16 @@
 import 'react-image-crop/dist/ReactCrop.css';
 
+import Backdrop from '@mui/material/Backdrop';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import { useCallback, useRef, useState } from 'react';
 import ReactCrop, { centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop';
 import setCanvasPreview from 'src/utils/setCanvasPreview';
-
 const ASPECT_RATIO = 1 / 1;
 const MIN_DIMENSION = 150;
 
-const ImageCropper = ({ closeModal, updateAvatar, fileRef }) => {
+const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading }) => {
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const [imgSrc, setImgSrc] = useState('');
@@ -64,6 +65,11 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef }) => {
 
   return (
     <>
+      {loading && (
+        <Backdrop open sx={{ zIndex: (theme) => theme.zIndex.modal + 1 }}>
+          <CircularProgress color="primary" />
+        </Backdrop>
+      )}
       <Stack justifyContent={'center'} p={3}>
         <Button variant="contained" onClick={handleAttach}>
           Selecionar outra imagem
@@ -94,6 +100,7 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef }) => {
             <Button
               variant="contained"
               onClick={() => {
+                setLoading(true);
                 setCanvasPreview(
                   imgRef.current, // HTMLImageElement
                   previewCanvasRef.current, // HTMLCanvasElement

@@ -1,26 +1,51 @@
 'use client';
 
 import Alert from '@mui/material/Alert';
+import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { enqueueSnackbar } from 'notistack';
 import { useEffect, useRef, useState } from 'react';
 import Iconify from 'src/components/iconify';
 import Image from 'src/components/image/image';
+import { useRouter } from 'src/routes/hook';
+import { paths } from 'src/routes/paths';
 import exportAsImage from 'src/utils/export-as-image';
 
 import ImageCropper from '../image-crop';
 import Template1 from '../templates/template-1';
 
 export default function ShareTrainingView() {
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const avatarUrl = useRef(null);
   const fileRef = useRef(null);
   const exportRef = useRef();
 
   const updateAvatar = (imgSrc) => {
     avatarUrl.current = imgSrc;
+  };
+
+  const handleCloseModal = () => {
+    setLoading(false);
+    setModalOpen(false);
+  };
+
+  const onSuccess = () => {
+    enqueueSnackbar('Imagem salva com sucesso! Agora é so compartilhar nas suas redes sociais.', {
+      autoHideDuration: 8000,
+      variant: 'success',
+    });
+    router.replace(paths.dashboard.root);
+  };
+
+  const handleSubmit = () => {
+    setLoading(true);
+    exportAsImage(exportRef.current, 'screenshot', setLoading, onSuccess);
   };
 
   useEffect(() => {
@@ -30,7 +55,12 @@ export default function ShareTrainingView() {
   }, [modalOpen]);
 
   return (
-    <>
+    <Box p={2}>
+      {loading && (
+        <Backdrop open sx={{ zIndex: (theme) => theme.zIndex.modal + 1 }}>
+          <CircularProgress color="primary" />
+        </Backdrop>
+      )}
       {!modalOpen && (
         <>
           {!avatarUrl.current && (
@@ -188,10 +218,7 @@ export default function ShareTrainingView() {
 
                 <Stack direction={'row'} spacing={2} pt={5} justifyContent={'end'}>
                   <Button variant="outlined">Fechar</Button>
-                  <Button
-                    variant="contained"
-                    onClick={() => exportAsImage(exportRef.current, 'screenshot')}
-                  >
+                  <Button variant="contained" onClick={handleSubmit}>
                     Gerar imagem
                   </Button>
                 </Stack>
@@ -204,10 +231,12 @@ export default function ShareTrainingView() {
       {modalOpen && (
         <ImageCropper
           updateAvatar={updateAvatar}
-          closeModal={() => setModalOpen(false)}
+          closeModal={handleCloseModal}
           fileRef={fileRef}
+          loading={loading}
+          setLoading={setLoading}
         />
       )}
-    </>
+    </Box>
   );
 }
