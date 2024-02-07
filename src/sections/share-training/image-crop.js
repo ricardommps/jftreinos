@@ -4,6 +4,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
+import Compressor from 'compressorjs';
 import { useCallback, useRef, useState } from 'react';
 import ReactCrop, { centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop';
 import setCanvasPreview from 'src/utils/setCanvasPreview';
@@ -23,27 +24,45 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading }
     }
   }, []);
 
-  const onSelectFile = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const onSelectFile = async (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const imageDataUrl = await readFile(file);
+      setImgSrc(imageDataUrl);
+    }
+  };
 
-    const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      const imageElement = new Image();
-      const imageUrl = reader.result?.toString() || '';
-      imageElement.src = imageUrl;
-
-      imageElement.addEventListener('load', (e) => {
-        if (error) setError('');
-        const { naturalWidth, naturalHeight } = e.currentTarget;
-        if (naturalWidth < MIN_DIMENSION || naturalHeight < MIN_DIMENSION) {
-          setError('Image must be at least 150 x 150 pixels.');
-          return setImgSrc('');
-        }
-      });
-      setImgSrc(imageUrl);
+  const readFile = useCallback((file) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        getNormalizedFile(file)
+          .then((normalizedFile) => reader.readAsDataURL(normalizedFile))
+          .catch((error) => {
+            setError(error);
+            reject(error);
+          });
+      } catch (error) {
+        setError(error);
+        reject(error);
+      }
     });
-    reader.readAsDataURL(file);
+  }, []);
+
+  const getNormalizedFile = (file) => {
+    return new Promise((resolve, reject) => {
+      new Compressor(file, {
+        maxWidth: 1000,
+        maxHeight: 1000,
+        success(normalizedFile) {
+          resolve(normalizedFile);
+        },
+        error(error) {
+          reject(error);
+        },
+      });
+    });
   };
 
   const onImageLoad = (e) => {
