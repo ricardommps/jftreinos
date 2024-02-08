@@ -20,6 +20,12 @@ export default function MetricsForm() {
             variant="outlined"
             type="number"
             helperText={`${Number(field.value) / 1000} km`}
+            inputProps={{
+              min: 0,
+              step: 0.01,
+              lang: 'en-US',
+              inputMode: 'number',
+            }}
           />
         )}
       />
@@ -34,6 +40,12 @@ export default function MetricsForm() {
             variant="outlined"
             type="number"
             helperText={toHoursAndMinutes(Number(field.value))}
+            inputProps={{
+              min: 0,
+              step: 0.01,
+              lang: 'en-US',
+              inputMode: 'number',
+            }}
           />
         )}
       />

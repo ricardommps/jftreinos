@@ -196,6 +196,13 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
                     type="number"
                     helperText={paceInfo}
                     onChange={handleChangePace}
+                    inputProps={{
+                      min: 0,
+                      max: 1000,
+                      step: 0.01,
+                      lang: 'en-US',
+                      inputMode: 'number',
+                    }}
                   />
                 </>
               )}
@@ -218,6 +225,12 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
                         label="Quantidade de esforços"
                         InputLabelProps={{ shrink: true }}
                         sx={{ maxWidth: { md: 96 } }}
+                        inputProps={{
+                          min: 0,
+                          max: 1000,
+                          step: 1,
+                          inputMode: 'number',
+                        }}
                       />
                     </Stack>
                     <Stack spacing={1} pt={2}>
@@ -280,13 +293,13 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
                                         }`}</Typography>
                                       </InputAdornment>
                                     ),
-                                    inputProps: {
-                                      min: 0,
-                                      max: 1000,
-                                      step: 0.1,
-                                      lang: 'en-US',
-                                      inputMode: 'decimal',
-                                    },
+                                  }}
+                                  inputProps={{
+                                    min: 0,
+                                    max: 1000,
+                                    step: 0.01,
+                                    lang: 'en-US',
+                                    inputMode: 'number',
                                   }}
                                 />
                               </Box>
