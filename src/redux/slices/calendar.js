@@ -14,6 +14,7 @@ const eventsFormated = (dataEvents) => {
       end: data[key].datePublished,
       trainingDateOther: data[key].trainingDateOther,
       title: data[key].name,
+      subtitle: data[key].subtitle,
       videos: data[key].videos,
     });
   }

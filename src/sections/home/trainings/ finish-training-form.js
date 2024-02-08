@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { RHFRadioGroup, RHFTextField } from 'src/components/hook-form';
@@ -229,62 +230,70 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
                           Clique nas caixas para adicionar o valor desejado
                         </Typography>
                       </Stack>
-                      <Box
-                        display="grid"
-                        gap={2}
-                        gridTemplateColumns="repeat(3, 1fr)"
-                        width={'40px'}
+                      <Grid
+                        container
+                        spacing={3}
+                        justifyContent={{
+                          xs: 'center',
+                          md: 'space-between',
+                        }}
                       >
                         {values.intensities.map((_, index) => (
-                          <Badge
-                            badgeContent={index + 1}
-                            color="info"
-                            key={`intensities-badge-key-${index}`}
-                          >
-                            <Box
-                              sx={{
-                                color: 'rgb(33, 43, 54)',
-                                backgroundColor: 'white',
-                                boxSizing: 'border-box',
-                                display: 'inline-flex',
-                                borderRadius: '8px',
-                                maxWidth: '100%',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                whiteSpace: 'nowrap',
-                                verticalAlign: 'middle',
-                                width: '100px',
-                              }}
-                            >
-                              <RHFTextField
+                          <Grid sm={3} key={`intensities-badge-key-${index}`}>
+                            <Badge badgeContent={index + 1} color="info">
+                              <Box
                                 sx={{
-                                  input: {
-                                    color: 'rgb(33, 43, 54)',
-                                  },
+                                  color: 'rgb(33, 43, 54)',
+                                  backgroundColor: 'white',
+                                  boxSizing: 'border-box',
+                                  display: 'inline-flex',
+                                  borderRadius: '8px',
+                                  maxWidth: '100%',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  whiteSpace: 'nowrap',
+                                  verticalAlign: 'middle',
+                                  width: '100px',
                                 }}
-                                hiddenLabel
-                                size="small"
-                                variant="filled"
-                                name={`intensities[${index}].intensitie`}
-                                type="number"
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                InputProps={{
-                                  endAdornment: (
-                                    <InputAdornment position="start" sx={{ fontSize: '12px' }}>
-                                      <Typography sx={{ fontSize: '12px', fontWeight: 'bold' }}>{`${
-                                        values.unitmeasurement === 'pace' ? 'min' : 'km/h'
-                                      }`}</Typography>
-                                    </InputAdornment>
-                                  ),
-                                  inputProps: { min: 0, max: 1000, step: 0.5 },
-                                }}
-                              />
-                            </Box>
-                          </Badge>
+                              >
+                                <RHFTextField
+                                  sx={{
+                                    input: {
+                                      color: 'rgb(33, 43, 54)',
+                                    },
+                                  }}
+                                  hiddenLabel
+                                  size="small"
+                                  variant="filled"
+                                  name={`intensities[${index}].intensitie`}
+                                  type="number"
+                                  InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                  InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment position="start" sx={{ fontSize: '12px' }}>
+                                        <Typography
+                                          sx={{ fontSize: '12px', fontWeight: 'bold' }}
+                                        >{`${
+                                          values.unitmeasurement === 'pace' ? 'min' : 'km/h'
+                                        }`}</Typography>
+                                      </InputAdornment>
+                                    ),
+                                    inputProps: {
+                                      min: 0,
+                                      max: 1000,
+                                      step: 0.1,
+                                      lang: 'en-US',
+                                      inputMode: 'decimal',
+                                    },
+                                  }}
+                                />
+                              </Box>
+                            </Badge>
+                          </Grid>
                         ))}
-                      </Box>
+                      </Grid>
                     </Stack>
                     <Stack>
                       <Typography sx={{ textTransform: 'capitalize', m: 1 }}>{`${

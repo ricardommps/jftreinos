@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import CardHeader from 'src/components/card-header/card-header';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { fDateCalender } from 'src/utils/format-time';
+import { getModuleName } from 'src/utils/modules';
 
 import DialogTablePaceSpeed from '../../dialog-table-pace-speed/dialog-table-pace-speed';
 import GymList from '../gym/gym-list';
@@ -20,9 +21,16 @@ export default function CalendarDetails({
   setUnrealizedTraining,
 }) {
   const openTable = useBoolean();
+
+  const renderTite = (
+    <Stack>
+      <Typography variant="h6">{getModuleName(event.title)}</Typography>
+      <Typography variant="body1">{getModuleName(event.subtitle)}</Typography>
+    </Stack>
+  );
   return (
     <>
-      <CardHeader title={event.title} action={onClose} onOpenTable={openTable.onTrue} />
+      <CardHeader title={renderTite} action={onClose} onOpenTable={openTable.onTrue} />
       <Box mt={12}>
         <Stack spacing={3} sx={{ px: 3, mb: 2 }}>
           <Stack sx={{ typography: 'body2' }}>
