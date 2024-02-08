@@ -32,6 +32,9 @@ export const paths = {
     historic: {
       root: () => `${ROOTS.DASHBOARD}/historic/`,
     },
+    share: {
+      root: () => `${ROOTS.DASHBOARD}/share/`,
+    },
     security: `${ROOTS.DASHBOARD}/security`,
   },
 };
