@@ -1,5 +1,84 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios, { API_ENDPOINTS } from 'src/utils/axios';
+
+const dataRunnerIndoor = {
+  rpe: 4,
+  duration: 35,
+  distance: 5420,
+  pace: '',
+  trimp: '140',
+  link: 'https://connect.garmin.com/modern/activity/13024023651?share_unique_id=31',
+  comments: '',
+  trainingId: 348,
+  unitmeasurement: 'km',
+  intensities: [
+    {
+      intensitie: 12,
+    },
+    {
+      intensitie: 12.8,
+    },
+    {
+      intensitie: 13,
+    },
+    {
+      intensitie: 13.5,
+    },
+    {
+      intensitie: 13.9,
+    },
+    {
+      intensitie: 14,
+    },
+    {
+      intensitie: 14.5,
+    },
+  ],
+  typetraining: 'outdoor',
+  training: {
+    id: 348,
+    programId: 46,
+    name: 'LL2_INTERVALADO',
+    subtitle: '',
+    description: 'Treino ll2 intervalado',
+    coverPath: '',
+    datePublished: '2024-02-12T03:00:00.000Z',
+    trainingDateOther: null,
+    published: true,
+    videos: [],
+    hide: false,
+    finished: true,
+    createdAt: '2024-02-12T15:50:34.516Z',
+    updatedAt: '2024-02-12T15:50:34.516Z',
+  },
+  id: 171,
+  createdAt: '2024-02-12T15:55:36.879Z',
+  updatedAt: '2024-02-12T15:55:36.879Z',
+};
+
+const dataGym = {
+  comments: '',
+  trainingId: 351,
+  training: {
+    id: 351,
+    programId: 45,
+    name: 'FORCA',
+    subtitle: 'Complementar inferiores',
+    description: '',
+    coverPath: '',
+    datePublished: '2024-02-14T03:00:00.000Z',
+    trainingDateOther: null,
+    published: true,
+    videos: [],
+    hide: false,
+    finished: true,
+    createdAt: '2024-02-12T15:51:26.990Z',
+    updatedAt: '2024-02-12T15:51:35.026Z',
+  },
+  id: 172,
+  createdAt: '2024-02-12T16:55:20.188Z',
+  updatedAt: '2024-02-12T16:55:20.188Z',
+};
 const initialState = {
   programs: null,
   programsStatus: {

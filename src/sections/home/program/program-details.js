@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import Iconify from 'src/components/iconify/iconify';
 import { useBoolean } from 'src/hooks/use-boolean';
 import useHome from 'src/hooks/use-home';
+import { useShareTemplate } from 'src/hooks/use-share-template';
 import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
 
@@ -16,15 +17,8 @@ import Calendar from '../trainings/calendar/calendar';
 import ProgramInfo from './program-info';
 
 export default function ProgramDetails() {
-  const {
-    onProgramDetail,
-    programDetailStatus,
-    programDetail,
-    finishedtraining,
-    trainingsStatus,
-
-    onClearFinishedtraining,
-  } = useHome();
+  const { onProgramDetail, programDetailStatus, programDetail, trainingsStatus } = useHome();
+  const { onClearShare } = useShareTemplate();
   const params = useParams();
   const finishedListOpen = useBoolean();
   const { id } = params;
@@ -32,15 +26,9 @@ export default function ProgramDetails() {
   useEffect(() => {
     if (id) {
       onProgramDetail(id);
+      onClearShare();
     }
   }, []);
-
-  useEffect(() => {
-    if (finishedtraining) {
-      onProgramDetail(id);
-      onClearFinishedtraining();
-    }
-  }, [finishedtraining]);
 
   const loading = programDetailStatus.loading || trainingsStatus.loading;
 

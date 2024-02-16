@@ -32,7 +32,7 @@ export default function HomeView() {
   }, [router]);
 
   const handleOpenShare = useCallback(() => {
-    router.push(paths.dashboard.share.root());
+    router.push(`${paths.dashboard.share.root()}`);
   }, [router]);
 
   return (
@@ -78,20 +78,6 @@ export default function HomeView() {
             <ShowChartIcon sx={{ marginTop: 2, fontSize: 35 }} />
           </Stack>
         </Paper>
-        {false && (
-          <Paper
-            sx={{
-              height: 140,
-              backgroundColor: theme.palette.info.main,
-            }}
-            onClick={handleOpenShare}
-          >
-            <Stack justifyContent="center" alignItems="center" height={'100%'} direction="column">
-              <Typography variant="h6">Share</Typography>
-              <ShowChartIcon sx={{ marginTop: 2, fontSize: 35 }} />
-            </Stack>
-          </Paper>
-        )}
       </Box>
     </Box>
   );

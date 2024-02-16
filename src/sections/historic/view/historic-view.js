@@ -16,6 +16,7 @@ import { useRouter } from 'src/routes/hook';
 import { paths } from 'src/routes/paths';
 import { getModuleName } from 'src/utils/modules';
 
+import { useShareTemplate } from 'src/hooks/use-share-template';
 import HistoricFilter from '../historic-filter';
 import HistoricList from '../historic.list';
 
@@ -28,6 +29,7 @@ const PER_PAGE = 5;
 
 export default function HistoricView() {
   const { onFinishedList, finishedList, finishedListStatus } = useHome();
+  const { onClearShare } = useShareTemplate();
   const router = useRouter();
 
   const [period, setPeriod] = useState(30);
@@ -78,6 +80,10 @@ export default function HistoricView() {
     setPage(1);
     setFilters(defaultFilters);
   }, [period]);
+
+  useEffect(() => {
+    onClearShare();
+  }, []);
 
   return (
     <>

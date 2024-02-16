@@ -9,6 +9,9 @@ import { useEffect } from 'react';
 import CardHeader from 'src/components/card-header/card-header';
 import { useBoolean } from 'src/hooks/use-boolean';
 import useHome from 'src/hooks/use-home';
+import { useShareTemplate } from 'src/hooks/use-share-template';
+import { useRouter } from 'src/routes/hook';
+import { paths } from 'src/routes/paths';
 import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
 
@@ -25,14 +28,16 @@ export default function FinishTraining({
   unrealizedTraining,
   typeTrainingSelected,
 }) {
+  const router = useRouter();
+
   const { finishedtraining, finishedtrainingDetailStatus } = useHome();
+  const { onGetShare } = useShareTemplate();
   const openTable = useBoolean();
   useEffect(() => {
     if (finishedtraining) {
-      enqueueSnackbar('Treino finalizado com sucesso!', {
-        autoHideDuration: 8000,
-        variant: 'success',
-      });
+      onGetShare(finishedtraining);
+      // onClearFinishedtraining();
+      router.push(paths.dashboard.share.root());
     }
   }, [finishedtraining]);
 

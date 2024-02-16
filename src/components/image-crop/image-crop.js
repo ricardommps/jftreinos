@@ -11,7 +11,7 @@ import setCanvasPreview from 'src/utils/setCanvasPreview';
 const ASPECT_RATIO = 1 / 1;
 const MIN_DIMENSION = 150;
 
-const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading }) => {
+const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, handleGoBack }) => {
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const [imgSrc, setImgSrc] = useState('');
@@ -91,12 +91,18 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading }
       )}
       <Stack justifyContent={'center'} p={3}>
         <Button variant="contained" onClick={handleAttach}>
-          Selecionar outra imagem
+          {!imgSrc ? 'Selecione uma image' : ' Selecionar outra imagem'}
         </Button>
       </Stack>
-
       <input type="file" ref={fileRef} style={{ display: 'none' }} onChange={onSelectFile} />
       {error && <p className="text-red-400 text-xs">{error}</p>}
+      {!imgSrc && (
+        <Stack justifyContent={'end'} p={1} direction={'row'} spacing={3} mt={3}>
+          <Button variant="outlined" onClick={handleGoBack}>
+            Cancelar
+          </Button>
+        </Stack>
+      )}
       {imgSrc && (
         <>
           <ReactCrop
@@ -115,7 +121,9 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading }
             />
           </ReactCrop>
           <Stack justifyContent={'end'} p={1} direction={'row'} spacing={3} mt={3}>
-            <Button variant="outlined">Voltar</Button>
+            <Button variant="outlined" onClick={handleGoBack}>
+              Cancelar
+            </Button>
             <Button
               variant="contained"
               onClick={() => {

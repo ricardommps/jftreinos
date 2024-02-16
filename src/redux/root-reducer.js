@@ -4,6 +4,7 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import calendarReducer from './slices/calendar';
 import homereducer from './slices/home';
 import metricsReducer from './slices/metrics';
+import shareReducer from './slices/share';
 import userReducer from './slices/user';
 
 export const createNoopStorage = () => ({
@@ -35,4 +36,5 @@ export const rootReducer = combineReducers({
   calendar: calendarReducer,
   user: userReducer,
   metrics: metricsReducer,
+  share: shareReducer,
 });

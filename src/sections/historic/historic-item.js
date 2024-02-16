@@ -16,12 +16,17 @@ import ProgramInfo from 'src/components/program-info';
 import SwipeableEdgeDrawer from 'src/components/swipeable-edge-drawer';
 import TrainingInfo from 'src/components/training-info';
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useShareTemplate } from 'src/hooks/use-share-template';
+import { useRouter } from 'src/routes/hook';
+import { paths } from 'src/routes/paths';
 import { formatedPace, fShortenNumber } from 'src/utils/format-number';
 import { getModuleName } from 'src/utils/modules';
 
 export default function HistoricItem({ historic, refreshList }) {
+  const router = useRouter();
   const theme = useTheme();
   const openDrawer = useBoolean();
+  const { onGetShareAndFormated, share } = useShareTemplate();
 
   const [openType, setOpenType] = useState(null);
 
@@ -43,6 +48,11 @@ export default function HistoricItem({ historic, refreshList }) {
 
   const handleOpenDrawer = (type) => {
     setOpenType(type);
+  };
+
+  const handleShere = () => {
+    onGetShareAndFormated(historic);
+    router.push(paths.dashboard.share.root());
   };
 
   const handleCloseDrawer = () => {
@@ -187,6 +197,11 @@ export default function HistoricItem({ historic, refreshList }) {
             borderTop: `dashed 1px ${theme.palette.divider}`,
           }}
         >
+          <Stack direction="row" alignItems="center">
+            <IconButton onClick={handleShere}>
+              <Iconify icon="solar:share-bold" width={25} />
+            </IconButton>
+          </Stack>
           {(historic?.comments?.length > 0 || historic?.description_feedback) && (
             <Stack direction="row" alignItems="center">
               <IconButton onClick={handleOpenComments}>
