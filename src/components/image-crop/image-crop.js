@@ -25,10 +25,14 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
   }, []);
 
   const onSelectFile = async (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const imageDataUrl = await readFile(file);
-      setImgSrc(imageDataUrl);
+    try {
+      if (e.target.files && e.target.files.length > 0) {
+        const file = e.target.files[0];
+        const imageDataUrl = await readFile(file);
+        setImgSrc(imageDataUrl);
+      }
+    } catch (error) {
+      console.log('--error-', error);
     }
   };
 
@@ -94,7 +98,13 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
           {!imgSrc ? 'Selecione uma image' : ' Selecionar outra imagem'}
         </Button>
       </Stack>
-      <input type="file" ref={fileRef} style={{ display: 'none' }} onChange={onSelectFile} />
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileRef}
+        style={{ display: 'none' }}
+        onChange={onSelectFile}
+      />
       {error && <p className="text-red-400 text-xs">{error}</p>}
       {!imgSrc && (
         <Stack justifyContent={'end'} p={1} direction={'row'} spacing={3} mt={3}>

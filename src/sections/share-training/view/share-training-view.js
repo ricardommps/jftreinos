@@ -5,9 +5,11 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useEffect } from 'react';
 import ImageGenerated from 'src/components/image-generated';
 import { useShareTemplate } from 'src/hooks/use-share-template';
 import { useRouter } from 'src/routes/hook';
+import { paths } from 'src/routes/paths';
 
 export default function ShareTrainingView() {
   const router = useRouter();
@@ -17,6 +19,12 @@ export default function ShareTrainingView() {
     onClearShare();
     router.back();
   };
+
+  useEffect(() => {
+    if (!share) {
+      router.push(paths.dashboard.home.root);
+    }
+  }, []);
 
   return (
     <>
