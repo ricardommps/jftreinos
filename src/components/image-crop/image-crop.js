@@ -93,7 +93,7 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
           <CircularProgress color="primary" />
         </Backdrop>
       )}
-      <Stack justifyContent={'center'} p={3}>
+      <Stack justifyContent={'center'} p={2}>
         <Button variant="contained" onClick={handleAttach}>
           {!imgSrc ? 'Selecione uma image' : ' Selecionar outra imagem'}
         </Button>
@@ -126,7 +126,7 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
               ref={imgRef}
               src={imgSrc}
               alt="Upload"
-              style={{ maxHeight: '70vh' }}
+              style={{ maxHeight: '60vh' }}
               onLoad={onImageLoad}
             />
           </ReactCrop>

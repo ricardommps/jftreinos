@@ -75,6 +75,11 @@ export default function ImageGenerated({ finishedtraining, handleGoBack, onClear
     exportAsImage(exportRef.current, 'screenshot', setLoading, onSuccess);
   };
 
+  const handleClose = () => {
+    onClearShare();
+    router.replace(paths.dashboard.root);
+  };
+
   useEffect(() => {
     if (fileRef.current && modalOpen) {
       fileRef.current.click();
@@ -93,7 +98,7 @@ export default function ImageGenerated({ finishedtraining, handleGoBack, onClear
 
   return (
     <Box>
-      <Typography variant="h4" textAlign={'center'} p={2}>
+      <Typography variant="h4" textAlign={'center'}>
         Compartilhar treino
       </Typography>
       {loading && (
@@ -107,7 +112,7 @@ export default function ImageGenerated({ finishedtraining, handleGoBack, onClear
             Selecione uma imagem
           </Button>
           <Stack direction={'row'} spacing={2} pt={5} justifyContent={'end'}>
-            <Button variant="outlined" onClick={handleSubmit}>
+            <Button variant="outlined" onClick={handleClose}>
               Fechar
             </Button>
           </Stack>
@@ -215,7 +220,7 @@ export default function ImageGenerated({ finishedtraining, handleGoBack, onClear
               </Stack>
             )}
             <Stack direction={'row'} spacing={2} pt={5} justifyContent={'end'}>
-              <Button variant="outlined" onClick={handleSubmit}>
+              <Button variant="outlined" onClick={handleClose}>
                 Fechar
               </Button>
               <Button variant="contained" onClick={handleSubmit}>
