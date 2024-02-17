@@ -46,16 +46,14 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
           const newFile = Object.assign(outputBlob, {
             preview: URL.createObjectURL(outputBlob),
           });
-          const reader = new FileReader();
-          reader.addEventListener('load', () => setImgSrc(reader.result?.toString() || ''));
-          reader.readAsDataURL(newFile);
+          const imageDataUrl = await readFile(newFile);
+          setImgSrc(imageDataUrl);
         } else {
           const newFile = Object.assign(file, {
             preview: URL.createObjectURL(file),
           });
-          const reader = new FileReader();
-          reader.addEventListener('load', () => setImgSrc(reader.result?.toString() || ''));
-          reader.readAsDataURL(newFile);
+          const imageDataUrl = await readFile(newFile);
+          setImgSrc(imageDataUrl);
         }
       }
     } catch (error) {
