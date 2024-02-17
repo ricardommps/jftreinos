@@ -4,10 +4,15 @@ import Backdrop from '@mui/material/Backdrop';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import Compressor from 'compressorjs';
 import { useCallback, useRef, useState } from 'react';
 import ReactCrop, { centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop';
 import setCanvasPreview from 'src/utils/setCanvasPreview';
+
+import Iconify from '../iconify';
+import { UploadBox } from '../upload';
+
 const ASPECT_RATIO = 1 / 1;
 const MIN_DIMENSION = 150;
 
@@ -23,6 +28,40 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
       fileRef.current.click();
     }
   }, []);
+
+  const handleDropSingleFile = async (acceptedFiles) => {
+    try {
+      if (acceptedFiles && acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
+        const ext = (
+          file.name ? file.name.split('.').pop() : file.path.split('.').pop()
+        ).toLowerCase();
+        if (ext === 'heic' || ext === 'heif') {
+          const heic2any = (await import('heic2any')).default;
+          const outputBlob = await heic2any({
+            blob: file, // Use the original file object
+            toType: 'image/jpeg',
+            quality: 0.7, // adjust quality as needed
+          });
+          const newFile = Object.assign(outputBlob, {
+            preview: URL.createObjectURL(outputBlob),
+          });
+          const reader = new FileReader();
+          reader.addEventListener('load', () => setImgSrc(reader.result?.toString() || ''));
+          reader.readAsDataURL(newFile);
+        } else {
+          const newFile = Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          });
+          const reader = new FileReader();
+          reader.addEventListener('load', () => setImgSrc(reader.result?.toString() || ''));
+          reader.readAsDataURL(newFile);
+        }
+      }
+    } catch (error) {
+      console.log('--error-', error);
+    }
+  };
 
   const onSelectFile = async (e) => {
     try {
@@ -63,6 +102,7 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
           resolve(normalizedFile);
         },
         error(error) {
+          console.log('-Compressor--error---', error);
           reject(error);
         },
       });
@@ -85,7 +125,6 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
     const centeredCrop = centerCrop(crop, width, height);
     setCrop(centeredCrop);
   };
-
   return (
     <>
       {loading && (
@@ -93,18 +132,45 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
           <CircularProgress color="primary" />
         </Backdrop>
       )}
-      <Stack justifyContent={'center'} p={2}>
-        <Button variant="contained" onClick={handleAttach}>
-          {!imgSrc ? 'Selecione uma image' : ' Selecionar outra imagem'}
-        </Button>
+      {false && (
+        <Stack justifyContent={'center'} p={2}>
+          <Button variant="contained" onClick={handleAttach}>
+            {!imgSrc ? 'Selecione uma image' : ' Selecionar outra imagem'}
+          </Button>
+        </Stack>
+      )}
+
+      <Stack>
+        <UploadBox
+          onDrop={handleDropSingleFile}
+          placeholder={
+            <Stack spacing={0.5} alignItems="center" sx={{ color: 'text.disabled' }}>
+              <Iconify icon="eva:cloud-upload-fill" width={40} />
+              <Typography variant="body2">
+                {' '}
+                {!imgSrc ? 'Selecione uma image New' : ' Selecionar outra imagem new'}
+              </Typography>
+            </Stack>
+          }
+          sx={{
+            mb: 3,
+            py: 2.5,
+            width: 'auto',
+            height: 'auto',
+            borderRadius: 1.5,
+          }}
+        />
       </Stack>
-      <input
-        type="file"
-        accept="image/*"
-        ref={fileRef}
-        style={{ display: 'none' }}
-        onChange={onSelectFile}
-      />
+      {false && (
+        <input
+          type="file"
+          accept="image/*, .heic"
+          ref={fileRef}
+          style={{ display: 'none' }}
+          onChange={onSelectFile}
+        />
+      )}
+
       {error && <p className="text-red-400 text-xs">{error}</p>}
       {!imgSrc && (
         <Stack justifyContent={'end'} p={1} direction={'row'} spacing={3} mt={3}>

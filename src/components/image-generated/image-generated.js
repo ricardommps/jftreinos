@@ -106,6 +106,7 @@ export default function ImageGenerated({ finishedtraining, handleGoBack, onClear
           <CircularProgress color="primary" />
         </Backdrop>
       )}
+
       {!modalOpen && !imageUrl.current && (
         <>
           <Button variant="contained" onClick={() => setModalOpen(true)} fullWidth>
