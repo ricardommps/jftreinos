@@ -103,7 +103,12 @@ export default function ImageGenerated({ finishedtraining, handleGoBack, onClear
       </Typography>
       {loading && (
         <Backdrop open sx={{ zIndex: (theme) => theme.zIndex.modal + 1 }}>
-          <CircularProgress color="primary" />
+          <Stack alignItems={'center'}>
+            <CircularProgress color="primary" />
+            <Typography variant="h4" textAlign={'center'}>
+              Carregando imagem
+            </Typography>
+          </Stack>
         </Backdrop>
       )}
 

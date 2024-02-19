@@ -1,22 +1,25 @@
 import 'react-image-crop/dist/ReactCrop.css';
 
-import Backdrop from '@mui/material/Backdrop';
 import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 import Compressor from 'compressorjs';
 import { useCallback, useRef, useState } from 'react';
 import ReactCrop, { centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop';
 import setCanvasPreview from 'src/utils/setCanvasPreview';
 
-import Iconify from '../iconify';
-import { UploadBox } from '../upload';
-
 const ASPECT_RATIO = 1 / 1;
 const MIN_DIMENSION = 150;
+const SCALE = 1;
+const ROTATE = 0;
 
-const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, handleGoBack }) => {
+const StyledImage = styled('img')(() => ({
+  transform: `scale(${SCALE}) rotate(${ROTATE}deg)`,
+  width: 'auto',
+  height: 'auto',
+}));
+
+const ImageCropper = ({ closeModal, updateAvatar, fileRef, setLoading, handleGoBack }) => {
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const [imgSrc, setImgSrc] = useState('');
@@ -29,10 +32,11 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
     }
   }, []);
 
-  const handleDropSingleFile = async (acceptedFiles) => {
+  const onSelectFile = async (e) => {
     try {
-      if (acceptedFiles && acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
+      setLoading(true);
+      if (e.target.files && e.target.files.length > 0) {
+        const file = e.target.files[0];
         const ext = (
           file.name ? file.name.split('.').pop() : file.path.split('.').pop()
         ).toLowerCase();
@@ -55,20 +59,10 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
           const imageDataUrl = await readFile(newFile);
           setImgSrc(imageDataUrl);
         }
+        setLoading(false);
       }
     } catch (error) {
-      console.log('--error-', error);
-    }
-  };
-
-  const onSelectFile = async (e) => {
-    try {
-      if (e.target.files && e.target.files.length > 0) {
-        const file = e.target.files[0];
-        const imageDataUrl = await readFile(file);
-        setImgSrc(imageDataUrl);
-      }
-    } catch (error) {
+      setLoading(false);
       console.log('--error-', error);
     }
   };
@@ -125,49 +119,18 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
   };
   return (
     <>
-      {loading && (
-        <Backdrop open sx={{ zIndex: (theme) => theme.zIndex.modal + 1 }}>
-          <CircularProgress color="primary" />
-        </Backdrop>
-      )}
-      {false && (
-        <Stack justifyContent={'center'} p={2}>
-          <Button variant="contained" onClick={handleAttach}>
-            {!imgSrc ? 'Selecione uma image' : ' Selecionar outra imagem'}
-          </Button>
-        </Stack>
-      )}
-
-      <Stack>
-        <UploadBox
-          onDrop={handleDropSingleFile}
-          placeholder={
-            <Stack spacing={0.5} alignItems="center" sx={{ color: 'text.disabled' }}>
-              <Iconify icon="eva:cloud-upload-fill" width={40} />
-              <Typography variant="body2">
-                {' '}
-                {!imgSrc ? 'Selecione uma image New' : ' Selecionar outra imagem new'}
-              </Typography>
-            </Stack>
-          }
-          sx={{
-            mb: 3,
-            py: 2.5,
-            width: 'auto',
-            height: 'auto',
-            borderRadius: 1.5,
-          }}
-        />
+      <Stack justifyContent={'center'} p={2}>
+        <Button variant="contained" onClick={handleAttach}>
+          {!imgSrc ? 'Selecione uma image' : ' Selecionar outra imagem'}
+        </Button>
       </Stack>
-      {false && (
-        <input
-          type="file"
-          accept="image/*, .heic"
-          ref={fileRef}
-          style={{ display: 'none' }}
-          onChange={onSelectFile}
-        />
-      )}
+      <input
+        type="file"
+        accept="image/*, .heic"
+        ref={fileRef}
+        style={{ display: 'none' }}
+        onChange={onSelectFile}
+      />
 
       {error && <p className="text-red-400 text-xs">{error}</p>}
       {!imgSrc && (
@@ -186,14 +149,9 @@ const ImageCropper = ({ closeModal, updateAvatar, fileRef, loading, setLoading, 
             aspect={ASPECT_RATIO}
             minWidth={MIN_DIMENSION}
           >
-            <img
-              ref={imgRef}
-              src={imgSrc}
-              alt="Upload"
-              style={{ maxHeight: '60vh' }}
-              onLoad={onImageLoad}
-            />
+            <StyledImage ref={imgRef} src={imgSrc} alt="Upload" onLoad={onImageLoad} />
           </ReactCrop>
+
           <Stack justifyContent={'end'} p={1} direction={'row'} spacing={3} mt={3}>
             <Button variant="outlined" onClick={handleGoBack}>
               Cancelar

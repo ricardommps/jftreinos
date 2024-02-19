@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 // auth
 import { AuthConsumer, AuthProvider } from 'src/auth/context/jwt';
 import MotionLazy from 'src/components/animate/motion-lazy';
+import ErrorBoundary from 'src/components/error-boundary';
 // components
 import ProgressBar from 'src/components/progress-bar';
 import { SettingsDrawer, SettingsProvider } from 'src/components/settings';
@@ -74,13 +75,15 @@ export default function RootLayout({ children }) {
                 }}
               >
                 <ThemeProvider>
-                  <MotionLazy>
-                    <SnackbarProvider>
-                      <SettingsDrawer />
-                      <ProgressBar />
-                      <AuthConsumer>{children}</AuthConsumer>
-                    </SnackbarProvider>
-                  </MotionLazy>
+                  <ErrorBoundary>
+                    <MotionLazy>
+                      <SnackbarProvider>
+                        <SettingsDrawer />
+                        <ProgressBar />
+                        <AuthConsumer>{children}</AuthConsumer>
+                      </SnackbarProvider>
+                    </MotionLazy>
+                  </ErrorBoundary>
                 </ThemeProvider>
               </SettingsProvider>
             </LocalizationProvider>
