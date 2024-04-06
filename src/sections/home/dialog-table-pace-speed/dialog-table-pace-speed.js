@@ -18,7 +18,7 @@ export default function DialogTablePaceSpeed({ open, onClose }) {
           justifyContent={'center'}
           alignItems={'center'}
         >
-          <Typography variant="h6"> Tabela Pace/Km </Typography>
+          <Typography variant="h6"> Tabela Pace km/h </Typography>
         </Stack>
       </DialogTitle>
       <DialogContent dividers sx={{ pt: 1, pb: 0, border: 'none' }}>

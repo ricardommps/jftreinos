@@ -11,13 +11,18 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import useHome from 'src/hooks/use-home';
 import * as Yup from 'yup';
 
+import RPSSlider from './rpe-slider';
+
 export default function FinishGymTrainingForm({ trainingId, onClose, unrealizedTraining }) {
   const { onFinishedTraining, finishedtrainingDetailStatus } = useHome();
-  const NewGymTrainingSchema = Yup.object().shape({});
+  const NewGymTrainingSchema = Yup.object().shape({
+    rpe: Yup.string().required('Campo rpe obrigatório'),
+  });
   const defaultValues = useMemo(
     () => ({
       comments: '',
       trainingId,
+      rpe: 0,
     }),
     [],
   );
@@ -29,6 +34,7 @@ export default function FinishGymTrainingForm({ trainingId, onClose, unrealizedT
 
   const {
     handleSubmit,
+    control,
     formState: { errors },
   } = methods;
 
@@ -36,6 +42,7 @@ export default function FinishGymTrainingForm({ trainingId, onClose, unrealizedT
     try {
       const payload = Object.assign({}, data);
       payload.trainingId = Number(payload.trainingId);
+      payload.rpe = Number(payload.rpe);
       if (unrealizedTraining) {
         payload.unrealized = unrealizedTraining;
       }
@@ -75,11 +82,18 @@ export default function FinishGymTrainingForm({ trainingId, onClose, unrealizedT
               <RHFTextField
                 name="comments"
                 label="Comentários"
-                variant="standard"
+                variant="outlined"
                 multiline
                 rows={6}
+                sx={{ pb: 2 }}
               />
             </Box>
+            {!unrealizedTraining && (
+              <Box>
+                <RPSSlider control={control} />
+              </Box>
+            )}
+
             <Stack pt={2} sx={{ width: '100%' }} spacing={2}>
               {renderErros}
             </Stack>

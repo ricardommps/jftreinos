@@ -36,5 +36,8 @@ export const paths = {
       root: () => `${ROOTS.DASHBOARD}/share/`,
     },
     security: `${ROOTS.DASHBOARD}/security`,
+    training: {
+      root: (id) => `${ROOTS.DASHBOARD}/training/${id}`,
+    },
   },
 };

@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
+import ExertionZone from 'src/components/exertion-zone/exertion-zone';
 import Iconify from 'src/components/iconify/iconify';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { extrapolation } from 'src/utils/extrapolation';
@@ -17,6 +18,7 @@ import ExtrapolativeValidity from '../extrapolative-validity/extrapolative-valid
 export default function ProgramInfo({ programDetail }) {
   const extrapolativeValidity = useBoolean();
   const openTable = useBoolean();
+  const exertionZone = useBoolean();
 
   const [currentExtrapolation, setCurrentExtrapolation] = useState(null);
 
@@ -46,8 +48,14 @@ export default function ProgramInfo({ programDetail }) {
         </IconButton>
       </Stack>
       <Stack spacing={1.5} direction="row">
-        <Typography>Tabela Pace/Km</Typography>
+        <Typography>Tabela Pace km/h</Typography>
         <IconButton sx={{ padding: 0 }} onClick={openTable.onTrue}>
+          <Iconify icon="eva:info-outline" />
+        </IconButton>
+      </Stack>
+      <Stack spacing={1.5} direction="row">
+        <Typography>Zona de esforço</Typography>
+        <IconButton sx={{ padding: 0 }} onClick={exertionZone.onTrue}>
           <Iconify icon="eva:info-outline" />
         </IconButton>
       </Stack>
@@ -67,15 +75,17 @@ export default function ProgramInfo({ programDetail }) {
       {programDetail.pv && (
         <>
           <Divider />
-          <Typography>{`PV: ${programDetail.pv}`}</Typography>
+          <Stack flexDirection={'row'} spacing={5}>
+            <Typography>{`PV: ${programDetail.pv}`}</Typography>
+            {programDetail.pace && (
+              <>
+                <Typography>{`Pace do PV: ${programDetail.pace}`}</Typography>
+              </>
+            )}
+          </Stack>
         </>
       )}
-      {programDetail.pace && (
-        <>
-          <Divider />
-          <Typography>{`Pace: ${programDetail.pace}`}</Typography>
-        </>
-      )}
+
       {programDetail.vla && (
         <>
           <Divider />
@@ -128,6 +138,18 @@ export default function ProgramInfo({ programDetail }) {
       />
       {openTable.value && (
         <DialogTablePaceSpeed open={openTable.value} onClose={openTable.onFalse} />
+      )}
+      {exertionZone.value && (
+        <ExertionZone
+          open={exertionZone.value}
+          onClose={exertionZone.onFalse}
+          pv={programDetail.pv}
+          pace={programDetail.pace}
+          vla={programDetail.vla}
+          paceVla={programDetail.paceVla}
+          vlan={programDetail.vlan}
+          paceVlan={programDetail.paceVlan}
+        />
       )}
     </>
   );

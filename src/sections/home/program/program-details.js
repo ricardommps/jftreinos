@@ -43,7 +43,6 @@ export default function ProgramDetails() {
   }, [finishedtraining]);
 
   const loading = programDetailStatus.loading || trainingsStatus.loading;
-
   return (
     <Container maxWidth={'lg'}>
       <Stack
@@ -86,7 +85,9 @@ export default function ProgramDetails() {
         )}
         {!loading && programDetail && (
           <>
-            <ProgramInfo programDetail={programDetail} />
+            {(!programDetail?.type || programDetail.type === 1) && (
+              <ProgramInfo programDetail={programDetail} />
+            )}
             <Typography variant="h6" align="center">
               Meus treinos
             </Typography>

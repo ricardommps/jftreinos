@@ -5,14 +5,23 @@ import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react'; // => request placed at the top
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Dialog from '@mui/material/Dialog';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import { alpha, useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { useCallback, useEffect, useState } from 'react';
 import { useResponsive } from 'src/hooks/use-responsive';
 import { getEvents } from 'src/redux/slices/calendar';
 import { useDispatch } from 'src/redux/store';
+import { useRouter } from 'src/routes/hook';
+import { paths } from 'src/routes/paths';
 import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
 
@@ -43,6 +52,7 @@ function useInitial(id) {
 export default function Calendar({ id, type }) {
   const smUp = useResponsive('up', 'sm');
   const theme = useTheme();
+  const router = useRouter();
   useInitial(id);
   const {
     calendarRef,
@@ -57,7 +67,6 @@ export default function Calendar({ id, type }) {
     onDatePrev,
     onDateToday,
     onSelectRange,
-    onClickEvent,
     onCloseForm,
     onOpenFinishTraining,
     onCloseFinishTraining,
@@ -77,11 +86,15 @@ export default function Calendar({ id, type }) {
         sx={{
           borderRadius: 1,
           border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.5)}`,
-          width: 'fit-content',
+          width: '100%',
           padding: '0px 10px',
         }}
       >
-        <b>{getModuleName(eventInfo.event.title)}</b>
+        <Stack>
+          <Typography variant="subtitle1">{getModuleName(eventInfo.event.title)}</Typography>
+          <Typography variant="caption">{eventInfo.event.extendedProps.subtitle}</Typography>
+        </Stack>
+
         <br />
         {eventInfo.event.extendedProps.trainingDateOther && (
           <>
@@ -102,14 +115,56 @@ export default function Calendar({ id, type }) {
     }
   };
 
+  const handleClickEvent = useCallback(
+    (arg) => {
+      router.push(paths.dashboard.training.root(arg.event.id));
+    },
+    [router],
+  );
+
+  const handleClickExtra = useCallback(
+    (id) => {
+      router.push(paths.dashboard.training.root(id));
+    },
+    [router],
+  );
+
   useEffect(() => {
     if (unrealizedTraining) {
       onOpenFinishTraining();
     }
   }, [unrealizedTraining]);
 
+  const extraTrainings = events.filter((item) => !item.start);
+
   return (
     <>
+      {extraTrainings && extraTrainings.length > 0 && (
+        <Box>
+          <Typography variant="h6" align="center">
+            Treinos extras
+          </Typography>
+          <Card>
+            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+              {extraTrainings.map((training) => (
+                <ListItem
+                  key={training.id}
+                  secondaryAction={
+                    <IconButton edge="end" onClick={() => handleClickExtra(training.id)}>
+                      <ArrowForwardIosIcon />
+                    </IconButton>
+                  }
+                >
+                  <ListItemText
+                    primary={getModuleName(training.title)}
+                    secondary={training.subtitle}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Card>
+        </Box>
+      )}
       <Card>
         <StyledCalendar>
           <CalendarToolbar
@@ -135,7 +190,7 @@ export default function Calendar({ id, type }) {
             headerToolbar={false}
             initialEvents={events}
             select={onSelectRange}
-            eventClick={onClickEvent}
+            eventClick={handleClickEvent}
             height={smUp ? 720 : 'auto'}
             plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
             locale={ptBrLocale}

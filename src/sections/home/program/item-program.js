@@ -93,7 +93,7 @@ export default function ItemProgram({ program, onView }) {
             alignItems="center"
             sx={{ typography: 'body2', color: !program.active ? 'text.disabled' : 'text.primary' }}
           >
-            {`Pace: ${program.pace}`}
+            {`Pace do PV: ${program.pace}`}
           </Stack>
         </>
       )}

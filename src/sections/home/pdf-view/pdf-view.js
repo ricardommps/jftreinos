@@ -48,13 +48,7 @@ export default function PdfView({ open, onClose, programId }) {
   }, [viewPdfStatus]);
 
   const MyDocument = () => {
-    return (
-      <ProgramPdf
-        program={viewPdf}
-        notificationPdf={''}
-        currentExtrapolation={currentExtrapolation}
-      />
-    );
+    return <ProgramPdf program={viewPdf} currentExtrapolation={currentExtrapolation} />;
   };
 
   const renderPdfGenerate = () => {

@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
     viewedFeedback: '/api/v2/trainingfeedback/viewed',
     viewPdf: '/api/v2/program/viewPdf',
   },
+  training: '/api/v2/training/trainingById',
   user: {
     changePassword: '/api/v2/customer/resetPassword',
   },

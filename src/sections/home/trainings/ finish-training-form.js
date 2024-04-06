@@ -25,7 +25,7 @@ export const OPTIONS = [
   { label: 'Km/h', value: 'km' },
 ];
 
-export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSelected, event }) {
+export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSelected, name }) {
   const theme = useTheme();
   const { onFinishedTraining, finishedtrainingDetailStatus } = useHome();
 
@@ -129,14 +129,6 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
       </Stack>
     </>
   );
-
-  function toHoursAndMinutes(totalMinutes) {
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    return `${hours}h${minutes > 0 ? ` ${minutes}m` : ''}`;
-  }
-
   const calculateAverage = () => {
     if (values?.intensities?.length > 0) {
       const intensitiesValues = values.intensities.map((intensitie) => intensitie.intensitie);
@@ -166,11 +158,11 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
   };
 
   const enableIntensities =
-    event.title === 'HIIT_CURTO' ||
-    event.title === 'HIITT_LONGO' ||
-    event.title === 'LL2_INTERVALADO' ||
-    event.title === 'SPRINT' ||
-    event.title === 'HIT_ELEVACAO';
+    name === 'HIIT_CURTO' ||
+    name === 'HIITT_LONGO' ||
+    name === 'LL2_INTERVALADO' ||
+    name === 'SPRINT' ||
+    name === 'HIT_ELEVACAO';
 
   useEffect(() => {
     getTrimp();
@@ -322,7 +314,14 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
               <Stack>
                 <Typography>{`Trimp: ${values.trimp}`}</Typography>
               </Stack>
-              <RHFTextField name="comments" label="Comentários" multiline rows={6} />
+              <RHFTextField
+                name="comments"
+                label="Comentários"
+                multiline
+                rows={6}
+                variant="outlined"
+                sx={{ pb: 2 }}
+              />
             </Box>
             <Stack pt={2} sx={{ width: '100%' }} spacing={2}>
               {renderErros}

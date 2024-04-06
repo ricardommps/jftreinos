@@ -9,6 +9,8 @@ import { useEffect } from 'react';
 import CardHeader from 'src/components/card-header/card-header';
 import { useBoolean } from 'src/hooks/use-boolean';
 import useHome from 'src/hooks/use-home';
+import { useRouter } from 'src/routes/hook';
+import { paths } from 'src/routes/paths';
 import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
 
@@ -19,12 +21,12 @@ import FinishGymTrainingForm from './finish-gym-training-form';
 export default function FinishTraining({
   open,
   onClose,
-  trainingId,
-  event,
+  training,
   type,
   unrealizedTraining,
   typeTrainingSelected,
 }) {
+  const router = useRouter();
   const { finishedtraining, finishedtrainingDetailStatus } = useHome();
   const openTable = useBoolean();
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function FinishTraining({
         autoHideDuration: 8000,
         variant: 'success',
       });
+      router.replace(paths.dashboard.root);
     }
   }, [finishedtraining]);
 
@@ -42,23 +45,27 @@ export default function FinishTraining({
         autoHideDuration: 8000,
         variant: 'error',
       });
+      router.replace(paths.dashboard.root);
     }
   }, [finishedtrainingDetailStatus.error]);
 
   return (
     <Dialog fullScreen open={open}>
       <CardHeader
-        title={`Finalizar Treino ${typeTrainingSelected}`}
+        title={
+          type === 2 ? 'Finalizar treino de força' : `Finalizar Treino ${typeTrainingSelected}`
+        }
         action={onClose}
         onOpenTable={openTable.onTrue}
+        type={type}
       />
       <Box mt={12}>
         <DialogContent dividers sx={{ pt: 1, pb: 0, border: 'none' }}>
           <Stack>
             <ListItemText
               sx={{ mb: 1 }}
-              primary={getModuleName(event.title)}
-              secondary={fDateCalender(event.start)}
+              primary={getModuleName(training.name)}
+              secondary={fDateCalender(training.datePublished)}
               primaryTypographyProps={{
                 typography: 'h6',
               }}
@@ -73,7 +80,7 @@ export default function FinishTraining({
           <Stack pt={2} pb={2}>
             {type === 2 || unrealizedTraining ? (
               <FinishGymTrainingForm
-                trainingId={trainingId}
+                trainingId={training.id}
                 onClose={onClose}
                 unrealizedTraining={unrealizedTraining}
               />
@@ -81,10 +88,10 @@ export default function FinishTraining({
               <>
                 <Typography>Métricas do treino</Typography>
                 <FinishTrainingForm
-                  trainingId={trainingId}
+                  trainingId={training.id}
                   onClose={onClose}
                   typeTrainingSelected={typeTrainingSelected}
-                  event={event}
+                  name={training.name}
                 />
               </>
             )}

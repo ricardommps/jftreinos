@@ -66,7 +66,7 @@ export default function CalendarDetails({
                     disabled
                   />
                 </Stack>
-                {event.videos.length > 0 && <RenderVideos videos={event.videos} />}
+                {event?.videos?.length > 0 && <RenderVideos videos={event.videos} />}
               </>
             )}
           </>
@@ -80,7 +80,7 @@ export default function CalendarDetails({
             value={event.description}
             disabled
           />
-          {event.videos.length > 0 && <RenderVideos videos={event.videos} />}
+          {event?.videos?.length > 0 && <RenderVideos videos={event.videos} />}
         </Stack>
         <Stack p={3}>
           <Button

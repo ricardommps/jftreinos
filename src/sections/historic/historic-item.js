@@ -14,7 +14,6 @@ import Iconify from 'src/components/iconify';
 import Intensities from 'src/components/intensities';
 import ProgramInfo from 'src/components/program-info';
 import SwipeableEdgeDrawer from 'src/components/swipeable-edge-drawer';
-import TrainingInfo from 'src/components/training-info';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { formatedPace, fShortenNumber } from 'src/utils/format-number';
 import { getModuleName } from 'src/utils/modules';
@@ -116,26 +115,32 @@ export default function HistoricItem({ historic, refreshList }) {
               primary={
                 <Stack spacing={1} direction="row" alignItems="center" sx={{ typography: 'h6' }}>
                   {getModuleName(historic.trainingname)}
-                  <Iconify icon="material-symbols:info" onClick={handleOpenInfoTraining} />
+                  {false && (
+                    <Iconify icon="material-symbols:info" onClick={handleOpenInfoTraining} />
+                  )}
                 </Stack>
               }
               secondary={historic.trainingsubtitle}
               primaryTypographyProps={{ typography: 'subtitle1' }}
               secondaryTypographyProps={{ typography: 'subtitle2' }}
             />
+            {historic.trainingdatepublished && (
+              <Typography variant="subtitle1" color="text.secondary" component="div">
+                {format(new Date(historic.trainingdatepublished), 'dd/MM/yyyy', { locale: ptBR })}
+              </Typography>
+            )}
 
-            <Typography variant="subtitle1" color="text.secondary" component="div">
-              {format(new Date(historic.trainingdatepublished), 'dd/MM/yyyy', { locale: ptBR })}
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              color="text.secondary"
-              component="div"
-              sx={{ textTransform: 'capitalize' }}
-            >
-              {historic.typetraining && `${historic.typetraining} - `}{' '}
-              {historic.unitmeasurement && historic.unitmeasurement === 'pace' ? 'min' : 'km/h'}
-            </Typography>
+            {(!historic?.type || historic?.type === 1) && historic.typetraining && (
+              <Typography
+                variant="subtitle1"
+                color="text.secondary"
+                component="div"
+                sx={{ textTransform: 'capitalize' }}
+              >
+                {historic.typetraining && `${historic.typetraining} - `}{' '}
+                {historic.unitmeasurement && historic.unitmeasurement === 'pace' ? 'min' : 'km/h'}
+              </Typography>
+            )}
           </Stack>
           <Stack spacing={2} alignItems={'flex-end'} paddingRight={2}>
             <Box
@@ -225,7 +230,6 @@ export default function HistoricItem({ historic, refreshList }) {
           <Stack>
             <>
               {openType === 'infoProgram' && <ProgramInfo historic={historic} />}
-              {openType === 'infoTraining' && <TrainingInfo historic={historic} />}
               {openType === 'comments' && (
                 <Comments
                   comments={historic?.comments}
