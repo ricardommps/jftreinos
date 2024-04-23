@@ -37,6 +37,16 @@ const initialState = {
     loading: false,
     error: null,
   },
+  myData: null,
+  myDataStatus: {
+    loading: false,
+    error: null,
+  },
+  upload: null,
+  uploadStatus: {
+    loading: false,
+    error: null,
+  },
 };
 
 const slice = createSlice({
@@ -198,6 +208,42 @@ const slice = createSlice({
       state.finishedtrainingDetailStatus.loading = false;
       state.finishedtrainingDetailStatus.error = null;
     },
+
+    getMyDataStart(state) {
+      state.myData = null;
+      state.myDataStatus.error = null;
+      state.myDataStatus.loading = true;
+    },
+    getMyDataFailure(state, action) {
+      state.myDataStatus.loading = false;
+      state.myDataStatus.error = action.payload;
+      state.myData = null;
+    },
+    getMyDataSuccess(state, action) {
+      const myData = action.payload;
+      state.myData = myData;
+
+      state.myDataStatus.loading = false;
+      state.myDataStatus.error = null;
+    },
+
+    uploadStart(state) {
+      state.upload = null;
+      state.uploadStatus.error = null;
+      state.uploadStatus.loading = true;
+    },
+    uploadFailure(state, action) {
+      state.uploadStatus.loading = false;
+      state.uploadStatus.error = action.payload;
+      state.upload = null;
+    },
+    uploadSuccess(state, action) {
+      const upload = action.payload;
+      state.upload = upload;
+
+      state.uploadStatus.loading = false;
+      state.uploadStatus.error = null;
+    },
   },
 });
 
@@ -286,6 +332,34 @@ export function getViewPdf(programId) {
       dispatch(slice.actions.getViewPdfSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getViewPdfFailure(error));
+    }
+  };
+}
+
+export function getMyData() {
+  return async (dispatch) => {
+    dispatch(slice.actions.getMyDataStart());
+    try {
+      const response = await axios.get(API_ENDPOINTS.myData);
+      dispatch(slice.actions.getMyDataSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.getMyDataFailure(error));
+    }
+  };
+}
+
+export function uploadFile(formData) {
+  return async (dispatch) => {
+    dispatch(slice.actions.uploadStart());
+    try {
+      const response = await axios.patch(API_ENDPOINTS.upload, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      dispatch(slice.actions.uploadSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.uploadFailure(error));
     }
   };
 }

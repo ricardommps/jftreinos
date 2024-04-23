@@ -16,6 +16,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // routes
 import { useRouter } from 'src/routes/hook';
 import { paths } from 'src/routes/paths';
+import axios from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +26,7 @@ const OPTIONS = [
     linkTo: '/',
   },
   {
-    label: 'Segurança',
+    label: 'Perfil',
     linkTo: paths.dashboard.security,
   },
 ];
@@ -54,15 +55,6 @@ export default function AccountPopover() {
     router.push(path);
   };
 
-  function stringAvatar(name) {
-    if (name) {
-      return {
-        children: `${name.split(' ')[0][0]}`,
-      };
-    }
-    return null;
-  }
-
   return (
     <>
       <IconButton
@@ -87,7 +79,7 @@ export default function AccountPopover() {
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
-          {...stringAvatar(user?.name)}
+          src={user?.avatar ? `${axios.defaults.baseURL}/avatar/${user.avatar}` : user?.name}
         />
       </IconButton>
 

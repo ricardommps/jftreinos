@@ -32,4 +32,6 @@ export const API_ENDPOINTS = {
   user: {
     changePassword: '/api/v2/customer/resetPassword',
   },
+  myData: '/api/v2/customer/myData',
+  upload: '/api/v2/customer/avatar',
 };
