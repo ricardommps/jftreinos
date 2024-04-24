@@ -165,42 +165,45 @@ export default function ChangePassword() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack component={Card} spacing={3} sx={{ p: 3 }}>
-        <Box>
-          <RHFUploadAvatar
-            name="avatar"
-            maxSize={3145728}
-            onDrop={handleDrop}
-            helperText={
-              <Typography
-                variant="caption"
-                sx={{
-                  mt: 3,
-                  mx: 'auto',
-                  display: 'block',
-                  textAlign: 'center',
-                  color: 'text.disabled',
-                }}
-              >
-                Permitido *.jpeg, *.jpg, *.png
-                <br />
-                tamanho máximo de {fData(3145728)}
-              </Typography>
-            }
-          />
-          {photoFile && (
-            <Stack pt={3}>
-              <LoadingButton
-                onClick={onUpdadeAvatar}
-                fullWidth
-                variant="contained"
-                loading={uploadStatus.loading}
-              >
-                {myData?.avatar ? 'Atualizar foto' : 'Salvar foto'}
-              </LoadingButton>
-            </Stack>
-          )}
-          <Divider sx={{ py: 1 }} />
-        </Box>
+        {false && (
+          <Box>
+            <RHFUploadAvatar
+              name="avatar"
+              maxSize={3145728}
+              onDrop={handleDrop}
+              helperText={
+                <Typography
+                  variant="caption"
+                  sx={{
+                    mt: 3,
+                    mx: 'auto',
+                    display: 'block',
+                    textAlign: 'center',
+                    color: 'text.disabled',
+                  }}
+                >
+                  Permitido *.jpeg, *.jpg, *.png
+                  <br />
+                  tamanho máximo de {fData(3145728)}
+                </Typography>
+              }
+            />
+            {photoFile && (
+              <Stack pt={3}>
+                <LoadingButton
+                  onClick={onUpdadeAvatar}
+                  fullWidth
+                  variant="contained"
+                  loading={uploadStatus.loading}
+                >
+                  {myData?.avatar ? 'Atualizar foto' : 'Salvar foto'}
+                </LoadingButton>
+              </Stack>
+            )}
+            <Divider sx={{ py: 1 }} />
+          </Box>
+        )}
+
         <Stack spacing={3}>
           <RHFTextField name="name" label="Nome" disabled />
           <RHFTextField name="email" label="E-mail" disabled />
