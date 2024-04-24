@@ -16,7 +16,6 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // routes
 import { useRouter } from 'src/routes/hook';
 import { paths } from 'src/routes/paths';
-import axios from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +78,7 @@ export default function AccountPopover() {
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
-          src={user?.avatar ? `${axios.defaults.baseURL}/avatar/${user.avatar}` : user?.name}
+          src={user?.avatar ? user?.avatar : user?.name}
         />
       </IconButton>
 

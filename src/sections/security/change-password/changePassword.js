@@ -18,7 +18,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import useMyData from 'src/hooks/use-my-data';
 import useUser from 'src/hooks/use-user';
 import { useRouter } from 'src/routes/hook';
-import axios from 'src/utils/axios';
 import { fData } from 'src/utils/format-number';
 import * as Yup from 'yup';
 
@@ -141,10 +140,7 @@ export default function ChangePassword() {
   useEffect(() => {
     if (myData?.id) {
       setValue('name', myData.name);
-      setValue(
-        'avatar',
-        myData.avatar ? `${axios.defaults.baseURL}/avatar/${myData.avatar}` : null,
-      );
+      setValue('avatar', myData.avatar ? myData.avatar : null);
       setValue('email', myData.email);
     }
   }, [myData]);
@@ -165,44 +161,42 @@ export default function ChangePassword() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack component={Card} spacing={3} sx={{ p: 3 }}>
-        {false && (
-          <Box>
-            <RHFUploadAvatar
-              name="avatar"
-              maxSize={3145728}
-              onDrop={handleDrop}
-              helperText={
-                <Typography
-                  variant="caption"
-                  sx={{
-                    mt: 3,
-                    mx: 'auto',
-                    display: 'block',
-                    textAlign: 'center',
-                    color: 'text.disabled',
-                  }}
-                >
-                  Permitido *.jpeg, *.jpg, *.png
-                  <br />
-                  tamanho máximo de {fData(3145728)}
-                </Typography>
-              }
-            />
-            {photoFile && (
-              <Stack pt={3}>
-                <LoadingButton
-                  onClick={onUpdadeAvatar}
-                  fullWidth
-                  variant="contained"
-                  loading={uploadStatus.loading}
-                >
-                  {myData?.avatar ? 'Atualizar foto' : 'Salvar foto'}
-                </LoadingButton>
-              </Stack>
-            )}
-            <Divider sx={{ py: 1 }} />
-          </Box>
-        )}
+        <Box>
+          <RHFUploadAvatar
+            name="avatar"
+            maxSize={3145728}
+            onDrop={handleDrop}
+            helperText={
+              <Typography
+                variant="caption"
+                sx={{
+                  mt: 3,
+                  mx: 'auto',
+                  display: 'block',
+                  textAlign: 'center',
+                  color: 'text.disabled',
+                }}
+              >
+                Permitido *.jpeg, *.jpg, *.png
+                <br />
+                tamanho máximo de {fData(3145728)}
+              </Typography>
+            }
+          />
+          {photoFile && (
+            <Stack pt={3}>
+              <LoadingButton
+                onClick={onUpdadeAvatar}
+                fullWidth
+                variant="contained"
+                loading={uploadStatus.loading}
+              >
+                {myData?.avatar ? 'Atualizar foto' : 'Salvar foto'}
+              </LoadingButton>
+            </Stack>
+          )}
+          <Divider sx={{ py: 1 }} />
+        </Box>
 
         <Stack spacing={3}>
           <RHFTextField name="name" label="Nome" disabled />
