@@ -19,7 +19,8 @@ export default function UploadAvatar({ error, file, disabled, helperText, sx, ..
     multiple: false,
     disabled,
     accept: {
-      'image/*': [],
+      'image/jpeg': [],
+      'image/png': [],
     },
     ...other,
   });
