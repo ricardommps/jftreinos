@@ -20,7 +20,9 @@ export default function CardHeader({ title, action, onOpenTable, type }) {
               Voltar
             </Button>
           </Stack>
-          <DialogTitle sx={{ paddingTop: '0px !important' }}>{getModuleName(title)}</DialogTitle>
+          {title && (
+            <DialogTitle sx={{ paddingTop: '0px !important' }}>{getModuleName(title)}</DialogTitle>
+          )}
         </Stack>
         {!type ||
           (type === 1 && (

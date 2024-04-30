@@ -4,6 +4,7 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import calendarReducer from './slices/calendar';
 import homereducer from './slices/home';
 import metricsReducer from './slices/metrics';
+import ratingReducer from './slices/rating';
 import trainingReducer from './slices/training';
 import userReducer from './slices/user';
 
@@ -37,4 +38,5 @@ export const rootReducer = combineReducers({
   user: userReducer,
   metrics: metricsReducer,
   training: trainingReducer,
+  rating: ratingReducer,
 });

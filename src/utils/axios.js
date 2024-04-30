@@ -34,4 +34,7 @@ export const API_ENDPOINTS = {
   },
   myData: '/api/v2/customer/myData',
   upload: '/api/v2/customer/avatar',
+  rating: {
+    root: '/api/v2/rating',
+  },
 };

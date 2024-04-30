@@ -96,6 +96,10 @@ export function AuthProvider({ children }) {
     initialize();
   }, [initialize]);
 
+  const refreshMe = useCallback(async () => {
+    initialize();
+  }, [initialize]);
+
   // LOGIN
   const login = useCallback(async (email, password) => {
     const data = {
@@ -165,8 +169,9 @@ export function AuthProvider({ children }) {
       login,
       register,
       logout,
+      refreshMe,
     }),
-    [login, logout, register, state.user, status],
+    [login, logout, register, state.user, status, refreshMe],
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
