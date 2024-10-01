@@ -3,12 +3,19 @@
 const ROOTS = {
   AUTH: '/auth',
   DASHBOARD: '/dashboard',
+  ANAMNESE: '/anamnese',
 };
 
 // ----------------------------------------------------------------------
 
 export const paths = {
   minimalUI: 'https://mui.com/store/items/minimal-dashboard/',
+  anamnese: {
+    root: ROOTS.ANAMNESE,
+    anamnese: {
+      root: `${ROOTS.ANAMNESE}`,
+    },
+  },
   // AUTH
   auth: {
     jwt: {

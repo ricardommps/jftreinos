@@ -97,15 +97,16 @@ export default function ItemProgram({ program, onView }) {
           </Stack>
         </>
       )}
-
-      <Stack
-        spacing={1}
-        direction="row"
-        alignItems="center"
-        sx={{ typography: 'body2', color: !program.active ? 'text.disabled' : 'text.primary' }}
-      >
-        {`Total de treinos: ${program.trainings.length}`}
-      </Stack>
+      {false && (
+        <Stack
+          spacing={1}
+          direction="row"
+          alignItems="center"
+          sx={{ typography: 'body2', color: !program.active ? 'text.disabled' : 'text.primary' }}
+        >
+          {`Total de treinos: ${program.trainings.length}`}
+        </Stack>
+      )}
     </Stack>
   );
   return (
