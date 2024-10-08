@@ -1,8 +1,7 @@
 'use client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Alert from '@mui/material/Alert';
-import Checkbox from '@mui/material/Checkbox';
+import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -13,10 +12,17 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { useCallback, useState } from 'react';
+import { useSnackbar } from 'notistack';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import FormProvider, { RHFOutlinedInput, RHFSelect, RHFTextField } from 'src/components/hook-form';
+import FormProvider, {
+  RHFOutlinedInput,
+  RHFRadioGroup,
+  RHFSelect,
+  RHFTextField,
+} from 'src/components/hook-form';
 import Image from 'src/components/image/image';
+import useAnamnese from 'src/hooks/use-anamnese';
 import * as Yup from 'yup';
 
 const RunningCompetitionExperienceOptions = [
@@ -35,6 +41,10 @@ const RunningCompetitionExperienceOptions = [
   {
     value: 'Já participei de prova de corrida mas não finalizei a distância para qual me inscrevi',
     label: 'Já participei de prova de corrida mas não finalizei a distância para qual me inscrevi',
+  },
+  {
+    value: 'Nunca participei de prova de corrida',
+    label: 'Nunca participei de prova de corrida',
   },
 ];
 
@@ -127,106 +137,242 @@ const ESTADOSBRASILEIROS = [
 ];
 
 export const GENDER_OPTIONS = [
-  { label: 'Masculino', value: 'Masculino' },
-  { label: 'Feminino', value: 'Feminino' },
-  { label: 'Outro', value: 'Outro' },
+  { label: 'Masculino', value: 'Men' },
+  { label: 'Feminino', value: 'Women' },
+  { label: 'Outro', value: 'OTHER' },
 ];
 
 export const MARITAL_OPTIONS = [
   { label: 'Solteiro(a)', value: 'Solteiro' },
   { label: 'Casado(a)', value: 'Casado' },
   { label: 'Divorciado(a)', value: 'Divorciado' },
-  { label: 'Viuvo(a)', value: 'Viuvo' },
+  { label: 'Viúvo(a)', value: 'Viúvo' },
+];
+
+const runningExperienceOption = [
+  {
+    label: 'Corro semanalmente, com assessoria profissional',
+    value: 'Corro semanalmente, com assessoria profissional',
+  },
+  {
+    label: 'Corro semanalmente, sem assessoria profissional',
+    value: 'Corro semanalmente, sem assessoria profissional',
+  },
+  {
+    label: 'Corro esporadicamente, sem assessoria profissional',
+    value: 'Corro esporadicamente, sem assessoria profissional',
+  },
+  {
+    label: 'Já corri com assessoria profissional',
+    value: 'Já corri com assessoria profissional',
+  },
+  {
+    label: 'Já corri sem assessoria profissional',
+    value: 'Já corri sem assessoria profissional',
+  },
+  { label: 'Nunca corri antes', value: 'Nunca corri antes' },
 ];
 
 export default function AnamneseView() {
+  const {
+    checkEmail,
+    onCheckEmail,
+    checkEmailStatus,
+    onCreateAnamnese,
+    anamneseCreateStatus,
+    anamneseCreate,
+  } = useAnamnese();
+  const { enqueueSnackbar } = useSnackbar();
+
   const [errorMsg, setErrorMsg] = useState('');
-  const [nextStep, setNextStep] = useState(true);
+  const [nextStep, setNextStep] = useState(false);
+
   const [noFatPercentage, setNoFatPercentage] = useState(false); // Estado para o switch
 
   const AnamneseSchema = Yup.object().shape({
     email: Yup.string()
       .required('Email obrigatório')
       .email('O e-mail deve ser um endereço de e-mail válido'),
-    ...(nextStep && {
-      name: Yup.string().required('Campo obrigatório'),
-      phone: Yup.string().required('Campo obrigatório'),
-      gender: Yup.string().required('Campo obrigatório'),
-      birthDate: Yup.date().required('Campo obrigatório').typeError(''),
-      maritalStatus: Yup.string().required('Campo obrigatório'),
-      zipCode: Yup.string().required('Campo obrigatório'),
-      street: Yup.string().required('Campo obrigatório'),
-      streetNumber: Yup.string().required('Campo obrigatório'),
-      city: Yup.string().required('Campo obrigatório'),
-      state: Yup.string().required('Campo obrigatório'),
-      district: Yup.string().required('Campo obrigatório'),
-      bodyMass: Yup.string().required('Campo obrigatório'),
-      height: Yup.string().required('Campo obrigatório'),
-      fatPercentage: Yup.string().nullable(),
-      hasDiabetesOrHypertension: Yup.string().required('Campo obrigatório'),
-      painOrInjuries: Yup.string().required('Campo obrigatório'),
-      heartDisease: Yup.string().required('Campo obrigatório'),
-      disease: Yup.string().required('Campo obrigatório'),
-      isPregnant: Yup.bool().required('Campo obrigatório'),
-      medicationsOrSupplements: Yup.string().required('Campo obrigatório'),
-      etilismo: Yup.string().required('Campo obrigatório'),
-      smoking: Yup.string().required('Campo obrigatório'),
-      food: Yup.string().required('Campo obrigatório'),
-      isVegetarian: Yup.bool().required('Campo obrigatório'),
-      isVegan: Yup.bool().required('Campo obrigatório'),
-      physicalActivity: Yup.string().required('Campo obrigatório'),
-      intentionsStartingSportsConsultancy: Yup.string().required('Campo obrigatório'),
-      lookingForRacingAdvice: Yup.bool().required('Campo obrigatório'),
-      runningExperience: Yup.string().when('lookingForRacingAdvice', {
-        is: true, // Se lookingForRacingAdvice for true
-        then: Yup.string().required('Campo obrigatório se você busca assessoria de corrida'), // Torna obrigatório
-        otherwise: Yup.string().nullable(), // Deixa opcional
-      }),
-      longestRunningDistance: Yup.string().when('lookingForRacingAdvice', {
-        is: true, // Se lookingForRacingAdvice for true
-        then: Yup.string().required('Campo obrigatório se você busca assessoria de corrida'), // Torna obrigatório
-        otherwise: Yup.string().nullable(), // Deixa opcional
-      }),
-      bestRunningTime: Yup.string().when('lookingForRacingAdvice', {
-        is: true, // Se lookingForRacingAdvice for true
-        then: Yup.string().required('Campo obrigatório se você busca assessoria de corrida'), // Torna obrigatório
-        otherwise: Yup.string().nullable(), // Deixa opcional
-      }),
-      strengtheningTraining: Yup.string().when('lookingForRacingAdvice', {
-        is: true, // Se lookingForRacingAdvice for true
-        then: Yup.string().required('Campo obrigatório se você busca assessoria de corrida'), // Torna obrigatório
-        otherwise: Yup.string().nullable(), // Deixa opcional
-      }),
-      runningCompetitionExperience: Yup.string().when('lookingForRacingAdvice', {
-        is: true, // Se lookingForRacingAdvice for true
-        then: Yup.string().required('Campo obrigatório se você busca assessoria de corrida'), // Torna obrigatório
-        otherwise: Yup.string().nullable(), // Deixa opcional
-      }),
-      youLookingForRaceConsultancy: Yup.string().when('lookingForRacingAdvice', {
-        is: true, // Se lookingForRacingAdvice for true
-        then: Yup.string().required('Campo obrigatório se você busca assessoria de corrida'), // Torna obrigatório
-        otherwise: Yup.string().nullable(), // Deixa opcional
-      }),
-      runningEventsFuture: Yup.string().when('lookingForRacingAdvice', {
-        is: true, // Se lookingForRacingAdvice for true
-        then: Yup.string().required('Campo obrigatório se você busca assessoria de corrida'), // Torna obrigatório
-        otherwise: Yup.string().nullable(), // Deixa opcional
-      }),
-      raceOnYourFutureCalendar: Yup.string().when('lookingForRacingAdvice', {
-        is: true, // Se lookingForRacingAdvice for true
-        then: Yup.string().required('Campo obrigatório se você busca assessoria de corrida'), // Torna obrigatório
-        otherwise: Yup.string().nullable(), // Deixa opcional
-      }),
-      daysOfTheWeekRun: Yup.string().when('lookingForRacingAdvice', {
-        is: true, // Se lookingForRacingAdvice for true
-        then: Yup.string().required('Campo obrigatório se você busca assessoria de corrida'), // Torna obrigatório
-        otherwise: Yup.string().nullable(), // Deixa opcional
-      }),
-      hasRunningClock: Yup.string().when('lookingForRacingAdvice', {
-        is: true, // Se lookingForRacingAdvice for true
-        then: Yup.string().required('Campo obrigatório se você busca assessoria de corrida'), // Torna obrigatório
-        otherwise: Yup.string().nullable(), // Deixa opcional
-      }),
+
+    // Campos que aparecem condicionalmente baseados em `nextStep`
+    name: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    phone: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    gender: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    birthDate: Yup.date().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório').typeError('Data inválida'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    maritalStatus: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    zipCode: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    street: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    streetNumber: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    city: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    state: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    district: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    weight: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    height: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    fatPercentage: Yup.string().nullable(),
+    hasDiabetesOrHypertension: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    painOrInjuries: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    youSurgery: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    heartDisease: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    disease: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    isPregnant: Yup.bool().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    medicationsOrSupplements: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    etilismo: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    smoking: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    food: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    isVegetarian: Yup.bool().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    isVegan: Yup.bool().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    physicalActivity: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    intentionsStartingSportsConsultancy: Yup.string().when('email', {
+      is: (email) => nextStep && !!email,
+      then: (schema) => schema.required('Campo obrigatório'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+
+    // Condicionais sobre assessoria de corrida
+    lookingForRacingAdvice: Yup.bool().required('Campo obrigatório'),
+    runningExperience: Yup.string().when('lookingForRacingAdvice', {
+      is: true,
+      then: (schema) => schema.required('Campo obrigatório se você busca assessoria de corrida'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    strengtheningTraining: Yup.string().when('lookingForRacingAdvice', {
+      is: true,
+      then: (schema) => schema.required('Campo obrigatório se você busca assessoria de corrida'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    runningCompetitionExperience: Yup.string().when('lookingForRacingAdvice', {
+      is: true,
+      then: (schema) => schema.required('Campo obrigatório se você busca assessoria de corrida'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    youLookingForRaceConsultancy: Yup.string().when('lookingForRacingAdvice', {
+      is: true,
+      then: (schema) => schema.required('Campo obrigatório se você busca assessoria de corrida'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    runningEventsFuture: Yup.string().when('lookingForRacingAdvice', {
+      is: true,
+      then: (schema) => schema.required('Campo obrigatório se você busca assessoria de corrida'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    raceOnYourFutureCalendar: Yup.string().when('lookingForRacingAdvice', {
+      is: true,
+      then: (schema) => schema.required('Campo obrigatório se você busca assessoria de corrida'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    daysOfTheWeekRun: Yup.string().when('lookingForRacingAdvice', {
+      is: true,
+      then: (schema) => schema.required('Campo obrigatório se você busca assessoria de corrida'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    hasRunningClock: Yup.string().when('lookingForRacingAdvice', {
+      is: true,
+      then: (schema) => schema.required('Campo obrigatório se você busca assessoria de corrida'),
+      otherwise: (schema) => schema.nullable(),
     }),
   });
 
@@ -234,37 +380,39 @@ export default function AnamneseView() {
     email: '',
     name: '',
     phone: '',
-    gender: '',
+    gender: 'Men',
     birthDate: null,
-    maritalStatus: '',
+    maritalStatus: 'Solteiro',
     zipCode: '',
     street: '',
     streetNumber: '',
     complement: '',
+    city: '',
     state: '',
     district: '',
-    bodyMass: '',
+    weight: '',
     height: '',
     fatPercentage: '',
     hasDiabetesOrHypertension: '',
     painOrInjuries: '',
+    youSurgery: '',
     heartDisease: '',
     disease: '',
     isPregnant: false,
     medicationsOrSupplements: '',
-    etilismo: '',
-    smoking: '',
-    food: '',
+    etilismo: 'Não bebo álcool',
+    smoking: 'Nunca tive o hábito de fumar',
+    food: 'Faço dieta para ganho de peso corporal',
     isVegetarian: false,
     isVegan: false,
     physicalActivity: '',
     intentionsStartingSportsConsultancy: '',
     lookingForRacingAdvice: false,
-    runningExperience: '',
+    runningExperience: 'Nunca corri antes',
     longestRunningDistance: '',
     bestRunningTime: '',
-    strengtheningTraining: '',
-    runningCompetitionExperience: '',
+    strengtheningTraining: 'Não faço',
+    runningCompetitionExperience: 'Já corri em prova e ganhei colocação em nível gera',
     youLookingForRaceConsultancy: '',
     runningEventsFuture: false,
     raceOnYourFutureCalendar: '',
@@ -289,90 +437,6 @@ export default function AnamneseView() {
   } = methods;
 
   const values = watch();
-
-  const handleChangeGender = useCallback(
-    (newValue) => {
-      setValue('gender', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeMarital = useCallback(
-    (newValue) => {
-      setValue('maritalStatus', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeEtilismo = useCallback(
-    (newValue) => {
-      setValue('etilismo', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeSmoking = useCallback(
-    (newValue) => {
-      setValue('smoking', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeFood = useCallback(
-    (newValue) => {
-      setValue('food', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeRunningCompetitionExperience = useCallback(
-    (newValue) => {
-      setValue('runningCompetitionExperience', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeStrengtheningTraining = useCallback(
-    (newValue) => {
-      setValue('strengtheningTraining', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeIsPregnant = useCallback(
-    (newValue) => {
-      setValue('isPregnant', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeRunningEventsFuture = useCallback(
-    (newValue) => {
-      setValue('runningEventsFuture', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeIsVegetarian = useCallback(
-    (newValue) => {
-      setValue('isVegetarian', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeRacingAdvice = useCallback(
-    (newValue) => {
-      setValue('lookingForRacingAdvice', newValue);
-    },
-    [setValue],
-  );
-
-  const handleChangeIsVegan = useCallback(
-    (newValue) => {
-      setValue('isVegan', newValue);
-    },
-    [setValue],
-  );
 
   const handleChangeHeightMass = (e) => {
     let valor = e.target.value;
@@ -399,7 +463,7 @@ export default function AnamneseView() {
     }
   };
 
-  const handleChangeBodyMass = (e) => {
+  const handleChangeweight = (e) => {
     let valor = e.target.value;
 
     // Substitui a vírgula por ponto para padronizar o valor
@@ -410,16 +474,16 @@ export default function AnamneseView() {
 
     // Verifica se o valor está dentro do padrão (números e ponto)
     if (regex.test(valor)) {
-      setValue('bodyMass', valor);
+      setValue('weight', valor);
 
       // Valida se o valor está entre 30 e 200 kg
       if (valor && (parseFloat(valor) < 30 || parseFloat(valor) > 200)) {
-        setError('bodyMass', {
+        setError('weight', {
           type: 'custom',
           message: 'O peso deve ser um número entre 30 e 200 kg.',
         });
       } else {
-        clearErrors('bodyMass');
+        clearErrors('weight');
       }
     }
   };
@@ -455,7 +519,7 @@ export default function AnamneseView() {
 
     // Se o switch for ativado, limpa o campo de percentual de gordura
     if (checked) {
-      setValue('fatPercentage', null); // Define como nulo se "Não sei informar" estiver ativado
+      setValue('fatPercentage', false); // Define como nulo se "Não sei informar" estiver ativado
       clearErrors('fatPercentage');
     } else {
       setValue('fatPercentage', ''); // Habilita o campo de volta
@@ -465,12 +529,14 @@ export default function AnamneseView() {
   const checkEmailExists = useCallback(
     async (data) => {
       try {
-        //const response = await axios.post('/api/check-email', { email: data.email });
-        // eslint-disable-next-line no-constant-condition
-        setNextStep(true);
+        await onCheckEmail({ email: data.email });
       } catch (error) {
-        console.error(error);
-        setErrorMsg('Erro ao verificar o e-mail.');
+        console.error('----error---', error);
+        reset();
+        enqueueSnackbar(error, {
+          autoHideDuration: 8000,
+          variant: 'error',
+        });
       }
     },
     [setErrorMsg],
@@ -478,13 +544,38 @@ export default function AnamneseView() {
 
   const onRegister = useCallback(async (data) => {
     try {
-      console.log('Dados do cadastro:', data);
+      await onCreateAnamnese(data);
       // Fazer chamada à API para cadastrar o usuário
     } catch (error) {
-      console.error(error);
-      setErrorMsg('Erro ao cadastrar o usuário.');
+      console.error('----error---', error);
+      reset();
+      setErrorMsg(typeof error === 'string' ? error : error.message);
     }
   }, []);
+
+  useEffect(() => {
+    if (checkEmailStatus?.error) {
+      enqueueSnackbar('Este e-mail não tem permissão.', {
+        autoHideDuration: 3000,
+        variant: 'error',
+      });
+    }
+  }, [checkEmailStatus]);
+
+  useEffect(() => {
+    if (anamneseCreateStatus?.error) {
+      enqueueSnackbar('Não foi possível enviar sua anamnese. Tente novamente mais tarde.', {
+        autoHideDuration: 3000,
+        variant: 'error',
+      });
+    }
+  }, [anamneseCreateStatus]);
+
+  useEffect(() => {
+    if (checkEmail) {
+      setNextStep(true);
+    }
+  }, [checkEmail]);
 
   const renderHead = (
     <Stack p={4}>
@@ -501,7 +592,6 @@ export default function AnamneseView() {
 
   const renderForm = (
     <Stack spacing={2.5} p={2}>
-      {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
       <Typography variant="h4">Identificação</Typography>
       <Divider sx={{ borderBottomWidth: 5 }} />
       <RHFTextField name="email" label="Email" disabled={nextStep} autoComplete="off" />
@@ -524,7 +614,6 @@ export default function AnamneseView() {
                     textField: {
                       fullWidth: true,
                       error: !!error,
-                      helperText: error?.message,
                     },
                     actionBar: {
                       actions: ['clear'],
@@ -536,37 +625,12 @@ export default function AnamneseView() {
           </Stack>
           <Stack>
             <Typography variant="subtitle2">Sexo</Typography>
-            <Stack direction="row" spacing={1}>
-              {GENDER_OPTIONS.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  control={
-                    <Checkbox
-                      checked={values.gender === option.value}
-                      onClick={() => handleChangeGender(option.value)}
-                    />
-                  }
-                  label={option.label}
-                />
-              ))}
-            </Stack>
+            <RHFRadioGroup row spacing={4} name="gender" options={GENDER_OPTIONS} />
           </Stack>
           <Stack>
             <Typography variant="subtitle2">Estado civil:</Typography>
             <Stack direction="row" spacing={1} flexWrap="wrap">
-              {MARITAL_OPTIONS.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  control={
-                    <Checkbox
-                      checked={values.maritalStatus === option.value}
-                      onClick={() => handleChangeMarital(option.value)}
-                    />
-                  }
-                  label={option.label}
-                  sx={{ minWidth: 120 }} // Define um tamanho mínimo para os itens
-                />
-              ))}
+              <RHFRadioGroup row spacing={4} name="maritalStatus" options={MARITAL_OPTIONS} />
             </Stack>
           </Stack>
           <Stack spacing={2.5}>
@@ -606,12 +670,10 @@ export default function AnamneseView() {
             <Stack>
               <Typography variant="subtitle2">1 - Massa corporal</Typography>
               <RHFOutlinedInput
-                name="bodyMass"
+                name="weight"
                 label="Massa corporal"
                 autoComplete="off"
-                InputProps={{ inputProps: { min: 10, max: 300, step: 0.1 } }}
-                onChange={handleChangeBodyMass}
-                helperText={'Exemplo: 44.5'}
+                onChange={handleChangeweight}
               />
               <FormHelperText id="outlined-weight-helper-text">Exemplo: 44.5</FormHelperText>
             </Stack>
@@ -622,9 +684,7 @@ export default function AnamneseView() {
                 name="height"
                 label="Altura"
                 autoComplete="off"
-                InputProps={{ inputProps: { min: 10, max: 300, step: 0.1 } }}
                 onChange={handleChangeHeightMass}
-                helperText={'Exemplo: 1.70'}
               />
               <FormHelperText id="outlined-weight-helper-text">Exemplo: 1.70</FormHelperText>
             </Stack>
@@ -638,7 +698,6 @@ export default function AnamneseView() {
                 value={values.fatPercentage || ''}
                 onChange={handleChangeFatPercentage}
                 disabled={noFatPercentage} // Desabilita o campo se o switch "Não sei informar" estiver ativado
-                helperText={'Exemplo: 21%'}
               />
               <FormHelperText id="outlined-weight-helper-text">Exemplo: 21</FormHelperText>
               <FormControlLabel
@@ -646,7 +705,6 @@ export default function AnamneseView() {
                   <Switch
                     checked={noFatPercentage}
                     onChange={handleToggleNoFatPercentage} // Função para ativar/desativar
-                    inputProps={{ 'aria-label': 'Não sei informar' }}
                   />
                 }
                 label="Não sei informar"
@@ -667,133 +725,71 @@ export default function AnamneseView() {
           </Stack>
           <Stack>
             <Typography variant="subtitle2">
-              6 - Você ou alguém da sua família possui alguma cardiopatia? Se sim, quem e qual (is)?
+              6 - Você já realizou ou vai realizar alguma cirurgia? Se sim, qual (is)??
+            </Typography>
+            <RHFTextField name="youSurgery" variant="outlined" multiline rows={3} />
+          </Stack>
+          <Stack>
+            <Typography variant="subtitle2">
+              7 - Você ou alguém da sua família possui alguma cardiopatia? Se sim, quem e qual (is)?
             </Typography>
             <RHFTextField name="heartDisease" variant="outlined" multiline rows={3} />
           </Stack>
           <Stack>
             <Typography variant="subtitle2">
-              7 - Você manifesta ou já manifestou qualquer outro tipo de doença? Se sim, qual (is)?
+              8 - Você manifesta ou já manifestou qualquer outro tipo de doença? Se sim, qual (is)?
             </Typography>
             <RHFTextField name="disease" variant="outlined" multiline rows={3} />
           </Stack>
           <Stack>
-            <Typography variant="subtitle2">8 - Você está grávida?</Typography>
-            <Stack direction="row" spacing={1}>
-              {YesNoOptions.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  control={
-                    <Checkbox
-                      checked={values.isPregnant === option.value}
-                      onClick={() => handleChangeIsPregnant(option.value)}
-                    />
-                  }
-                  label={option.label}
-                />
-              ))}
-            </Stack>
+            <Typography variant="subtitle2">9 - Você está grávida?</Typography>
+            <RHFRadioGroup row spacing={4} name="isPregnant" options={YesNoOptions} />
           </Stack>
           <Stack>
             <Typography variant="subtitle2">
-              9 - Usa medicamentos e/ou suplementos alimentares? Se sim, qual (is)?
+              10 - Usa medicamentos e/ou suplementos alimentares? Se sim, qual (is)?
             </Typography>
             <RHFTextField name="medicationsOrSupplements" variant="outlined" multiline rows={3} />
           </Stack>
           <Stack>
-            <Typography variant="subtitle2">10 - Etilismo</Typography>
-            <Stack spacing={1}>
-              {EtilismoOptions.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  control={
-                    <Checkbox
-                      checked={values.etilismo === option.value}
-                      onClick={() => handleChangeEtilismo(option.value)}
-                    />
-                  }
-                  label={option.label}
-                />
-              ))}
+            <Typography variant="subtitle2">11 - Etilismo</Typography>
+            <Stack spacing={2}>
+              <RHFRadioGroup row spacing={4} name="etilismo" options={EtilismoOptions} />
             </Stack>
           </Stack>
           <Stack>
-            <Typography variant="subtitle2">11 - Tabagismo</Typography>
-            <Stack spacing={1}>
-              {SmokingOptions.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  control={
-                    <Checkbox
-                      checked={values.smoking === option.value}
-                      onClick={() => handleChangeSmoking(option.value)}
-                    />
-                  }
-                  label={option.label}
-                />
-              ))}
+            <Typography variant="subtitle2">12 - Tabagismo</Typography>
+            <Stack spacing={2}>
+              <RHFRadioGroup row spacing={4} name="smoking" options={SmokingOptions} />
             </Stack>
           </Stack>
           <Stack>
-            <Typography variant="subtitle2">12 - Alimentação</Typography>
-            <Stack spacing={1}>
-              {FoodOptions.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  control={
-                    <Checkbox
-                      checked={values.food === option.value}
-                      onClick={() => handleChangeFood(option.value)}
-                    />
-                  }
-                  label={option.label}
-                />
-              ))}
+            <Typography variant="subtitle2">13 - Alimentação</Typography>
+            <Stack spacing={2}>
+              <RHFRadioGroup row spacing={4} name="food" options={FoodOptions} />
             </Stack>
           </Stack>
           <Stack>
-            <Typography variant="subtitle2">13 - Vegetariano?</Typography>
-            <Stack direction="row" spacing={1}>
-              {YesNoOptions.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  control={
-                    <Checkbox
-                      checked={values.isVegetarian === option.value}
-                      onClick={() => handleChangeIsVegetarian(option.value)}
-                    />
-                  }
-                  label={option.label}
-                />
-              ))}
+            <Typography variant="subtitle2">14 - Vegetariano?</Typography>
+            <Stack direction="row" spacing={2}>
+              <RHFRadioGroup row spacing={4} name="isVegetarian" options={YesNoOptions} />
             </Stack>
           </Stack>
           <Stack>
-            <Typography variant="subtitle2">14 - Vegano?</Typography>
-            <Stack direction="row" spacing={1}>
-              {YesNoOptions.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  control={
-                    <Checkbox
-                      checked={values.isVegan === option.value}
-                      onClick={() => handleChangeIsVegan(option.value)}
-                    />
-                  }
-                  label={option.label}
-                />
-              ))}
+            <Typography variant="subtitle2">15 - Vegano?</Typography>
+            <Stack direction="row" spacing={2}>
+              <RHFRadioGroup row spacing={4} name="isVegan" options={YesNoOptions} />
             </Stack>
           </Stack>
           <Stack>
             <Typography variant="subtitle2">
-              15 - Você pratica alguma atividade física regularmente? Se sim, qual (is)?
+              16 - Você pratica alguma atividade física regularmente? Se sim, qual (is)?
             </Typography>
             <RHFTextField name="physicalActivity" variant="outlined" multiline rows={3} />
           </Stack>
           <Stack>
             <Typography variant="subtitle2">
-              16 - Qual sua intenção em começar uma assessoria esportiva?
+              17 - Qual sua intenção em começar uma assessoria esportiva?
             </Typography>
             <RHFTextField
               name="intentionsStartingSportsConsultancy"
@@ -803,87 +799,71 @@ export default function AnamneseView() {
             />
           </Stack>
           <Stack>
-            <Typography variant="subtitle2">17 - Está buscando assessoria de corrida?</Typography>
-            <Stack direction="row" spacing={1}>
-              {YesNoOptions.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  control={
-                    <Checkbox
-                      checked={values.lookingForRacingAdvice === option.value}
-                      onClick={() => handleChangeRacingAdvice(option.value)}
-                    />
-                  }
-                  label={option.label}
-                />
-              ))}
+            <Typography variant="subtitle2">18 - Está buscando assessoria de corrida?</Typography>
+            <Stack direction="row" spacing={2}>
+              <RHFRadioGroup row spacing={4} name="lookingForRacingAdvice" options={YesNoOptions} />
             </Stack>
           </Stack>
           {values.lookingForRacingAdvice && (
             <>
               <Typography variant="h6">
-                Caso tenha respondido ´´Sim´´ na questão anterior, responda as próximas questões.
+                Caso tenha respondido "Sim" na questão anterior, responda as próximas questões.
               </Typography>
               <Divider sx={{ borderBottomWidth: 5 }} />
               <Stack>
                 <Typography variant="subtitle2">
-                  18 - Sobre sua experiência com a prática de corrida:
+                  19 - Sobre sua experiência com a prática de corrida:
                 </Typography>
-                <RHFTextField name="runningExperience" variant="outlined" multiline rows={3} />
+                <Stack spacing={2}>
+                  <RHFRadioGroup
+                    row
+                    spacing={4}
+                    name="runningExperience"
+                    options={runningExperienceOption}
+                  />
+                </Stack>
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  19 - Se você corre, qual foi sua maior distância percorrida?
+                  20 - Se você corre, qual foi sua maior distância percorrida?
                 </Typography>
                 <RHFTextField name="longestRunningDistance" variant="outlined" multiline rows={3} />
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  20 - Se você corre, qual foi sua melhor marca e em qual distância ela aconteceu?
+                  21 - Se você corre, qual foi sua melhor marca e em qual distância ela aconteceu?
                 </Typography>
                 <RHFTextField name="bestRunningTime" variant="outlined" multiline rows={3} />
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  21 - Sobre seu treino de fortalecimento:
+                  22 - Sobre seu treino de fortalecimento:
                 </Typography>
                 <Stack spacing={1}>
-                  {StrengtheningTrainingOptions.map((option) => (
-                    <FormControlLabel
-                      key={option.value}
-                      control={
-                        <Checkbox
-                          checked={values.strengtheningTraining === option.value}
-                          onClick={() => handleChangeStrengtheningTraining(option.value)}
-                        />
-                      }
-                      label={option.label}
-                    />
-                  ))}
+                  <RHFRadioGroup
+                    row
+                    spacing={4}
+                    name="strengtheningTraining"
+                    options={StrengtheningTrainingOptions}
+                  />
                 </Stack>
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  22 - Sobre sua experiência com competições de corrida:
+                  23 - Sobre sua experiência com competições de corrida:
                 </Typography>
-                <Stack spacing={1}>
-                  {RunningCompetitionExperienceOptions.map((option) => (
-                    <FormControlLabel
-                      key={option.value}
-                      control={
-                        <Checkbox
-                          checked={values.runningCompetitionExperience === option.value}
-                          onClick={() => handleChangeRunningCompetitionExperience(option.value)}
-                        />
-                      }
-                      label={option.label}
-                    />
-                  ))}
+                <Stack spacing={2}>
+                  <RHFRadioGroup
+                    row
+                    spacing={4}
+                    name="runningCompetitionExperience"
+                    options={RunningCompetitionExperienceOptions}
+                  />
                 </Stack>
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  23 - Por que você está procurando uma assessoria de corrida?
+                  24 - Por que você está procurando uma assessoria de corrida?
                 </Typography>
                 <RHFTextField
                   name="youLookingForRaceConsultancy"
@@ -894,26 +874,20 @@ export default function AnamneseView() {
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  24 - Você pretende participar de provas de corrida no futuro?
+                  25 - Você pretende participar de provas de corrida no futuro?
                 </Typography>
-                <Stack direction="row" spacing={1}>
-                  {YesNoMaybeOptions.map((option) => (
-                    <FormControlLabel
-                      key={option.value}
-                      control={
-                        <Checkbox
-                          checked={values.runningEventsFuture === option.value}
-                          onClick={() => handleChangeRunningEventsFuture(option.value)}
-                        />
-                      }
-                      label={option.label}
-                    />
-                  ))}
+                <Stack direction="row" spacing={2}>
+                  <RHFRadioGroup
+                    row
+                    spacing={4}
+                    name="runningEventsFuture"
+                    options={YesNoMaybeOptions}
+                  />
                 </Stack>
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  25 - Você já tem alguma prova de corrida em seu calendário futuro? Se sim, qual
+                  26 - Você já tem alguma prova de corrida em seu calendário futuro? Se sim, qual
                   distância pretende correr? E qual a data do(s) evento(s)?
                 </Typography>
                 <RHFTextField
@@ -925,14 +899,14 @@ export default function AnamneseView() {
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  26 - Quantos dias da semana você pretende e pode correr? E quanto tempo você tem
+                  27 - Quantos dias da semana você pretende e pode correr? E quanto tempo você tem
                   para as sessões?
                 </Typography>
                 <RHFTextField name="daysOfTheWeekRun" variant="outlined" multiline rows={3} />
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  27 - Você possui relógio de corrida? Se sim, qual?
+                  28 - Você possui relógio de corrida? Se sim, qual?
                 </Typography>
                 <RHFTextField name="hasRunningClock" variant="outlined" multiline rows={3} />
               </Stack>
@@ -949,7 +923,6 @@ export default function AnamneseView() {
             type="button"
             variant="contained"
             onClick={handleSubmit(checkEmailExists)}
-            disabled={nextStep || isSubmitting}
           >
             Verificar E-mail
           </LoadingButton>
@@ -970,7 +943,7 @@ export default function AnamneseView() {
       </Stack>
     </Stack>
   );
-  console.log('---noFatPercentage---', noFatPercentage);
+
   return (
     <>
       <Stack spacing={1} p={2}>
@@ -978,7 +951,16 @@ export default function AnamneseView() {
         <Stack alignItems="center">
           <Typography variant="h2">Anamnese</Typography>
         </Stack>
-        <FormProvider methods={methods}>{renderForm}</FormProvider>
+        {!anamneseCreate ? (
+          <FormProvider methods={methods}>{renderForm}</FormProvider>
+        ) : (
+          <Box>
+            <Typography>
+              Sua anamnese foi recebida com sucesso! Logo você receberá o acesso à plataforma e aos
+              seus treinos!
+            </Typography>
+          </Box>
+        )}
       </Stack>
     </>
   );

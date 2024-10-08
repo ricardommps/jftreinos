@@ -18,6 +18,12 @@ export const API_ENDPOINTS = {
     me: '/api/v2/user/customer/me',
     login: '/api/v2/auth/customer/login',
   },
+  anamnese: {
+    create: 'api/v2/anamnese',
+  },
+  customer: {
+    checkEmail: '/api/v2/customer/checkEmail',
+  },
   home: {
     programs: '/api/v2/program/myPrograms',
     programDetail: '/api/v2/program/myProgram',

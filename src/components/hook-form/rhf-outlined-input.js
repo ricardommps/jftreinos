@@ -24,7 +24,6 @@ export default function RHFOutlinedInput({ name, helperText, type, ...other }) {
             }
           }}
           error={!!error}
-          helperText={error ? error?.message : helperText}
           {...other}
         />
       )}

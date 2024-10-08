@@ -5,8 +5,9 @@ import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { enqueueSnackbar } from 'notistack';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import CardHeader from 'src/components/card-header/card-header';
+import TimePickerDialog from 'src/components/time-picker';
 import { useBoolean } from 'src/hooks/use-boolean';
 import useHome from 'src/hooks/use-home';
 import { useRouter } from 'src/routes/hook';
@@ -29,6 +30,7 @@ export default function FinishTraining({
   const router = useRouter();
   const { finishedtraining, finishedtrainingDetailStatus } = useHome();
   const openTable = useBoolean();
+  const [openModal, setOpenModal] = useState(false);
   useEffect(() => {
     if (finishedtraining) {
       enqueueSnackbar('Treino finalizado com sucesso!', {
@@ -101,6 +103,7 @@ export default function FinishTraining({
       {openTable.value && (
         <DialogTablePaceSpeed open={openTable.value} onClose={openTable.onFalse} />
       )}
+      <TimePickerDialog open={openModal} onClose={() => setOpenModal(false)} />
     </Dialog>
   );
 }
