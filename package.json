@@ -17,6 +17,8 @@
     "re-build": "rm -rf .next .swc _static out node_modules && yarn install && yarn build"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "@babel/runtime": "^7.25.6",
     "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -43,8 +45,10 @@
     "apexcharts": "^3.41.0",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.4.0",
+    "babel-runtime": "^6.26.0",
     "compressorjs": "^1.2.1",
     "date-fns": "^2.30.0",
+    "dayjs": "^1.11.7",
     "encoding": "^0.1.13",
     "filesize": "^6.1.0",
     "framer-motion": "^10.12.16",
@@ -66,6 +70,8 @@
     "react-lazy-load-image-component": "^1.6.0",
     "react-player": "^2.13.0",
     "react-redux": "^8.0.7",
+    "react-simple-wheel-picker": "^1.2.0",
+    "react-wheelpicker": "^1.0.8",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "simplebar-react": "^3.2.4",

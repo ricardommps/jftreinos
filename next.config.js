@@ -1,5 +1,6 @@
 module.exports = {
   trailingSlash: true,
+  transpilePackages: ["react-leaflet-cluster"],
   modularizeImports: {
     '@mui/material': {
       transform: '@mui/material/{{member}}',

@@ -14,7 +14,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAuthContext } from 'src/auth/hooks';
 import RatingDialog from 'src/components/rating-dialog';
 import { useBoolean } from 'src/hooks/use-boolean';
@@ -28,7 +28,7 @@ export default function HomeView() {
   const router = useRouter();
   const { user, refreshMe } = useAuthContext();
   const { onSaveRating, ratingStatus, rating } = useRating();
-  const [showAlert, setShowAlert] = useState(false);
+  //const [showAlert, setShowAlert] = useState(false);
   const ratingOpen = useBoolean();
   const handleOpenMetrics = useCallback(() => {
     router.push(paths.dashboard.metrics.root());
@@ -58,7 +58,7 @@ export default function HomeView() {
 
   useEffect(() => {
     if (user) {
-      setShowAlert(!user?.rating && !user?.rating?.notRating);
+      //setShowAlert(!user?.rating && !user?.rating?.notRating);
     }
   }, [user]);
 
@@ -78,7 +78,7 @@ export default function HomeView() {
       <Stack textAlign={'center'}>
         <Typography variant="h6">Olá, {user?.name}</Typography>
       </Stack>
-      {showAlert && (
+      {false && (
         <Box>
           <Alert severity="info">
             <AlertTitle>Avalie a JF Assessoria</AlertTitle>
