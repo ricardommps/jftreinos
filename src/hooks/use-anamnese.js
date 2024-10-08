@@ -13,14 +13,14 @@ export default function useAnamnese() {
   );
 
   const onCheckEmail = useCallback(
-    (customerEmail) => {
-      dispatch(getCheckEmailReq(customerEmail));
+    async (customerEmail) => {
+      return dispatch(getCheckEmailReq(customerEmail)); // Retorna a Promise
     },
     [dispatch],
   );
 
   const onCreateAnamnese = useCallback(
-    (anamnese) => {
+    async (anamnese) => {
       dispatch(createAnamneseReq(anamnese));
     },
     [dispatch],

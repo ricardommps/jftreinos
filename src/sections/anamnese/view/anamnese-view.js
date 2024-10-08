@@ -184,10 +184,10 @@ export default function AnamneseView() {
   } = useAnamnese();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [errorMsg, setErrorMsg] = useState('');
   const [nextStep, setNextStep] = useState(false);
 
   const [noFatPercentage, setNoFatPercentage] = useState(false); // Estado para o switch
+  const [isLoading, setIsLoading] = useState(false);
 
   const AnamneseSchema = Yup.object().shape({
     email: Yup.string()
@@ -513,6 +513,11 @@ export default function AnamneseView() {
     }
   };
 
+  const handleChangeEmail = (event) => {
+    const emailValue = event.target.value.toLowerCase();
+    setValue('email', emailValue);
+  };
+
   const handleToggleNoFatPercentage = (e) => {
     const checked = e.target.checked;
     setNoFatPercentage(checked);
@@ -528,10 +533,12 @@ export default function AnamneseView() {
 
   const checkEmailExists = useCallback(
     async (data) => {
+      setIsLoading(true);
       try {
         await onCheckEmail({ email: data.email });
+        setIsLoading(false);
       } catch (error) {
-        console.error('----error---', error);
+        setIsLoading(false);
         reset();
         enqueueSnackbar(error, {
           autoHideDuration: 8000,
@@ -539,19 +546,23 @@ export default function AnamneseView() {
         });
       }
     },
-    [setErrorMsg],
+    [setIsLoading, onCheckEmail],
   );
 
-  const onRegister = useCallback(async (data) => {
-    try {
-      await onCreateAnamnese(data);
-      // Fazer chamada à API para cadastrar o usuário
-    } catch (error) {
-      console.error('----error---', error);
-      reset();
-      setErrorMsg(typeof error === 'string' ? error : error.message);
-    }
-  }, []);
+  const onRegister = useCallback(
+    async (data) => {
+      setIsLoading(true);
+      try {
+        await onCreateAnamnese(data);
+        setIsLoading(false);
+        // Fazer chamada à API para cadastrar o usuário
+      } catch (error) {
+        setIsLoading(false);
+        reset();
+      }
+    },
+    [setIsLoading],
+  );
 
   useEffect(() => {
     if (checkEmailStatus?.error) {
@@ -560,7 +571,7 @@ export default function AnamneseView() {
         variant: 'error',
       });
     }
-  }, [checkEmailStatus]);
+  }, [checkEmailStatus, setIsLoading]);
 
   useEffect(() => {
     if (anamneseCreateStatus?.error) {
@@ -569,14 +580,13 @@ export default function AnamneseView() {
         variant: 'error',
       });
     }
-  }, [anamneseCreateStatus]);
+  }, [anamneseCreateStatus, setIsLoading]);
 
   useEffect(() => {
     if (checkEmail) {
       setNextStep(true);
     }
   }, [checkEmail]);
-
   const renderHead = (
     <Stack p={4}>
       <Stack alignItems="center">
@@ -594,7 +604,13 @@ export default function AnamneseView() {
     <Stack spacing={2.5} p={2}>
       <Typography variant="h4">Identificação</Typography>
       <Divider sx={{ borderBottomWidth: 5 }} />
-      <RHFTextField name="email" label="Email" disabled={nextStep} autoComplete="off" />
+      <RHFTextField
+        name="email"
+        label="Email"
+        disabled={nextStep}
+        autoComplete="off"
+        onChange={handleChangeEmail}
+      />
       {nextStep && (
         <>
           <RHFTextField name="name" label="Nome" autoComplete="off" />
@@ -920,8 +936,9 @@ export default function AnamneseView() {
             fullWidth
             color="inherit"
             size="large"
-            type="button"
-            variant="contained"
+            variant="outlined"
+            loading={isLoading}
+            disabled={isLoading}
             onClick={handleSubmit(checkEmailExists)}
           >
             Verificar E-mail
@@ -932,9 +949,9 @@ export default function AnamneseView() {
             fullWidth
             color="inherit"
             size="large"
-            type="button"
-            variant="contained"
-            loading={isSubmitting}
+            variant="outlined"
+            loading={isLoading}
+            disabled={isLoading}
             onClick={handleSubmit(onRegister)}
           >
             Cadastrar
