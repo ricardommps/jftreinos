@@ -2,22 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios, { API_ENDPOINTS } from 'src/utils/axios';
 
 const eventsFormated = (dataEvents) => {
-  const data = Object.assign([], dataEvents);
-  const newData = [];
-  for (var key in data) {
-    newData.push({
-      id: data[key].id.toString(),
-      allDay: true,
-      color: '#00B8D9',
-      description: data[key].description,
-      start: data[key].datePublished,
-      end: data[key].datePublished,
-      trainingDateOther: data[key].trainingDateOther,
-      title: data[key].name,
-      subtitle: data[key].subtitle,
-      videos: data[key].videos,
-    });
-  }
+  const newData = dataEvents.map((event) => ({
+    id: event.id.toString(),
+    allDay: true,
+    color: '#00B8D9',
+    description: event.description || '', // Garantindo que tenha uma string
+    start: event.datePublished || new Date(), // Usar a data atual se for null
+    end: event.datePublished || new Date(), // Usar a data atual se for null
+    trainingDateOther: event.trainingDateOther || null,
+    title: event.name || '',
+    subtitle: event.subtitle || '',
+    videos: event.videos || [],
+  }));
+
   return newData;
 };
 

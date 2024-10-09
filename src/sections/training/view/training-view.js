@@ -22,6 +22,7 @@ import { useRouter } from 'src/routes/hook';
 import DialogTablePaceSpeed from 'src/sections/home/dialog-table-pace-speed/dialog-table-pace-speed';
 import FinishTraining from 'src/sections/home/trainings/ finish-training';
 import MediasList from 'src/sections/home/trainings/medias/medias-list';
+import StretchesMedias from 'src/sections/home/trainings/stretches-medias/stretches-medias';
 import TypeTraining from 'src/sections/home/trainings/type-training';
 import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
@@ -37,6 +38,8 @@ export default function TrainingView() {
 
   const [unrealizedTraining, setUnrealizedTraining] = useState(false);
   const [typeTrainingSelected, setTypeTrainingSelected] = useState('indoor');
+  const [mediasStretches, setMediasStretches] = useState([]);
+  const [medias, setMedias] = useState([]);
 
   const handleChangeSwitch = (event) => {
     setUnrealizedTraining(event.target.checked);
@@ -75,6 +78,26 @@ export default function TrainingView() {
     initialize();
   }, [initialize]);
 
+  useEffect(() => {
+    if (training) {
+      const medias = training?.training?.medias;
+      const stretchesOrder = training?.training?.stretchesOrder;
+      const mediaOrder = training?.training?.mediaOrder;
+      if (stretchesOrder && medias.length > 0 && stretchesOrder.length > 0) {
+        const stretchesItems = medias
+          .filter((item) => stretchesOrder.includes(item.id))
+          .sort((a, b) => stretchesOrder.indexOf(a.id) - stretchesOrder.indexOf(b.id));
+        setMediasStretches(stretchesItems);
+      }
+
+      if (mediaOrder && medias.length > 0 && mediaOrder.length > 0) {
+        const orderedItems = medias
+          .filter((item) => mediaOrder.includes(item.id))
+          .sort((a, b) => mediaOrder.indexOf(a.id) - mediaOrder.indexOf(b.id));
+        setMedias(orderedItems);
+      }
+    }
+  }, [training, setMediasStretches, setMedias]);
   return (
     <>
       <Stack spacing={1.5} direction="row" pl={2}>
@@ -144,6 +167,30 @@ export default function TrainingView() {
                   </>
                 )}
 
+                {mediasStretches &&
+                  mediasStretches.length > 0 &&
+                  training?.training?.stretchesOrder.length > 0 && (
+                    <>
+                      <Divider sx={{ borderStyle: 'dashed' }} />
+                      <Stack maxHeight={'80vh'}>
+                        <Typography align="center" fontWeight={'bold'} variant="h5">
+                          Alongamentos ativos e educativos de corrida
+                        </Typography>
+                        <Scrollbar sx={{ height: 320 }}>
+                          <Box pt={2}>
+                            <Stack pt={2}>
+                              <StretchesMedias
+                                mediaOrder={training?.training?.stretchesOrder}
+                                medias={mediasStretches}
+                                exerciseInfo={training?.training?.exerciseInfo}
+                              />
+                            </Stack>
+                          </Box>
+                        </Scrollbar>
+                      </Stack>
+                    </>
+                  )}
+
                 {(training?.training?.description || training?.training?.medias.length > 0) && (
                   <>
                     <Divider sx={{ borderStyle: 'dashed' }} />
@@ -161,12 +208,12 @@ export default function TrainingView() {
                       </Stack>
                     )}
 
-                    {training?.training?.medias && training?.training?.medias.length > 0 && (
+                    {medias && medias.length > 0 && training?.training?.mediaOrder.length > 0 && (
                       <Box pt={2}>
                         <Stack pt={2}>
                           <MediasList
                             mediaOrder={training?.training?.mediaOrder}
-                            medias={training?.training?.medias}
+                            medias={medias}
                             exerciseInfo={training?.training?.exerciseInfo}
                           />
                         </Stack>
