@@ -27,8 +27,8 @@ import * as Yup from 'yup';
 
 const RunningCompetitionExperienceOptions = [
   {
-    value: 'Já corri em prova e ganhei colocação em nível gera',
-    label: 'Já corri em prova e ganhei colocação em nível gera',
+    value: 'Já corri em prova e ganhei colocação em nível geral',
+    label: 'Já corri em prova e ganhei colocação em nível geral',
   },
   {
     value: 'Já corri em prova e ganhei colocação em nível de categoria (idade)',

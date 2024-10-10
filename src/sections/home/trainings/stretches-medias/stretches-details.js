@@ -13,7 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ReactPlayer from 'react-player/youtube';
-export default function MediaDetails({ open, onClose, media, exerciseInfo }) {
+export default function StretchesDetails({ open, onClose, media, exerciseInfo }) {
   const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
   return (
     <Dialog fullScreen open={open}>
@@ -39,24 +39,29 @@ export default function MediaDetails({ open, onClose, media, exerciseInfo }) {
             direction="row"
             divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
           >
-            <Stack width={1}>
-              {exerciseInfoById?.reps}
-              <Box
-                component="span"
-                sx={{ color: 'text.secondary', typography: 'body2', width: '98%' }}
-              >
-                Range de repetições
-              </Box>
-            </Stack>
-            <Stack width={1}>
-              {exerciseInfoById?.reset}
-              <Box
-                component="span"
-                sx={{ color: 'text.secondary', typography: 'body2', width: '98%' }}
-              >
-                Intervalo de recuperação
-              </Box>
-            </Stack>
+            {exerciseInfoById?.reps && (
+              <Stack width={1}>
+                {exerciseInfoById?.reps}
+                <Box
+                  component="span"
+                  sx={{ color: 'text.secondary', typography: 'body2', width: '98%' }}
+                >
+                  Range de repetições
+                </Box>
+              </Stack>
+            )}
+            {exerciseInfoById?.reset && (
+              <Stack width={1}>
+                {exerciseInfoById?.reset}
+                <Box
+                  component="span"
+                  sx={{ color: 'text.secondary', typography: 'body2', width: '98%' }}
+                >
+                  Intervalo de recuperação
+                </Box>
+              </Stack>
+            )}
+
             {exerciseInfoById?.rir && (
               <Stack width={1}>
                 {exerciseInfoById?.rir}
@@ -68,21 +73,6 @@ export default function MediaDetails({ open, onClose, media, exerciseInfo }) {
                 </Box>
               </Stack>
             )}
-          </Stack>
-          <Stack
-            pt={3}
-            direction="row"
-            divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
-          >
-            <Stack width={1}>
-              -
-              <Box
-                component="span"
-                sx={{ color: 'text.secondary', typography: 'body2', width: '98%' }}
-              >
-                Carga
-              </Box>
-            </Stack>
           </Stack>
         </Card>
         <Stack mt={2}>

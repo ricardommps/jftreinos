@@ -100,9 +100,6 @@ const TimePickerDialog = ({ open, handleClose }) => {
         <Button onClick={handleClose}>Cancelar</Button>
         <Button
           onClick={() => {
-            console.log(
-              `Horas: ${selectedHour}, Minutos: ${selectedMinute}, Segundos: ${selectedSecond}`,
-            );
             handleClose();
           }}
         >
