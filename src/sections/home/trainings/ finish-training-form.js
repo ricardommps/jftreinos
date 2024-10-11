@@ -10,11 +10,14 @@ import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import DistanceSelect from 'src/components/distance-select';
 import { RHFRadioGroup, RHFTextField } from 'src/components/hook-form';
 import FormProvider from 'src/components/hook-form/form-provider';
+import TimeSelect from 'src/components/time-select';
 import useHome from 'src/hooks/use-home';
+import { convertPaceToSpeed } from 'src/utils/convertValues';
 import * as Yup from 'yup';
 
 import MetricsForm from './forms/metrics-form';
@@ -30,10 +33,20 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
   const { onFinishedTraining, finishedtrainingDetailStatus } = useHome();
 
   const NewTrainingSchema = Yup.object().shape({
-    distance: Yup.string().required('Campo distância obrigatório'),
-    duration: Yup.string().required('Campo tempo total obrigatório'),
-    rpe: Yup.string().required('Campo rpe obrigatório'),
+    distanceInMeters: Yup.number()
+      .required('Campo distância obrigatório')
+      .min(1, 'A distância deve ser maior que 0'),
+
+    durationInSeconds: Yup.number()
+      .required('Campo tempo total obrigatório')
+      .min(1, 'O tempo deve ser maior que 0'),
+
+    rpe: Yup.number().required('Campo rpe obrigatório').min(1, 'O RPE deve ser maior que 0'), // Opcional: Validação para RPE também ser maior que zero
   });
+
+  const [openDistanceSelect, setOpenDistanceSelect] = useState(false);
+  const [openTimeSelect, setOpenTimeSelect] = useState(false);
+  const [openPaceSelect, setOpenPaceSelect] = useState(false);
 
   const defaultValues = useMemo(
     () => ({
@@ -49,6 +62,9 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
       intensities: [{ intensitie: 0 }],
       typetraining: typeTrainingSelected,
       quantity: 1,
+      distanceInMeters: 0,
+      durationInSeconds: 0,
+      paceInSeconds: 0,
     }),
     [],
   );
@@ -69,11 +85,13 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
   const values = watch();
 
   const getTrimp = () => {
-    const duration = Number(values.duration);
-    if (duration > 0) {
-      const trimp = values.duration * values.rpe;
-      setValue('trimp', trimp.toString());
-      return trimp;
+    const durationInSeconds = Number(values.durationInSeconds);
+    if (durationInSeconds > 0) {
+      const durationInMinutes = durationInSeconds / 60; // Converte segundos para minutos
+      const trimp = durationInMinutes * values.rpe; // Calcula TRIMP com base em minutos
+      const formattedTrimp = trimp.toFixed(2); // Formata TRIMP para duas casas decimais
+      setValue('trimp', formattedTrimp.toString());
+      return formattedTrimp;
     }
     return 0;
   };
@@ -86,11 +104,13 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
           (item) => item.intensitie !== '' && item.intensitie > 0,
         );
       }
-      payload.distance = Number(payload.distance);
-      payload.duration = Number(payload.duration);
+      payload.distanceInMeters = Number(payload.distanceInMeters);
+      payload.durationInSeconds = Number(payload.durationInSeconds);
       payload.rpe = Number(payload.rpe);
       payload.trainingId = Number(payload.trainingId);
-      payload.pace = String(payload.pace);
+      payload.paceInSeconds = Number(payload.paceInSeconds);
+      payload.distance = undefined;
+      payload.duration = undefined;
       delete payload.quantity;
       onFinishedTraining(payload);
     } catch (error) {
@@ -112,23 +132,6 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
     </>
   );
 
-  const paceInfo = (
-    <>
-      <Stack flexDirection={'row'}>
-        <Typography sx={{ marginRight: 2, color: theme.palette.warning.dark }}>
-          Separadores válidos
-        </Typography>
-        <Typography sx={{ fontWeight: 'bold', marginRight: 1, color: theme.palette.warning.dark }}>
-          {' '}
-          .
-        </Typography>
-        <Typography sx={{ fontWeight: 'bold', marginRight: 1, color: theme.palette.warning.dark }}>
-          {' '}
-          ,
-        </Typography>
-      </Stack>
-    </>
-  );
   const calculateAverage = () => {
     if (values?.intensities?.length > 0) {
       const intensitiesValues = values.intensities.map((intensitie) => intensitie.intensitie);
@@ -142,10 +145,26 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
     return 0;
   };
 
-  const handleChangePace = useCallback((event) => {
-    const paceValue = event.target.value;
-    setValue('pace', paceValue.replace(',', '.'));
-  }, []);
+  const handleDistance = (item) => {
+    if (item) {
+      setValue('distanceInMeters', item);
+    }
+    setOpenDistanceSelect(false);
+  };
+
+  const handleDuration = (item) => {
+    if (item) {
+      setValue('durationInSeconds', item);
+    }
+    setOpenTimeSelect(false);
+  };
+
+  const handlePace = (item) => {
+    if (item) {
+      setValue('paceInSeconds', item);
+    }
+    setOpenPaceSelect(false);
+  };
 
   const updateIntensitiesItems = () => {
     const newIntensities = [];
@@ -178,16 +197,21 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <>
             <Box rowGap={3} columnGap={2} display="grid" pt={2}>
-              <MetricsForm />
+              <MetricsForm
+                setOpenDistanceSelect={setOpenDistanceSelect}
+                setOpenTimeSelect={setOpenTimeSelect}
+              />
               {typeTrainingSelected === 'outdoor' && (
                 <>
                   <RHFTextField
+                    InputProps={{
+                      readOnly: true, // Faz com que o campo seja apenas leitura
+                    }}
                     name="pace"
                     label="Pace médio da sessão"
                     variant="outlined"
-                    type="number"
-                    helperText={paceInfo}
-                    onChange={handleChangePace}
+                    onClick={() => setOpenPaceSelect(true)}
+                    value={convertPaceToSpeed(values.paceInSeconds)}
                     inputProps={{
                       min: 0,
                       max: 1000,
@@ -348,6 +372,34 @@ export default function FinishTrainingForm({ trainingId, onClose, typeTrainingSe
           </>
         </FormProvider>
       </Stack>
+      {openDistanceSelect && (
+        <DistanceSelect
+          visible={openDistanceSelect}
+          onClose={() => setOpenDistanceSelect(false)}
+          onSave={handleDistance}
+          initialValue={values.distanceInMeters}
+          title={'Selecione a distância percorrida (km)'}
+        />
+      )}
+
+      {openTimeSelect && (
+        <TimeSelect
+          visible={openTimeSelect}
+          onClose={() => setOpenTimeSelect(false)}
+          onSave={handleDuration}
+          initialValue={values.durationInSeconds}
+        />
+      )}
+
+      {openPaceSelect && (
+        <DistanceSelect
+          visible={openPaceSelect}
+          onClose={() => setOpenPaceSelect(false)}
+          onSave={handlePace}
+          initialValue={values.paceInSeconds}
+          title={'Selecione o pace médio da sessão (km)'}
+        />
+      )}
     </>
   );
 }
