@@ -1,93 +1,59 @@
 'use client';
 
 import Badge from '@mui/material/Badge';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import Stack from '@mui/material/Stack';
 // @mui
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { m } from 'framer-motion';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 // _mock
-import { _notifications } from 'src/_mock';
 import { varHover } from 'src/components/animate';
+import EmptyContent from 'src/components/empty-content';
 import Iconify from 'src/components/iconify';
+import LoadingProgress from 'src/components/loading-progress';
 // components
-import Label from 'src/components/label';
 import Scrollbar from 'src/components/scrollbar';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
+import useANotifications from 'src/hooks/use-notifications';
 import { useResponsive } from 'src/hooks/use-responsive';
 
 //
 import NotificationItem from './notification-item';
 
-// ----------------------------------------------------------------------
-
-const TABS = [
-  {
-    value: 'all',
-    label: 'All',
-    count: 22,
-  },
-  {
-    value: 'unread',
-    label: 'Unread',
-    count: 12,
-  },
-  {
-    value: 'archived',
-    label: 'Archived',
-    count: 10,
-  },
-];
-
-// ----------------------------------------------------------------------
-
 export default function NotificationsPopover() {
+  const { onGetNotifications, notifications, notificationsStatus, readAt } = useANotifications();
   const drawer = useBoolean();
 
   const smUp = useResponsive('up', 'sm');
 
-  const [currentTab, setCurrentTab] = useState('all');
-
-  const handleChangeTab = useCallback((event, newValue) => {
-    setCurrentTab(newValue);
+  const initialize = useCallback(async () => {
+    onGetNotifications();
   }, []);
 
-  const [notifications, setNotifications] = useState(_notifications);
+  const totalUnRead = notifications.filter((item) => !item.readAt).length;
 
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  useEffect(() => {
+    if (drawer.value) {
+      initialize();
+    }
+  }, [drawer.value]);
 
-  const handleMarkAllAsRead = () => {
-    setNotifications(
-      notifications.map((notification) => ({
-        ...notification,
-        isUnRead: false,
-      })),
-    );
-  };
+  useEffect(() => {
+    if (readAt) {
+      onGetNotifications();
+    }
+  }, [readAt]);
 
   const renderHead = (
     <Stack direction="row" alignItems="center" sx={{ py: 2, pl: 2.5, pr: 1, minHeight: 68 }}>
       <Typography variant="h6" sx={{ flexGrow: 1 }}>
-        Notifications
+        Nofiticações
       </Typography>
-
-      {!!totalUnRead && (
-        <Tooltip title="Mark all as read">
-          <IconButton color="primary" onClick={handleMarkAllAsRead}>
-            <Iconify icon="eva:done-all-fill" />
-          </IconButton>
-        </Tooltip>
-      )}
 
       {!smUp && (
         <IconButton onClick={drawer.onFalse}>
@@ -95,36 +61,6 @@ export default function NotificationsPopover() {
         </IconButton>
       )}
     </Stack>
-  );
-
-  const renderTabs = (
-    <Tabs value={currentTab} onChange={handleChangeTab}>
-      {TABS.map((tab) => (
-        <Tab
-          key={tab.value}
-          iconPosition="end"
-          value={tab.value}
-          label={tab.label}
-          icon={
-            <Label
-              variant={((tab.value === 'all' || tab.value === currentTab) && 'filled') || 'soft'}
-              color={
-                (tab.value === 'unread' && 'info') ||
-                (tab.value === 'archived' && 'success') ||
-                'default'
-              }
-            >
-              {tab.count}
-            </Label>
-          }
-          sx={{
-            '&:not(:last-of-type)': {
-              mr: 3,
-            },
-          }}
-        />
-      ))}
-    </Tabs>
   );
 
   const renderList = (
@@ -166,28 +102,25 @@ export default function NotificationsPopover() {
         {renderHead}
 
         <Divider />
-
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ pl: 2.5, pr: 1 }}
-        >
-          {renderTabs}
-          <IconButton onClick={handleMarkAllAsRead}>
-            <Iconify icon="solar:settings-bold-duotone" />
-          </IconButton>
-        </Stack>
-
-        <Divider />
-
-        {renderList}
-
-        <Box sx={{ p: 1 }}>
-          <Button fullWidth size="large">
-            View All
-          </Button>
-        </Box>
+        {notificationsStatus.loading ? (
+          <LoadingProgress />
+        ) : (
+          <>
+            {notificationsStatus.empty ? (
+              <EmptyContent
+                imgUrl="/assets/icons/empty/ic_content.svg"
+                sx={{
+                  borderRadius: 1.5,
+                  bgcolor: 'background.default',
+                  height: '50vh',
+                }}
+                title="Nenhuma notificação"
+              />
+            ) : (
+              <>{renderList}</>
+            )}
+          </>
+        )}
       </Drawer>
     </>
   );

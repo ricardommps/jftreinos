@@ -8,19 +8,27 @@ import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Comments from 'src/components/comments';
 import Iconify from 'src/components/iconify';
 import Intensities from 'src/components/intensities';
 import ProgramInfo from 'src/components/program-info';
 import SwipeableEdgeDrawer from 'src/components/swipeable-edge-drawer';
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useRouter } from 'src/routes/hook';
+import { paths } from 'src/routes/paths';
+import {
+  convertMetersToKilometersFormat,
+  convertPaceToSpeed,
+  convertSecondsToHourMinuteFormat,
+} from 'src/utils/convertValues';
 import { formatedPace, fShortenNumber } from 'src/utils/format-number';
 import { getModuleName } from 'src/utils/modules';
 
 export default function HistoricItem({ historic, refreshList }) {
   const theme = useTheme();
   const openDrawer = useBoolean();
+  const router = useRouter();
 
   const [openType, setOpenType] = useState(null);
 
@@ -58,6 +66,13 @@ export default function HistoricItem({ historic, refreshList }) {
     if (openType === 'comments') return 'Comentarios e feedbacks';
     if (openType === 'intensities') return 'Intensidade dos esforços';
   };
+
+  const handleClickTraining = useCallback(
+    (id) => {
+      router.push(paths.dashboard.training.root(id));
+    },
+    [router],
+  );
 
   useEffect(() => {
     if (openType) {
@@ -142,7 +157,12 @@ export default function HistoricItem({ historic, refreshList }) {
               </Typography>
             )}
           </Stack>
-          <Stack spacing={2} alignItems={'flex-end'} paddingRight={2}>
+          <Stack
+            spacing={2}
+            alignItems={'flex-end'}
+            paddingRight={2}
+            onClick={() => handleClickTraining(historic.training_id)}
+          >
             <Box
               sx={{ paddingLeft: 2 }}
               display="grid"
@@ -168,6 +188,27 @@ export default function HistoricItem({ historic, refreshList }) {
                   {fShortenNumber(formatedPace(historic.pace))}
                 </Stack>
               )}
+
+              {historic.distance_in_meters && (
+                <Stack direction="row" alignItems="center">
+                  <Iconify icon="game-icons:path-distance" width={20} sx={{ mr: 0.5 }} />
+                  {convertMetersToKilometersFormat(historic.distance_in_meters, true)}
+                </Stack>
+              )}
+              {historic.duration_in_seconds && (
+                <Stack direction="row" alignItems="center">
+                  <Iconify icon="material-symbols:timer-outline" width={20} sx={{ mr: 0.5 }} />
+                  {convertSecondsToHourMinuteFormat(historic.duration_in_seconds)}
+                </Stack>
+              )}
+
+              {historic.pace_in_seconds && Number(historic.pace_in_seconds) > 0 && (
+                <Stack direction="row" alignItems="center">
+                  <Iconify icon="material-symbols:speed-outline" width={20} sx={{ mr: 0.5 }} />
+                  {convertPaceToSpeed(historic.pace_in_seconds, true)}
+                </Stack>
+              )}
+
               {historic.rpe > 0 && (
                 <Stack direction="row" alignItems="center">
                   <Iconify icon="fluent:emoji-16-regular" width={20} sx={{ mr: 0.5 }} />

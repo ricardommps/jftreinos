@@ -5,9 +5,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { enqueueSnackbar } from 'notistack';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import CardHeader from 'src/components/card-header/card-header';
-import TimePickerDialog from 'src/components/time-picker';
 import { useBoolean } from 'src/hooks/use-boolean';
 import useHome from 'src/hooks/use-home';
 import { useRouter } from 'src/routes/hook';
@@ -15,7 +14,6 @@ import { paths } from 'src/routes/paths';
 import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
 
-import DialogTablePaceSpeed from '../dialog-table-pace-speed/dialog-table-pace-speed';
 import FinishTrainingForm from './ finish-training-form';
 import FinishGymTrainingForm from './finish-gym-training-form';
 
@@ -30,7 +28,6 @@ export default function FinishTraining({
   const router = useRouter();
   const { finishedtraining, finishedtrainingDetailStatus } = useHome();
   const openTable = useBoolean();
-  const [openModal, setOpenModal] = useState(false);
   useEffect(() => {
     if (finishedtraining) {
       enqueueSnackbar('Treino finalizado com sucesso!', {
@@ -100,10 +97,6 @@ export default function FinishTraining({
           </Stack>
         </DialogContent>
       </Box>
-      {openTable.value && (
-        <DialogTablePaceSpeed open={openTable.value} onClose={openTable.onFalse} />
-      )}
-      <TimePickerDialog open={openModal} onClose={() => setOpenModal(false)} />
     </Dialog>
   );
 }

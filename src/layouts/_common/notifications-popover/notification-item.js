@@ -1,51 +1,22 @@
 // @mui
-import Avatar from '@mui/material/Avatar';
+import { LoadingButton } from '@mui/lab';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import FileThumbnail from 'src/components/file-thumbnail';
+import useANotifications from 'src/hooks/use-notifications';
 // components
-import Label from 'src/components/label';
 // utils
 import { fToNow } from 'src/utils/format-time';
 
 // ----------------------------------------------------------------------
 
 export default function NotificationItem({ notification }) {
-  const renderAvatar = (
-    <ListItemAvatar>
-      {notification.avatarUrl ? (
-        <Avatar src={notification.avatarUrl} sx={{ bgcolor: 'background.neutral' }} />
-      ) : (
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          sx={{
-            width: 40,
-            height: 40,
-            borderRadius: '50%',
-            bgcolor: 'background.neutral',
-          }}
-        >
-          <Box
-            component="img"
-            src={`/assets/icons/notification/${
-              (notification.type === 'order' && 'ic_order') ||
-              (notification.type === 'chat' && 'ic_chat') ||
-              (notification.type === 'mail' && 'ic_mail') ||
-              (notification.type === 'delivery' && 'ic_delivery')
-            }.svg`}
-            sx={{ width: 24, height: 24 }}
-          />
-        </Stack>
-      )}
-    </ListItemAvatar>
-  );
+  const { onReadAt, readAtStatus } = useANotifications();
+  const handleAccept = () => {
+    onReadAt(notification.id);
+  };
 
   const renderText = (
     <ListItemText
@@ -63,13 +34,12 @@ export default function NotificationItem({ notification }) {
           }
         >
           {fToNow(notification.createdAt)}
-          {notification.category}
         </Stack>
       }
     />
   );
 
-  const renderUnReadBadge = notification.isUnRead && (
+  const renderUnReadBadge = !notification.readAt && (
     <Box
       sx={{
         top: 26,
@@ -77,24 +47,13 @@ export default function NotificationItem({ notification }) {
         height: 8,
         right: 20,
         borderRadius: '50%',
-        bgcolor: 'info.main',
+        bgcolor: 'warning.main',
         position: 'absolute',
       }}
     />
   );
 
-  const friendAction = (
-    <Stack spacing={1} direction="row" sx={{ mt: 1.5 }}>
-      <Button size="small" variant="contained">
-        Accept
-      </Button>
-      <Button size="small" variant="outlined">
-        Decline
-      </Button>
-    </Stack>
-  );
-
-  const projectAction = (
+  const content = (
     <Stack alignItems="flex-start">
       <Box
         sx={{
@@ -105,92 +64,18 @@ export default function NotificationItem({ notification }) {
           bgcolor: 'background.neutral',
         }}
       >
-        {reader(
-          `<p><strong>@Jaydon Frankie</strong> feedback by asking questions or just leave a note of appreciation.</p>`,
-        )}
+        {notification.content}
       </Box>
-
-      <Button size="small" variant="contained">
-        Reply
-      </Button>
-    </Stack>
-  );
-
-  const fileAction = (
-    <Stack
-      spacing={1}
-      direction="row"
-      sx={{
-        pl: 1,
-        p: 1.5,
-        mt: 1.5,
-        borderRadius: 1.5,
-        bgcolor: 'background.neutral',
-      }}
-    >
-      <FileThumbnail
-        file="http://localhost:8080/httpsdesign-suriname-2015.mp3"
-        sx={{ width: 40, height: 40 }}
-      />
-
-      <Stack spacing={1} direction={{ xs: 'column', sm: 'row' }} flexGrow={1} sx={{ minWidth: 0 }}>
-        <ListItemText
-          disableTypography
-          primary={
-            <Typography variant="subtitle2" component="div" sx={{ color: 'text.secondary' }} noWrap>
-              design-suriname-2015.mp3
-            </Typography>
-          }
-          secondary={
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{ typography: 'caption', color: 'text.disabled' }}
-              divider={
-                <Box
-                  sx={{
-                    mx: 0.5,
-                    width: 2,
-                    height: 2,
-                    borderRadius: '50%',
-                    bgcolor: 'currentColor',
-                  }}
-                />
-              }
-            >
-              <span>2.3 GB</span>
-              <span>30 min ago</span>
-            </Stack>
-          }
-        />
-
-        <Button size="small" variant="outlined">
-          Download
-        </Button>
-      </Stack>
-    </Stack>
-  );
-
-  const tagsAction = (
-    <Stack direction="row" spacing={0.75} flexWrap="wrap" sx={{ mt: 1.5 }}>
-      <Label variant="outlined" color="info">
-        Design
-      </Label>
-      <Label variant="outlined" color="warning">
-        Dashboard
-      </Label>
-      <Label variant="outlined">Design system</Label>
-    </Stack>
-  );
-
-  const paymentAction = (
-    <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
-      <Button size="small" variant="contained">
-        Pay
-      </Button>
-      <Button size="small" variant="outlined">
-        Decline
-      </Button>
+      {!notification.readAt && (
+        <LoadingButton
+          size="small"
+          variant="contained"
+          onClick={handleAccept}
+          loading={readAtStatus.loading}
+        >
+          Aceitar
+        </LoadingButton>
+      )}
     </Stack>
   );
 
@@ -205,15 +90,9 @@ export default function NotificationItem({ notification }) {
     >
       {renderUnReadBadge}
 
-      {renderAvatar}
-
       <Stack sx={{ flexGrow: 1 }}>
         {renderText}
-        {notification.type === 'friend' && friendAction}
-        {notification.type === 'project' && projectAction}
-        {notification.type === 'file' && fileAction}
-        {notification.type === 'tags' && tagsAction}
-        {notification.type === 'payment' && paymentAction}
+        {content}
       </Stack>
     </ListItemButton>
   );

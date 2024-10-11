@@ -1,50 +1,52 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import { RHFTextField } from 'src/components/hook-form';
-export default function MetricsForm() {
+import {
+  convertMetersToKilometersFormat,
+  convertSecondsToHourMinuteFormat,
+} from 'src/utils/convertValues';
+export default function MetricsForm({ setOpenDistanceSelect, setOpenTimeSelect }) {
   const { control } = useFormContext();
-  function toHoursAndMinutes(totalMinutes) {
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    return `${hours}h${minutes > 0 ? ` ${minutes}m` : ''}`;
-  }
   return (
     <>
       <Controller
-        name="distance"
+        name="distanceInMeters"
         control={control}
         render={({ field }) => (
           <RHFTextField
-            name="distance"
-            label="Distância em metros *"
+            InputProps={{
+              readOnly: true, // Faz com que o campo seja apenas leitura
+            }}
+            name="distanceInMeters"
+            label="Selecione a distância percorrida"
             variant="outlined"
-            type="number"
-            helperText={`${Number(field.value) / 1000} km`}
+            value={convertMetersToKilometersFormat(field.value)}
+            onClick={() => setOpenDistanceSelect(true)}
             inputProps={{
               min: 0,
               step: 0.01,
               lang: 'en-US',
-              inputMode: 'number',
             }}
           />
         )}
       />
 
       <Controller
-        name="duration"
+        name="durationInSeconds"
         control={control}
         render={({ field }) => (
           <RHFTextField
-            name="duration"
-            label="Tempo total em minutos *"
+            InputProps={{
+              readOnly: true, // Faz com que o campo seja apenas leitura
+            }}
+            name="durationInSeconds"
+            label="Selecione o tempo"
             variant="outlined"
-            type="number"
-            helperText={toHoursAndMinutes(Number(field.value))}
+            value={convertSecondsToHourMinuteFormat(field.value)}
+            onClick={() => setOpenTimeSelect(true)}
             inputProps={{
               min: 0,
               step: 0.01,
               lang: 'en-US',
-              inputMode: 'number',
             }}
           />
         )}

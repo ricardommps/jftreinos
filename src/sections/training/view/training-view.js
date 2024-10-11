@@ -241,25 +241,30 @@ export default function TrainingView() {
             </CardContent>
             <CardActions disableSpacing>
               <Stack direction="column" width={'100%'} spacing={2}>
-                <Stack p={3} width={'100%'}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        color="warning"
-                        checked={unrealizedTraining}
-                        onChange={handleChangeSwitch}
-                      />
-                    }
-                    label="Treino não realizado"
-                  />
-                </Stack>
+                {!training?.training?.finished && (
+                  <Stack p={3} width={'100%'}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          color="warning"
+                          checked={unrealizedTraining}
+                          onChange={handleChangeSwitch}
+                        />
+                      }
+                      label="Treino não realizado"
+                    />
+                  </Stack>
+                )}
+
                 <Stack direction="row" spacing={2} justifyContent={'end'} pr={1}>
                   <Button variant="outlined" color="inherit" onClick={handleGoBack}>
                     Fechar
                   </Button>
-                  <Button variant="contained" color="inherit" onClick={handleOpenFinishTraining}>
-                    Finalizar treino
-                  </Button>
+                  {!training?.training?.finished && (
+                    <Button variant="contained" color="inherit" onClick={handleOpenFinishTraining}>
+                      Finalizar treino
+                    </Button>
+                  )}
                 </Stack>
               </Stack>
             </CardActions>

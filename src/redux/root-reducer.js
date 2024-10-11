@@ -5,6 +5,7 @@ import anamneseReducer from './slices/anamnese';
 import calendarReducer from './slices/calendar';
 import homereducer from './slices/home';
 import metricsReducer from './slices/metrics';
+import notificatiosReducer from './slices/notification';
 import ratingReducer from './slices/rating';
 import trainingReducer from './slices/training';
 import userReducer from './slices/user';
@@ -41,4 +42,5 @@ export const rootReducer = combineReducers({
   training: trainingReducer,
   rating: ratingReducer,
   anamnese: anamneseReducer,
+  notifications: notificatiosReducer,
 });

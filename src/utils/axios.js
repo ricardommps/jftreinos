@@ -21,6 +21,10 @@ export const API_ENDPOINTS = {
   anamnese: {
     create: 'api/v2/anamnese',
   },
+  notifications: {
+    all: 'api/v2/notification/all',
+    readAt: 'api/v2/notification/readAt',
+  },
   customer: {
     checkEmail: '/api/v2/customer/checkEmail',
   },
