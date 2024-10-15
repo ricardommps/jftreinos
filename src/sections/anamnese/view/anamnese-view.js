@@ -425,16 +425,7 @@ export default function AnamneseView() {
     defaultValues,
   });
 
-  const {
-    reset,
-    watch,
-    setValue,
-    setError,
-    clearErrors,
-    control,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+  const { reset, watch, setValue, setError, clearErrors, control, handleSubmit } = methods;
 
   const values = watch();
 
@@ -536,9 +527,7 @@ export default function AnamneseView() {
       setIsLoading(true);
       try {
         await onCheckEmail({ email: data.email });
-        setIsLoading(false);
       } catch (error) {
-        setIsLoading(false);
         reset();
         enqueueSnackbar(error, {
           autoHideDuration: 8000,
@@ -554,7 +543,6 @@ export default function AnamneseView() {
       setIsLoading(true);
       try {
         await onCreateAnamnese(data);
-        setIsLoading(false);
         // Fazer chamada à API para cadastrar o usuário
       } catch (error) {
         setIsLoading(false);
@@ -570,6 +558,7 @@ export default function AnamneseView() {
         autoHideDuration: 3000,
         variant: 'error',
       });
+      setIsLoading(false);
     }
   }, [checkEmailStatus, setIsLoading]);
 
@@ -579,14 +568,22 @@ export default function AnamneseView() {
         autoHideDuration: 3000,
         variant: 'error',
       });
+      setIsLoading(false);
     }
   }, [anamneseCreateStatus, setIsLoading]);
 
   useEffect(() => {
     if (checkEmail) {
+      setIsLoading(false);
       setNextStep(true);
     }
   }, [checkEmail]);
+
+  useEffect(() => {
+    if (anamneseCreate) {
+      setIsLoading(false);
+    }
+  }, [anamneseCreate]);
   const renderHead = (
     <Stack p={4}>
       <Stack alignItems="center">
