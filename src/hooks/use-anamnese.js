@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import {
+  anamneseLoginReq,
   clearAnamneseState,
   clearCheckEmail,
   createAnamneseReq,
@@ -8,9 +9,14 @@ import {
 import { useDispatch, useSelector } from 'src/redux/store';
 export default function useAnamnese() {
   const dispatch = useDispatch();
-  const { checkEmail, checkEmailStatus, anamneseCreate, anamneseCreateStatus } = useSelector(
-    (state) => state.anamnese,
-  );
+  const {
+    checkEmail,
+    checkEmailStatus,
+    anamneseCreate,
+    anamneseCreateStatus,
+    anamneseLogin,
+    anamneseLoginStatus,
+  } = useSelector((state) => state.anamnese);
 
   const onCheckEmail = useCallback(
     async (customerEmail) => {
@@ -20,8 +26,15 @@ export default function useAnamnese() {
   );
 
   const onCreateAnamnese = useCallback(
-    async (anamnese) => {
-      dispatch(createAnamneseReq(anamnese));
+    async (anamnese, token, id) => {
+      dispatch(createAnamneseReq(anamnese, token, id));
+    },
+    [dispatch],
+  );
+
+  const onLoginAnamnese = useCallback(
+    async (payload) => {
+      dispatch(anamneseLoginReq(payload));
     },
     [dispatch],
   );
@@ -43,5 +56,8 @@ export default function useAnamnese() {
     checkEmailStatus,
     anamneseCreate,
     anamneseCreateStatus,
+    onLoginAnamnese,
+    anamneseLogin,
+    anamneseLoginStatus,
   };
 }

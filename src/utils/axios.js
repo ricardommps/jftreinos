@@ -17,9 +17,11 @@ export const API_ENDPOINTS = {
   auth: {
     me: '/api/v2/user/customer/me',
     login: '/api/v2/auth/customer/login',
+    anamneseLogin: '/api/v2/auth/customer/anamnese/login',
   },
   anamnese: {
     create: 'api/v2/anamnese',
+    createRegisteredUser: 'api/v2/anamnese/registeredUser',
   },
   notifications: {
     all: 'api/v2/notification/all',

@@ -12,7 +12,7 @@ export const paths = {
   minimalUI: 'https://mui.com/store/items/minimal-dashboard/',
   anamnese: {
     root: ROOTS.ANAMNESE,
-    anamnese: {
+    create: {
       root: `${ROOTS.ANAMNESE}`,
     },
   },
