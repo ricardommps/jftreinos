@@ -97,7 +97,7 @@ export default function TrainingView() {
         setMediasStretches(stretchesItems);
       }
 
-      if (heatingOrder && medias.length > 0 && heatingOrder.length > 0) {
+      if (heatingOrder && medias.length > 0 && heatingOrder?.length > 0) {
         const heatingItems = medias
           .filter((item) => heatingOrder.includes(item.id))
           .sort((a, b) => heatingOrder.indexOf(a.id) - heatingOrder.indexOf(b.id));
@@ -165,7 +165,7 @@ export default function TrainingView() {
                   )}
                 </Stack>
 
-                {(training?.training?.heating || training?.training?.heatingOrder.length > 0) && (
+                {(training?.training?.heating || training?.training?.heatingOrder?.length > 0) && (
                   <>
                     <Divider sx={{ borderStyle: 'dashed' }} />
                     <Accordion defaultExpanded elevation={0} sx={{ '&:before': { height: '0px' } }}>
@@ -184,7 +184,7 @@ export default function TrainingView() {
                             {training?.training?.heating}
                           </Typography>
                         )}
-                        {training?.training?.heatingOrder.length > 0 &&
+                        {training?.training?.heatingOrder?.length > 0 &&
                           mediasHeating &&
                           mediasHeating.length > 0 && (
                             <Scrollbar sx={{ height: 320 }}>
