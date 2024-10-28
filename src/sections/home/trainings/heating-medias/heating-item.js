@@ -11,7 +11,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import StretchesDetails from './stretches-details';
+import HeatinDetails from './heating-details';
 
 const Footer = styled('div')(() => ({
   margin: '2px 10px',
@@ -27,7 +27,7 @@ const Footer = styled('div')(() => ({
     padding: '0 0 0 20px',
   },
 }));
-export default function StretcheItem({ media, exerciseInfo }) {
+export default function HeatinItem({ media, exerciseInfo }) {
   const details = useBoolean();
   const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
   return (
@@ -143,7 +143,7 @@ export default function StretcheItem({ media, exerciseInfo }) {
         </Stack>
       </Footer>
       {details.value && (
-        <StretchesDetails
+        <HeatinDetails
           open={details.value}
           onClose={details.onFalse}
           media={media}

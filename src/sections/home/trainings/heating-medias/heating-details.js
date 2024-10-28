@@ -1,10 +1,6 @@
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Dialog from '@mui/material/Dialog';
@@ -17,7 +13,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
-export default function MediaDetails({ open, onClose, media, exerciseInfo }) {
+export default function HeatinDetails({ open, onClose, media, exerciseInfo }) {
   const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
 
   const [isEditing, setIsEditing] = useState(false);
@@ -119,6 +115,7 @@ export default function MediaDetails({ open, onClose, media, exerciseInfo }) {
             ) : (
               <Stack justifyContent="center" alignItems="center" ml={5}>
                 {carga}
+
                 <Box
                   component="span"
                   sx={{
@@ -161,7 +158,7 @@ export default function MediaDetails({ open, onClose, media, exerciseInfo }) {
           <ReactPlayer className="react-player" url={media.videoUrl} width="100%" height={200} />
         </Stack>
         <Card sx={{ py: 3, textAlign: 'center', typography: 'h4', mt: 2 }}>{renderNewInfo()}</Card>
-        <Stack mt={2}>
+        {/* <Stack mt={2}>
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -174,7 +171,7 @@ export default function MediaDetails({ open, onClose, media, exerciseInfo }) {
               <Typography>{media.instrucctions}</Typography>
             </AccordionDetails>
           </Accordion>
-        </Stack>
+        </Stack> */}
       </DialogContent>
     </Dialog>
   );
