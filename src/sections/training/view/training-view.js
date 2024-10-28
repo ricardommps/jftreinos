@@ -1,5 +1,9 @@
 'use client';
 
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -21,6 +25,7 @@ import useTraining from 'src/hooks/use-training';
 import { useRouter } from 'src/routes/hook';
 import DialogTablePaceSpeed from 'src/sections/home/dialog-table-pace-speed/dialog-table-pace-speed';
 import FinishTraining from 'src/sections/home/trainings/ finish-training';
+import HeatingMedias from 'src/sections/home/trainings/heating-medias/heating-medias';
 import MediasList from 'src/sections/home/trainings/medias/medias-list';
 import StretchesMedias from 'src/sections/home/trainings/stretches-medias/stretches-medias';
 import TypeTraining from 'src/sections/home/trainings/type-training';
@@ -39,6 +44,7 @@ export default function TrainingView() {
   const [unrealizedTraining, setUnrealizedTraining] = useState(false);
   const [typeTrainingSelected, setTypeTrainingSelected] = useState('indoor');
   const [mediasStretches, setMediasStretches] = useState([]);
+  const [mediasHeating, setMediasHeating] = useState([]);
   const [medias, setMedias] = useState([]);
 
   const handleChangeSwitch = (event) => {
@@ -82,12 +88,20 @@ export default function TrainingView() {
     if (training) {
       const medias = training?.training?.medias;
       const stretchesOrder = training?.training?.stretchesOrder;
+      const heatingOrder = training?.training?.heatingOrder;
       const mediaOrder = training?.training?.mediaOrder;
       if (stretchesOrder && medias.length > 0 && stretchesOrder.length > 0) {
         const stretchesItems = medias
           .filter((item) => stretchesOrder.includes(item.id))
           .sort((a, b) => stretchesOrder.indexOf(a.id) - stretchesOrder.indexOf(b.id));
         setMediasStretches(stretchesItems);
+      }
+
+      if (heatingOrder && medias.length > 0 && heatingOrder?.length > 0) {
+        const heatingItems = medias
+          .filter((item) => heatingOrder.includes(item.id))
+          .sort((a, b) => heatingOrder.indexOf(a.id) - heatingOrder.indexOf(b.id));
+        setMediasHeating(heatingItems);
       }
 
       if (mediaOrder && medias.length > 0 && mediaOrder.length > 0) {
@@ -97,7 +111,7 @@ export default function TrainingView() {
         setMedias(orderedItems);
       }
     }
-  }, [training, setMediasStretches, setMedias]);
+  }, [training, setMediasStretches, setMedias, setMediasHeating]);
   return (
     <>
       <Stack spacing={1.5} direction="row" pl={2}>
@@ -151,19 +165,38 @@ export default function TrainingView() {
                   )}
                 </Stack>
 
-                {training?.training?.heating && (
+                {(training?.training?.heating || training?.training?.heatingOrder?.length > 0) && (
                   <>
                     <Divider sx={{ borderStyle: 'dashed' }} />
-                    <Stack maxHeight={'20vh'}>
-                      <Typography align="center" fontWeight={'bold'} variant="h5">
-                        Aquecimento
-                      </Typography>
-                      <Scrollbar>
-                        <Typography sx={{ whiteSpace: 'pre-line' }}>
-                          {training?.training?.heating}
+                    <Accordion defaultExpanded elevation={0} sx={{ '&:before': { height: '0px' } }}>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="heating-content"
+                        id="heating-header"
+                      >
+                        <Typography align="center" fontWeight={'bold'} variant="h5">
+                          Aquecimento
                         </Typography>
-                      </Scrollbar>
-                    </Stack>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        {training?.training?.heating && (
+                          <Typography sx={{ whiteSpace: 'pre-line' }}>
+                            {training?.training?.heating}
+                          </Typography>
+                        )}
+                        {training?.training?.heatingOrder?.length > 0 &&
+                          mediasHeating &&
+                          mediasHeating.length > 0 && (
+                            <Scrollbar sx={{ height: 320 }}>
+                              <HeatingMedias
+                                mediaOrder={training?.training?.heatingOrder}
+                                medias={mediasHeating}
+                                exerciseInfo={training?.training?.exerciseInfo}
+                              />
+                            </Scrollbar>
+                          )}
+                      </AccordionDetails>
+                    </Accordion>
                   </>
                 )}
 
@@ -172,26 +205,41 @@ export default function TrainingView() {
                   training?.training?.stretchesOrder.length > 0 && (
                     <>
                       <Divider sx={{ borderStyle: 'dashed' }} />
-                      <Stack maxHeight={'80vh'}>
-                        <Typography align="center" fontWeight={'bold'} variant="h5">
-                          Alongamentos ativos e educativos de corrida
-                        </Typography>
-                        <Scrollbar sx={{ height: 320 }}>
-                          <Box pt={2}>
-                            <Stack pt={2}>
-                              <StretchesMedias
-                                mediaOrder={training?.training?.stretchesOrder}
-                                medias={mediasStretches}
-                                exerciseInfo={training?.training?.exerciseInfo}
-                              />
-                            </Stack>
-                          </Box>
-                        </Scrollbar>
-                      </Stack>
+                      <Accordion
+                        defaultExpanded
+                        elevation={0}
+                        sx={{ '&:before': { height: '0px' } }}
+                      >
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="stretches-content"
+                          id="stretches-header"
+                        >
+                          <Typography align="center" fontWeight={'bold'} variant="h5">
+                            Alongamentos ativos e educativos de corrida
+                          </Typography>
+                        </AccordionSummary>
+
+                        <AccordionDetails>
+                          <Stack maxHeight={'80vh'}>
+                            <Scrollbar sx={{ height: 320 }}>
+                              <Box pt={2}>
+                                <Stack pt={2}>
+                                  <StretchesMedias
+                                    mediaOrder={training?.training?.stretchesOrder}
+                                    medias={mediasStretches}
+                                    exerciseInfo={training?.training?.exerciseInfo}
+                                  />
+                                </Stack>
+                              </Box>
+                            </Scrollbar>
+                          </Stack>
+                        </AccordionDetails>
+                      </Accordion>
                     </>
                   )}
 
-                {(training?.training?.description || training?.training?.medias.length > 0) && (
+                {(training?.training?.description || training?.training?.mediaOrder.length > 0) && (
                   <>
                     <Divider sx={{ borderStyle: 'dashed' }} />
                     <Typography align="center" fontWeight={'bold'} variant="h5">

@@ -13,8 +13,9 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
-export default function StretchesDetails({ open, onClose, media, exerciseInfo }) {
+export default function HeatinDetails({ open, onClose, media, exerciseInfo }) {
   const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
+
   const [isEditing, setIsEditing] = useState(false);
   const [carga, setCarga] = useState('10kg');
 
@@ -115,6 +116,7 @@ export default function StretchesDetails({ open, onClose, media, exerciseInfo })
               ) : (
                 <Stack justifyContent="center" alignItems="center" ml={5}>
                   {carga}
+
                   <Box
                     component="span"
                     sx={{
@@ -137,6 +139,7 @@ export default function StretchesDetails({ open, onClose, media, exerciseInfo })
       </Stack>
     </>
   );
+
   return (
     <Dialog fullScreen open={open}>
       <DialogTitle sx={{ m: 0, p: 2 }}> {media.title}</DialogTitle>

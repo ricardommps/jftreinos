@@ -1,14 +1,34 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { useBoolean } from 'src/hooks/use-boolean';
+
+const Footer = styled('div')(() => ({
+  margin: '2px 10px',
+  borderRadius: '0 0 8px 8px',
+  fontSize: '.7rem',
+  padding: '2px 10px 5px',
+  '& span': {
+    display: 'block',
+    margin: '0 auto',
+    textAlign: 'left',
+    position: 'relative',
+    fontStyle: 'normal',
+    padding: '0 0 0 20px',
+  },
+}));
 
 import MediaDetails from './media-details';
 export default function MediaItem({ media, exerciseInfo }) {
   const details = useBoolean();
+  const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
   return (
     <>
       <ListItem
@@ -28,6 +48,99 @@ export default function MediaItem({ media, exerciseInfo }) {
         </ListItemAvatar>
         <ListItemText primary={media.title} />
       </ListItem>
+      <Footer>
+        <Stack flexDirection={'row'}>
+          <Stack>
+            {exerciseInfoById?.method && exerciseInfoById?.method.length > 0 && (
+              <Stack flexDirection="row" spacing={1}>
+                <Typography
+                  sx={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'text.secondary' }}
+                >
+                  MÉTODO:
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: '0.75rem',
+                    color: 'text.primary',
+                  }}
+                >
+                  {exerciseInfoById?.method}
+                </Typography>
+              </Stack>
+            )}
+            {exerciseInfoById?.reps && exerciseInfoById?.reps.length > 0 && (
+              <Stack flexDirection="row" spacing={1}>
+                <Typography
+                  sx={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'text.secondary' }}
+                >
+                  RANGE DE REPETIÇÕES:
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: '0.75rem',
+                    color: 'text.primary',
+                  }}
+                >
+                  {exerciseInfoById?.reps}
+                </Typography>
+              </Stack>
+            )}
+            {exerciseInfoById?.reset && exerciseInfoById?.reset > 0 && (
+              <Stack flexDirection="row" spacing={1}>
+                <Typography
+                  sx={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'text.secondary' }}
+                >
+                  INTERVALO DE RECUPERAÇÃO:
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: '0.75rem',
+                    color: 'text.primary',
+                  }}
+                >
+                  {exerciseInfoById?.reset}
+                </Typography>
+              </Stack>
+            )}
+            {exerciseInfoById?.rir && exerciseInfoById?.rir.length > 0 && (
+              <Stack flexDirection="row" spacing={1}>
+                <Typography
+                  sx={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'text.secondary' }}
+                >
+                  repetições de reserva
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: '0.75rem',
+                    color: 'text.primary',
+                  }}
+                >
+                  {exerciseInfoById?.rir}
+                </Typography>
+              </Stack>
+            )}
+            {exerciseInfoById?.cadence && exerciseInfoById?.cadence.length > 0 && (
+              <Stack flexDirection="row" spacing={1}>
+                <Typography
+                  sx={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'text.secondary' }}
+                >
+                  Cadência / Vel. de mov.:
+                </Typography>
+                <Typography
+                  noWrap
+                  sx={{
+                    fontSize: '0.75rem',
+                    color: 'text.primary',
+                  }}
+                >
+                  {exerciseInfoById?.cadence}
+                </Typography>
+              </Stack>
+            )}
+          </Stack>
+          <Box sx={{ flexGrow: 1 }} />
+        </Stack>
+      </Footer>
       {details.value && (
         <MediaDetails
           open={details.value}
