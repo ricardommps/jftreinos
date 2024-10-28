@@ -102,36 +102,38 @@ export default function StretchesDetails({ open, onClose, media, exerciseInfo })
             </Box>
           </Stack>
         )}
-        <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
-          <Stack width={1} alignItems="center">
-            {isEditing ? (
-              <TextField
-                value={carga}
-                onChange={handleCargaChange}
-                size="small"
-                sx={{ width: '100px' }}
-              />
-            ) : (
-              <Stack justifyContent="center" alignItems="center" ml={5}>
-                {carga}
-                <Box
-                  component="span"
-                  sx={{
-                    color: 'text.secondary',
-                    typography: 'caption',
-                    width: '100%',
-                    textAlign: 'center',
-                  }}
-                >
-                  Carga
-                </Box>
-              </Stack>
-            )}
+        {false && (
+          <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
+            <Stack width={1} alignItems="center">
+              {isEditing ? (
+                <TextField
+                  value={carga}
+                  onChange={handleCargaChange}
+                  size="small"
+                  sx={{ width: '100px' }}
+                />
+              ) : (
+                <Stack justifyContent="center" alignItems="center" ml={5}>
+                  {carga}
+                  <Box
+                    component="span"
+                    sx={{
+                      color: 'text.secondary',
+                      typography: 'caption',
+                      width: '100%',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Carga
+                  </Box>
+                </Stack>
+              )}
+            </Stack>
+            <IconButton onClick={handleEditClick} sx={{ '& svg': { width: 20, height: 20 } }}>
+              {isEditing ? <CheckIcon /> : <EditIcon />}
+            </IconButton>
           </Stack>
-          <IconButton onClick={handleEditClick} sx={{ '& svg': { width: 20, height: 20 } }}>
-            {isEditing ? <CheckIcon /> : <EditIcon />}
-          </IconButton>
-        </Stack>
+        )}
       </Stack>
     </>
   );
