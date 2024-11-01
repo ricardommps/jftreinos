@@ -277,7 +277,7 @@ export default function TrainingView() {
                       </AccordionSummary>
                       <AccordionDetails sx={{ padding: 0 }}>
                         {training?.training?.description && (
-                          <Stack maxHeight={'20vh'} p={2}>
+                          <Stack p={2}>
                             <Scrollbar>
                               <Typography sx={{ whiteSpace: 'pre-line' }}>
                                 {training?.training?.description}
