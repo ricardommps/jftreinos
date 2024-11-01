@@ -1,6 +1,5 @@
 'use client';
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -25,12 +24,14 @@ import useTraining from 'src/hooks/use-training';
 import { useRouter } from 'src/routes/hook';
 import DialogTablePaceSpeed from 'src/sections/home/dialog-table-pace-speed/dialog-table-pace-speed';
 import FinishTraining from 'src/sections/home/trainings/ finish-training';
-import HeatingMedias from 'src/sections/home/trainings/heating-medias/heating-medias';
-import MediasList from 'src/sections/home/trainings/medias/medias-list';
-import StretchesMedias from 'src/sections/home/trainings/stretches-medias/stretches-medias';
 import TypeTraining from 'src/sections/home/trainings/type-training';
+import WorkoutView from 'src/sections/home/trainings/workout/workout-view';
 import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
+
+const stretchTags = ['Alongamento ativo', 'Alongamento passivo', 'Alongamentos'];
+const heatingTags = ['Aquecimento'];
+const excludedTags = ['Alongamento ativo', 'Alongamento passivo', 'Alongamentos', 'Aquecimento'];
 
 export default function TrainingView() {
   const router = useRouter();
@@ -80,6 +81,7 @@ export default function TrainingView() {
   const handleGoBack = () => {
     router.back();
   };
+
   useEffect(() => {
     initialize();
   }, [initialize]);
@@ -91,24 +93,27 @@ export default function TrainingView() {
       const heatingOrder = training?.training?.heatingOrder;
       const mediaOrder = training?.training?.mediaOrder;
       if (stretchesOrder && medias.length > 0 && stretchesOrder.length > 0) {
-        const stretchesItems = medias
-          .filter((item) => stretchesOrder.includes(item.id))
-          .sort((a, b) => stretchesOrder.indexOf(a.id) - stretchesOrder.indexOf(b.id));
-        setMediasStretches(stretchesItems);
+        const filteredStretches = medias?.filter((item) =>
+          item.tags.some((tag) => stretchTags.includes(tag)),
+        );
+        setMediasStretches(filteredStretches);
       }
 
       if (heatingOrder && medias.length > 0 && heatingOrder?.length > 0) {
-        const heatingItems = medias
-          .filter((item) => heatingOrder.includes(item.id))
-          .sort((a, b) => heatingOrder.indexOf(a.id) - heatingOrder.indexOf(b.id));
-        setMediasHeating(heatingItems);
+        const filteredHeating = medias?.filter((item) =>
+          item.tags.some((tag) => heatingTags.includes(tag)),
+        );
+        setMediasHeating(filteredHeating);
       }
 
       if (mediaOrder && medias.length > 0 && mediaOrder.length > 0) {
-        const orderedItems = medias
-          .filter((item) => mediaOrder.includes(item.id))
-          .sort((a, b) => mediaOrder.indexOf(a.id) - mediaOrder.indexOf(b.id));
-        setMedias(orderedItems);
+        // const orderedItems = medias
+        //   .filter((item) => mediaOrder.includes(item.id))
+        //   .sort((a, b) => mediaOrder.indexOf(a.id) - mediaOrder.indexOf(b.id));
+        const filteredWorkout = medias?.filter(
+          (item) => !item.tags.some((tag) => excludedTags.includes(tag)),
+        );
+        setMedias(filteredWorkout);
       }
     }
   }, [training, setMediasStretches, setMedias, setMediasHeating]);
@@ -144,7 +149,7 @@ export default function TrainingView() {
               title={getModuleName(training?.training?.name)}
               subheader={getModuleName(training?.training?.subtitle)}
             />
-            <CardContent>
+            <CardContent sx={{ padding: 2 }}>
               <Stack spacing={2}>
                 <Stack sx={{ typography: 'body2' }}>
                   <Typography variant="subtitle1" sx={{ mb: 1 }}>
@@ -167,33 +172,42 @@ export default function TrainingView() {
 
                 {(training?.training?.heating || training?.training?.heatingOrder?.length > 0) && (
                   <>
-                    <Divider sx={{ borderStyle: 'dashed' }} />
-                    <Accordion defaultExpanded elevation={0} sx={{ '&:before': { height: '0px' } }}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="heating-content"
-                        id="heating-header"
-                      >
-                        <Typography align="center" fontWeight={'bold'} variant="h5">
-                          Aquecimento
-                        </Typography>
+                    <Accordion
+                      aria-controls="stretches-medias-content"
+                      id="stretches-medias-header"
+                      defaultExpanded
+                      elevation={0}
+                      sx={{
+                        '&:before': {
+                          display: 'none',
+                        },
+                      }}
+                    >
+                      <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
+                        <Typography variant="subtitle1">Aquecimento</Typography>
                       </AccordionSummary>
-                      <AccordionDetails>
+                      <AccordionDetails sx={{ padding: 0 }}>
                         {training?.training?.heating && (
-                          <Typography sx={{ whiteSpace: 'pre-line' }}>
-                            {training?.training?.heating}
-                          </Typography>
+                          <Stack maxHeight={'20vh'} p={2}>
+                            <Scrollbar>
+                              <Typography sx={{ whiteSpace: 'pre-line' }}>
+                                {training?.training?.heating}
+                              </Typography>
+                            </Scrollbar>
+                          </Stack>
                         )}
                         {training?.training?.heatingOrder?.length > 0 &&
                           mediasHeating &&
                           mediasHeating.length > 0 && (
-                            <Scrollbar sx={{ height: 320 }}>
-                              <HeatingMedias
-                                mediaOrder={training?.training?.heatingOrder}
-                                medias={mediasHeating}
-                                exerciseInfo={training?.training?.exerciseInfo}
-                              />
-                            </Scrollbar>
+                            <Box>
+                              <Stack>
+                                <WorkoutView
+                                  mediaOrder={training?.training?.heatingOrder}
+                                  medias={mediasHeating}
+                                  exerciseInfo={training?.training?.exerciseInfo}
+                                />
+                              </Stack>
+                            </Box>
                           )}
                       </AccordionDetails>
                     </Accordion>
@@ -204,28 +218,31 @@ export default function TrainingView() {
                   mediasStretches.length > 0 &&
                   training?.training?.stretchesOrder.length > 0 && (
                     <>
-                      <Divider sx={{ borderStyle: 'dashed' }} />
                       <Accordion
+                        aria-controls="stretches-medias-content"
+                        id="stretches-medias-header"
                         defaultExpanded
                         elevation={0}
-                        sx={{ '&:before': { height: '0px' } }}
+                        sx={{
+                          '&:before': {
+                            display: 'none',
+                          },
+                        }}
                       >
                         <AccordionSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls="stretches-content"
-                          id="stretches-header"
+                          expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                         >
-                          <Typography align="center" fontWeight={'bold'} variant="h5">
+                          <Typography variant="subtitle1">
                             Alongamentos ativos e educativos de corrida
                           </Typography>
                         </AccordionSummary>
 
-                        <AccordionDetails>
+                        <AccordionDetails sx={{ padding: 0 }}>
                           <Stack maxHeight={'80vh'}>
                             <Scrollbar sx={{ height: 320 }}>
                               <Box pt={2}>
                                 <Stack pt={2}>
-                                  <StretchesMedias
+                                  <WorkoutView
                                     mediaOrder={training?.training?.stretchesOrder}
                                     medias={mediasStretches}
                                     exerciseInfo={training?.training?.exerciseInfo}
@@ -241,32 +258,49 @@ export default function TrainingView() {
 
                 {(training?.training?.description || training?.training?.mediaOrder.length > 0) && (
                   <>
-                    <Divider sx={{ borderStyle: 'dashed' }} />
-                    <Typography align="center" fontWeight={'bold'} variant="h5">
-                      {!training.type || training.type === 1 ? 'Descrição' : 'Parte principal'}
-                    </Typography>
+                    <Accordion
+                      aria-controls="stretches-medias-content"
+                      id="stretches-medias-header"
+                      defaultExpanded
+                      elevation={0}
+                      sx={{
+                        '&:before': {
+                          display: 'none',
+                        },
+                      }}
+                    >
+                      <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
+                        <Typography variant="subtitle1">
+                          {' '}
+                          {!training.type || training.type === 1 ? 'Descrição' : 'Parte principal'}
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails sx={{ padding: 0 }}>
+                        {training?.training?.description && (
+                          <Stack maxHeight={'20vh'} p={2}>
+                            <Scrollbar>
+                              <Typography sx={{ whiteSpace: 'pre-line' }}>
+                                {training?.training?.description}
+                              </Typography>
+                            </Scrollbar>
+                          </Stack>
+                        )}
 
-                    {training?.training?.description && (
-                      <Stack maxHeight={'20vh'}>
-                        <Scrollbar>
-                          <Typography sx={{ whiteSpace: 'pre-line' }}>
-                            {training?.training?.description}
-                          </Typography>
-                        </Scrollbar>
-                      </Stack>
-                    )}
-
-                    {medias && medias.length > 0 && training?.training?.mediaOrder.length > 0 && (
-                      <Box pt={2}>
-                        <Stack pt={2}>
-                          <MediasList
-                            mediaOrder={training?.training?.mediaOrder}
-                            medias={medias}
-                            exerciseInfo={training?.training?.exerciseInfo}
-                          />
-                        </Stack>
-                      </Box>
-                    )}
+                        {medias &&
+                          medias.length > 0 &&
+                          training?.training?.mediaOrder.length > 0 && (
+                            <Box>
+                              <Stack>
+                                <WorkoutView
+                                  mediaOrder={training?.training?.mediaOrder}
+                                  medias={medias}
+                                  exerciseInfo={training?.training?.exerciseInfo}
+                                />
+                              </Stack>
+                            </Box>
+                          )}
+                      </AccordionDetails>
+                    </Accordion>
                   </>
                 )}
 
