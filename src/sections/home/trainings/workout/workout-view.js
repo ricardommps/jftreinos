@@ -5,7 +5,8 @@ import Scrollbar from 'src/components/scrollbar';
 import WorkoutViewGroup from './workout-view-group';
 import WorkoutViewItem from './workout-view-item';
 
-export default function WorkoutView({ medias, mediaOrder, exerciseInfo }) {
+export default function WorkoutView({ medias, mediaOrder, exerciseInfo, type, workoutLoad }) {
+  console.log('-----type--', type);
   return (
     <Box sx={{ p: 1, overflow: 'hidden' }}>
       <Scrollbar sx={{ height: 320 }}>
@@ -19,13 +20,21 @@ export default function WorkoutView({ medias, mediaOrder, exerciseInfo }) {
                     key={`group-${index}`}
                     media={groupedMedias}
                     exerciseInfo={exerciseInfo}
+                    workoutLoad={workoutLoad}
                   />
                 );
               }
             } else {
               const media = medias.find((m) => m.id === orderItem);
               if (media?.id) {
-                return <WorkoutViewItem key={media.id} media={media} exerciseInfo={exerciseInfo} />;
+                return (
+                  <WorkoutViewItem
+                    key={media.id}
+                    media={media}
+                    exerciseInfo={exerciseInfo}
+                    workoutLoad={workoutLoad}
+                  />
+                );
               }
             }
           })}
