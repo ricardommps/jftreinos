@@ -49,4 +49,5 @@ export const API_ENDPOINTS = {
   rating: {
     root: '/api/v2/rating',
   },
+  workoutLoad: '/api/v2/workout-load',
 };

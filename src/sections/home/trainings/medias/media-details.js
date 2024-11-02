@@ -15,13 +15,15 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
-export default function MediaDetails({ open, onClose, media, exerciseInfo }) {
+import useTraining from 'src/hooks/use-training';
+export default function MediaDetails({ open, onClose, media, exerciseInfo, isWorkoutLoad }) {
+  const { onSaveWorkoutLoad, onGetWorkoutLoad, workoutLoad } = useTraining();
   const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
 
   const [isEditing, setIsEditing] = useState(false);
-  const [carga, setCarga] = useState('10kg');
+  const [carga, setCarga] = useState('-');
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);
@@ -30,6 +32,29 @@ export default function MediaDetails({ open, onClose, media, exerciseInfo }) {
   const handleCargaChange = (event) => {
     setCarga(event.target.value);
   };
+
+  const handleSaveLoad = () => {
+    onSaveWorkoutLoad(media.id, carga);
+  };
+  const initialize = useCallback(async () => {
+    try {
+      onGetWorkoutLoad(media.id);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isWorkoutLoad) {
+      initialize();
+    }
+  }, [initialize]);
+
+  useEffect(() => {
+    if (workoutLoad?.length > 0) {
+      setCarga(workoutLoad[0].load);
+    }
+  }, [workoutLoad]);
 
   const renderNewInfo = () => (
     <>
@@ -107,36 +132,46 @@ export default function MediaDetails({ open, onClose, media, exerciseInfo }) {
             </Box>
           </Stack>
         )}
-        <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
-          <Stack width={1} alignItems="center">
-            {isEditing ? (
-              <TextField
-                value={carga}
-                onChange={handleCargaChange}
-                size="small"
-                sx={{ width: '100px' }}
-              />
-            ) : (
-              <Stack justifyContent="center" alignItems="center" ml={5}>
-                {carga}
-                <Box
-                  component="span"
-                  sx={{
-                    color: 'text.secondary',
-                    typography: 'caption',
-                    width: '100%',
-                    textAlign: 'center',
-                  }}
-                >
-                  Carga
-                </Box>
-              </Stack>
+        {workoutLoad && isWorkoutLoad && (
+          <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
+            <Stack width={1} alignItems="center">
+              {isEditing ? (
+                <TextField
+                  value={carga}
+                  onChange={handleCargaChange}
+                  size="small"
+                  sx={{ width: '100px' }}
+                />
+              ) : (
+                <Stack justifyContent="center" alignItems="center" ml={5}>
+                  {carga}
+                  <Box
+                    component="span"
+                    sx={{
+                      color: 'text.secondary',
+                      typography: 'caption',
+                      width: '100%',
+                      textAlign: 'center',
+                    }}
+                  >
+                    Carga
+                  </Box>
+                </Stack>
+              )}
+            </Stack>
+            {!isEditing && (
+              <IconButton onClick={handleEditClick} sx={{ '& svg': { width: 20, height: 20 } }}>
+                <EditIcon />
+              </IconButton>
+            )}
+
+            {isEditing && (
+              <IconButton onClick={handleSaveLoad} sx={{ '& svg': { width: 20, height: 20 } }}>
+                <CheckIcon />
+              </IconButton>
             )}
           </Stack>
-          <IconButton onClick={handleEditClick} sx={{ '& svg': { width: 20, height: 20 } }}>
-            {isEditing ? <CheckIcon /> : <EditIcon />}
-          </IconButton>
-        </Stack>
+        )}
       </Stack>
     </>
   );

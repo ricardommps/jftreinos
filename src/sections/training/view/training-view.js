@@ -295,6 +295,7 @@ export default function TrainingView() {
                                   mediaOrder={training?.training?.mediaOrder}
                                   medias={medias}
                                   exerciseInfo={training?.training?.exerciseInfo}
+                                  workoutLoad={true}
                                 />
                               </Stack>
                             </Box>

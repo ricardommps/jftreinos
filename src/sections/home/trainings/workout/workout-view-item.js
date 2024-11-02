@@ -18,7 +18,7 @@ import {
   Title,
 } from '../styles';
 
-export default function WorkoutViewItem({ media, exerciseInfo }) {
+export default function WorkoutViewItem({ media, exerciseInfo, workoutLoad }) {
   const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
   const details = useBoolean();
   return (
@@ -175,6 +175,7 @@ export default function WorkoutViewItem({ media, exerciseInfo }) {
           onClose={details.onFalse}
           media={media}
           exerciseInfo={exerciseInfo}
+          isWorkoutLoad={workoutLoad}
         />
       )}
     </>

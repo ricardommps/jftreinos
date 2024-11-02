@@ -4,7 +4,7 @@ import React from 'react';
 
 import WorkoutViewGroupItem from './workout-view-group-item';
 
-export default function WorkoutViewGroup({ media, exerciseInfo }) {
+export default function WorkoutViewGroup({ media, exerciseInfo, workoutLoad }) {
   return (
     <>
       <Paper
@@ -23,7 +23,11 @@ export default function WorkoutViewGroup({ media, exerciseInfo }) {
       >
         {media.map((subMedia, index) => (
           <React.Fragment key={index}>
-            <WorkoutViewGroupItem media={subMedia} exerciseInfo={exerciseInfo} />
+            <WorkoutViewGroupItem
+              media={subMedia}
+              exerciseInfo={exerciseInfo}
+              workoutLoad={workoutLoad}
+            />
           </React.Fragment>
         ))}
       </Paper>
