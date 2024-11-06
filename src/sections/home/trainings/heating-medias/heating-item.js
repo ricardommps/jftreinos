@@ -51,9 +51,9 @@ export default function HeatinItem({ media, exerciseInfo }) {
       </ListItem>
       <Footer>
         <Stack flexDirection={'row'}>
-          <Stack>
+          <Stack spacing={1}>
             {exerciseInfoById?.method && exerciseInfoById?.method.length > 0 && (
-              <Stack flexDirection="row" spacing={1}>
+              <Stack>
                 <Typography
                   sx={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'text.secondary' }}
                 >
@@ -70,7 +70,7 @@ export default function HeatinItem({ media, exerciseInfo }) {
               </Stack>
             )}
             {exerciseInfoById?.reps && exerciseInfoById?.reps.length > 0 && (
-              <Stack flexDirection="row" spacing={1}>
+              <Stack>
                 <Typography
                   sx={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'text.secondary' }}
                 >
@@ -86,8 +86,8 @@ export default function HeatinItem({ media, exerciseInfo }) {
                 </Typography>
               </Stack>
             )}
-            {exerciseInfoById?.reset && exerciseInfoById?.reset > 0 && (
-              <Stack flexDirection="row" spacing={1}>
+            {exerciseInfoById?.reset > 0 && (
+              <Stack>
                 <Typography
                   sx={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'text.secondary' }}
                 >
@@ -104,7 +104,7 @@ export default function HeatinItem({ media, exerciseInfo }) {
               </Stack>
             )}
             {exerciseInfoById?.rir && exerciseInfoById?.rir.length > 0 && (
-              <Stack flexDirection="row" spacing={1}>
+              <Stack>
                 <Typography
                   sx={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'text.secondary' }}
                 >
@@ -121,14 +121,13 @@ export default function HeatinItem({ media, exerciseInfo }) {
               </Stack>
             )}
             {exerciseInfoById?.cadence && exerciseInfoById?.cadence.length > 0 && (
-              <Stack flexDirection="row" spacing={1}>
+              <Stack>
                 <Typography
                   sx={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'text.secondary' }}
                 >
                   Cadência / Vel. de mov.:
                 </Typography>
                 <Typography
-                  noWrap
                   sx={{
                     fontSize: '0.75rem',
                     color: 'text.primary',
