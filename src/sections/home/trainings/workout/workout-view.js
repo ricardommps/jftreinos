@@ -6,7 +6,6 @@ import WorkoutViewGroup from './workout-view-group';
 import WorkoutViewItem from './workout-view-item';
 
 export default function WorkoutView({ medias, mediaOrder, exerciseInfo, type, workoutLoad }) {
-  console.log('-----type--', type);
   return (
     <Box sx={{ p: 1, overflow: 'hidden' }}>
       <Scrollbar sx={{ height: 320 }}>
