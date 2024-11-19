@@ -1,3 +1,5 @@
+import 'dayjs/locale/pt-br'; // Importa o idioma português do Brasil
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Divider from '@mui/material/Divider';
@@ -10,7 +12,10 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { ptBR } from '@mui/x-date-pickers/locales';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -37,6 +42,8 @@ import {
   YesNoMaybeOptions,
   YesNoOptions,
 } from './constants';
+
+dayjs.locale('pt-br');
 
 export default function AnamneseForm({
   email,
@@ -427,22 +434,28 @@ export default function AnamneseForm({
               name="birthDate"
               control={control}
               render={({ field, fieldState: { error } }) => (
-                <DatePicker
-                  label="Data de Nasc."
-                  value={dayjs(field?.value).toDate() || null}
-                  onChange={(newValue) => {
-                    field.onChange(newValue);
-                  }}
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      error: !!error,
-                    },
-                    actionBar: {
-                      actions: ['clear'],
-                    },
-                  }}
-                />
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  adapterLocale="pt-br"
+                  localeText={ptBR.components.MuiLocalizationProvider.defaultProps.localeText}
+                >
+                  <DatePicker
+                    label="Data de Nasc."
+                    value={field?.value ? dayjs(field.value) : null}
+                    onChange={(newValue) => {
+                      field.onChange(newValue);
+                    }}
+                    slotProps={{
+                      textField: {
+                        fullWidth: true,
+                        error: !!error,
+                      },
+                      actionBar: {
+                        actions: ['clear', 'cancel', 'accept'],
+                      },
+                    }}
+                  />
+                </LocalizationProvider>
               )}
             />
           </Stack>
