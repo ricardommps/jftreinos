@@ -2,6 +2,9 @@
 import 'simplebar-react/dist/simplebar.min.css';
 // lazy image
 import 'react-lazy-load-image-component/src/effects/blur.css';
+// slick-carousel
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
 
 import PropTypes from 'prop-types';
 // auth

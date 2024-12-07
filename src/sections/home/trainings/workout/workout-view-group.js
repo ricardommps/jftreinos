@@ -1,12 +1,14 @@
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
-import { alpha } from '@mui/material/styles';
-import React from 'react';
+import './slider.css'; // Inclui o CSS personalizado
 
-import WorkoutViewGroupItem from './workout-view-group-item';
+import Box from '@mui/material/Box';
+import CardHeader from '@mui/material/CardHeader';
+import { useTheme } from '@mui/material/styles';
+import Carousel, { CarouselArrows, useCarousel } from 'src/components/carousel';
+
+import WorkoutItemGroup from './workout-item-group';
 
 export default function WorkoutViewGroup({ media, exerciseInfo, workoutLoad }) {
+  const theme = useTheme();
   const handleType = () => {
     if (media.length === 2) {
       return 'BISET';
@@ -18,35 +20,50 @@ export default function WorkoutViewGroup({ media, exerciseInfo, workoutLoad }) {
 
     return 'CIRCUITO';
   };
+  const carousel = useCarousel({
+    slidesToShow: 4,
+    infinite: false,
+    responsive: [
+      {
+        breakpoint: theme.breakpoints.values.lg,
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: theme.breakpoints.values.md,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: theme.breakpoints.values.sm,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  });
   return (
-    <>
-      <Paper
-        variant="outlined"
-        pb={2}
+    <Box sx={{ py: 2, overflow: 'hidden', borderRadius: 2 }}>
+      <CardHeader
+        title={handleType()}
+        action={<CarouselArrows onNext={carousel.onNext} onPrev={carousel.onPrev} />}
         sx={{
-          marginBottom: '8.25px',
-          paddingTop: '10px',
-          paddingRight: '10px',
-          paddingLeft: '10px',
-          borderRadius: 1.5,
-          borderStyle: 'dashed',
-          borderColor: (theme) => alpha(theme.palette.grey[300], 0.5),
-          bgcolor: (theme) => alpha(theme.palette.grey[500], 0.04),
+          p: 1,
         }}
-      >
-        <Box justifyContent="flex-start" display="flex" p={1} gap={2}>
-          <Chip label={handleType()} color="info" />
-        </Box>
+      />
+      <Carousel ref={carousel.carouselRef} {...carousel.carouselSettings}>
         {media.map((subMedia, index) => (
-          <React.Fragment key={index}>
-            <WorkoutViewGroupItem
-              media={subMedia}
-              exerciseInfo={exerciseInfo}
-              workoutLoad={workoutLoad}
-            />
-          </React.Fragment>
+          <WorkoutItemGroup
+            key={subMedia.id}
+            media={subMedia}
+            exerciseInfo={exerciseInfo}
+            workoutLoad={workoutLoad}
+            index={index + 1}
+          />
         ))}
-      </Paper>
-    </>
+      </Carousel>
+    </Box>
   );
 }

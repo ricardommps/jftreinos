@@ -22,7 +22,6 @@ export default function ProgramDetails() {
     programDetail,
     finishedtraining,
     trainingsStatus,
-
     onClearFinishedtraining,
   } = useHome();
   const params = useParams();

@@ -7,8 +7,8 @@ const eventsFormated = (dataEvents) => {
     allDay: true,
     color: '#00B8D9',
     description: event.description || '', // Garantindo que tenha uma string
-    start: event.datePublished || new Date(), // Usar a data atual se for null
-    end: event.datePublished || new Date(), // Usar a data atual se for null
+    start: event.datePublished,
+    end: event.datePublished,
     trainingDateOther: event.trainingDateOther || null,
     title: event.name || '',
     subtitle: event.subtitle || '',

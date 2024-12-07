@@ -50,4 +50,10 @@ export const API_ENDPOINTS = {
     root: '/api/v2/rating',
   },
   workoutLoad: '/api/v2/workout-load',
+  workout: {
+    root: '/api/v2/workout',
+  },
+  finished: {
+    root: '/api/v2/finished',
+  },
 };

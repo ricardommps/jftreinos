@@ -9,6 +9,7 @@ import notificatiosReducer from './slices/notification';
 import ratingReducer from './slices/rating';
 import trainingReducer from './slices/training';
 import userReducer from './slices/user';
+import workoutReducer from './slices/workout';
 
 export const createNoopStorage = () => ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -43,4 +44,5 @@ export const rootReducer = combineReducers({
   rating: ratingReducer,
   anamnese: anamneseReducer,
   notifications: notificatiosReducer,
+  workout: workoutReducer,
 });

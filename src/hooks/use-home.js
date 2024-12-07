@@ -29,8 +29,8 @@ export default function useHome() {
     viewPdfStatus,
   } = useSelector((state) => state.home);
 
-  const onListPrograms = useCallback(() => {
-    dispatch(getAllPrograms());
+  const onListPrograms = useCallback(async () => {
+    await dispatch(getAllPrograms());
   }, [dispatch]);
 
   const onProgramDetail = useCallback(

@@ -3,68 +3,65 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { enqueueSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import CardHeader from 'src/components/card-header/card-header';
 import { useBoolean } from 'src/hooks/use-boolean';
-import useHome from 'src/hooks/use-home';
+import useWorkout from 'src/hooks/use-workout';
 import { useRouter } from 'src/routes/hook';
 import { paths } from 'src/routes/paths';
+import FinishGymTrainingForm from 'src/sections/home/trainings/finish-gym-training-form';
+import FinishTrainingForm from 'src/sections/home/trainings/finish-training-form';
 import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
 
-import FinishTrainingForm from './ finish-training-form';
-import FinishGymTrainingForm from './finish-gym-training-form';
-
-export default function FinishTraining({
+export default function FinishWorkout({
   open,
   onClose,
-  training,
-  type,
+  workout,
   unrealizedTraining,
   typeTrainingSelected,
 }) {
   const router = useRouter();
-  const { finishedtraining, finishedtrainingDetailStatus } = useHome();
+  const { finished, finishedStatus } = useWorkout();
   const openTable = useBoolean();
   useEffect(() => {
-    if (finishedtraining) {
+    if (finished) {
       enqueueSnackbar('Treino finalizado com sucesso!', {
         autoHideDuration: 8000,
         variant: 'success',
       });
       router.replace(paths.dashboard.root);
     }
-  }, [finishedtraining]);
+  }, [finished]);
 
   useEffect(() => {
-    if (finishedtrainingDetailStatus.error) {
+    if (useBoolean.error) {
       enqueueSnackbar('Não foi possível executar esta operação. Tente novamente mais tarde.', {
         autoHideDuration: 8000,
         variant: 'error',
       });
       router.replace(paths.dashboard.root);
     }
-  }, [finishedtrainingDetailStatus.error]);
+  }, [finishedStatus.error]);
 
   return (
     <Dialog fullScreen open={open}>
       <CardHeader
         title={
-          type === 2 ? 'Finalizar treino de força' : `Finalizar Treino ${typeTrainingSelected}`
+          workout.running ? `Finalizar Treino ${typeTrainingSelected}` : 'Finalizar treino de força'
         }
         action={onClose}
         onOpenTable={openTable.onTrue}
-        type={type}
+        type={workout.running ? 1 : 2}
       />
       <Box mt={12}>
         <DialogContent dividers sx={{ pt: 1, pb: 0, border: 'none' }}>
           <Stack>
             <ListItemText
               sx={{ mb: 1 }}
-              primary={getModuleName(training.name)}
-              secondary={fDateCalender(training.datePublished)}
+              primary={getModuleName(workout.name)}
+              secondary={fDateCalender(workout.datePublished)}
               primaryTypographyProps={{
                 typography: 'h6',
               }}
@@ -77,20 +74,20 @@ export default function FinishTraining({
             />
           </Stack>
           <Stack pt={2} pb={2}>
-            {type === 2 || unrealizedTraining ? (
+            {!workout.running || unrealizedTraining ? (
               <FinishGymTrainingForm
-                trainingId={training.id}
+                workoutId={workout.id}
                 onClose={onClose}
                 unrealizedTraining={unrealizedTraining}
               />
             ) : (
               <>
-                <Typography>Métricas do treino</Typography>
                 <FinishTrainingForm
-                  trainingId={training.id}
+                  workoutId={workout.id}
                   onClose={onClose}
                   typeTrainingSelected={typeTrainingSelected}
-                  name={training.name}
+                  name={workout.name}
+                  unrealizedTraining={unrealizedTraining}
                 />
               </>
             )}

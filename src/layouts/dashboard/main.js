@@ -22,6 +22,7 @@ export default function Main({ children, sx, ...other }) {
           py: `${HEADER.H_DESKTOP + SPACING}px`,
           width: `calc(100% - ${NAV.W_VERTICAL}px)`,
         }),
+        paddingBottom: 0,
         ...sx,
       }}
       {...other}

@@ -29,6 +29,8 @@ export const paths = {
     home: {
       root: `${ROOTS.DASHBOARD}/home`,
       details: (id) => `${ROOTS.DASHBOARD}/home/${id}`,
+      running: (id) => `${ROOTS.DASHBOARD}/home/workout-running/${id}`,
+      gym: (id) => `${ROOTS.DASHBOARD}/home/workout-gym/${id}`,
     },
     metrics: {
       root: () => `${ROOTS.DASHBOARD}/metrics/`,
@@ -45,6 +47,12 @@ export const paths = {
     security: `${ROOTS.DASHBOARD}/security`,
     training: {
       root: (id) => `${ROOTS.DASHBOARD}/training/${id}`,
+    },
+    workout: {
+      root: (id, readonly = false) => {
+        const url = `${ROOTS.DASHBOARD}/workout/${id}`;
+        return readonly ? `${url}?readonly=true` : url;
+      },
     },
   },
 };

@@ -25,7 +25,7 @@ import { paths } from 'src/routes/paths';
 import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
 
-import FinishTraining from '../ finish-training';
+import FinishTraining from '../finish-training';
 import TypeTraining from '../type-training';
 import CalendarDetails from './calendar-details';
 import CalendarToolbar from './calendar-toolbar';
@@ -136,7 +136,6 @@ export default function Calendar({ id, type }) {
   }, [unrealizedTraining]);
 
   const extraTrainings = events.filter((item) => !item.start);
-
   return (
     <>
       {extraTrainings && extraTrainings.length > 0 && (
