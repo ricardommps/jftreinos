@@ -130,16 +130,18 @@ export default function ItemProgram({ program, onView }) {
           <Iconify icon="solar:eye-bold" />
           Ver treino
         </MenuItem>
-        <MenuItem
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          onClick={(e) => {
-            viewPdf.onTrue();
-            popover.onClose();
-          }}
-        >
-          <PrintIcon sx={{ fontSize: '22px', width: '22px', height: '30px' }} />
-          Pdf
-        </MenuItem>
+        {false && (
+          <MenuItem
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            onClick={(e) => {
+              viewPdf.onTrue();
+              popover.onClose();
+            }}
+          >
+            <PrintIcon sx={{ fontSize: '22px', width: '22px', height: '30px' }} />
+            Pdf
+          </MenuItem>
+        )}
       </CustomPopover>
       {viewPdf.value && (
         <PdfView open={viewPdf.value} onClose={handleClosePdfView} programId={program.id} />
