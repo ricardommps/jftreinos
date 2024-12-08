@@ -1,16 +1,12 @@
 import InputAdornment from '@mui/material/InputAdornment';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import { useCallback } from 'react';
 import Iconify from 'src/components/iconify';
-import Label from 'src/components/label';
 import usePagination from 'src/hooks/use-pagination';
 
-import HistoricItem from './historic-item';
+import HistoryItem from '../workout/history/history-item';
 
 export default function HistoricList({
   historics,
@@ -23,11 +19,7 @@ export default function HistoricList({
   getFinishedList,
   handleResetFilterName,
 }) {
-  const STATUS_OPTIONS = [
-    { value: 'all', label: 'Todos' },
-    { value: 'corrida', label: 'Corrida' },
-    { value: 'forca', label: 'Força' },
-  ];
+  const STATUS_OPTIONS = [{ value: 'all', label: 'Todos' }];
 
   const data = usePagination(historics, perPage);
   const count = Math.ceil(historics?.length / perPage);
@@ -54,53 +46,8 @@ export default function HistoricList({
     },
     [handleFilters],
   );
-
-  const refreshList = () => {
-    setPage(1);
-    data.resetPage();
-    getFinishedList();
-  };
-
   return (
     <>
-      <Tabs
-        value={filters.type}
-        onChange={handleFilterType}
-        indicatorColor="secondary"
-        sx={{
-          boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-        }}
-      >
-        {STATUS_OPTIONS.map((tab) => (
-          <Tab
-            key={tab.value}
-            iconPosition="end"
-            value={tab.value}
-            label={tab.label}
-            icon={
-              <Label
-                variant={
-                  ((tab.value === 'all' || tab.value === filters.item) && 'filled') || 'soft'
-                }
-                color={
-                  (tab.value === 'all' && 'default') ||
-                  (tab.value === 'corrida' && 'success') ||
-                  (tab.value === 'forca' && 'info') ||
-                  'default'
-                }
-              >
-                {tab.value === 'all' && finishedList.length}
-
-                {tab.value === 'corrida' &&
-                  finishedList.filter((item) => item.type === 1 || !item?.type).length}
-
-                {tab.value === 'forca' && finishedList.filter((item) => item.type === 2).length}
-              </Label>
-            }
-            sx={{ textTransform: 'capitalize' }}
-          />
-        ))}
-      </Tabs>
       <Stack
         direction="row"
         alignItems="center"
@@ -127,8 +74,8 @@ export default function HistoricList({
       </Stack>
 
       <>
-        {data.currentData().map((historic) => (
-          <HistoricItem historic={historic} key={historic.id} refreshList={refreshList} />
+        {data.currentData().map((item) => (
+          <HistoryItem historyItem={item} key={item.id} workoutInfo={true} />
         ))}
         {historics.length > perPage && (
           <Pagination

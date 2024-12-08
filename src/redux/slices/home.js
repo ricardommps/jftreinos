@@ -302,10 +302,14 @@ export function getFinishedListReq(timestampFrom, timestampTo) {
   return async (dispatch) => {
     dispatch(slice.actions.getFinishedListStart());
     try {
-      const response = await axios.get(
+      const finishedTraining = await axios.get(
         `${API_ENDPOINTS.home.finishedList}?timestampFrom=${timestampFrom}&timestampTo=${timestampTo}`,
       );
-      dispatch(slice.actions.getFinishedListSuccess(response.data));
+      const finished = await axios.get(
+        `${API_ENDPOINTS.finished.root}/listByUser?timestampFrom=${timestampFrom}&timestampTo=${timestampTo}`,
+      );
+      const response = [...finished.data, ...finishedTraining.data];
+      dispatch(slice.actions.getFinishedListSuccess(response));
     } catch (error) {
       dispatch(slice.actions.getFinishedListFailure(error));
     }

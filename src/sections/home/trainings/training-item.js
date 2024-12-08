@@ -8,7 +8,7 @@ import { ptBR } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import FinishTraining from './ finish-training';
+import FinishTraining from './finish-training';
 import TrainingDetails from './training-details';
 export default function TrainingItem({ training, finished = false }) {
   const finishedTraining = useBoolean();

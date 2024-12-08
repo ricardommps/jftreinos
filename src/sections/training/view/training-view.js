@@ -23,7 +23,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import useTraining from 'src/hooks/use-training';
 import { useRouter } from 'src/routes/hook';
 import DialogTablePaceSpeed from 'src/sections/home/dialog-table-pace-speed/dialog-table-pace-speed';
-import FinishTraining from 'src/sections/home/trainings/ finish-training';
+import FinishTraining from 'src/sections/home/trainings/finish-training';
 import TypeTraining from 'src/sections/home/trainings/type-training';
 import WorkoutView from 'src/sections/home/trainings/workout/workout-view';
 import { fDateCalender } from 'src/utils/format-time';
@@ -137,7 +137,7 @@ export default function TrainingView() {
                   {training.training.name !== 'FORCA' && (
                     <Stack>
                       <Stack spacing={1.5} direction="row" mt={0.5} pr={2}>
-                        <Typography>Tabela Pace km/h</Typography>
+                        <Typography>Tabela Pace km-h</Typography>
                         <IconButton sx={{ padding: 0 }} onClick={openTable.onTrue}>
                           <Iconify icon="eva:info-outline" />
                         </IconButton>

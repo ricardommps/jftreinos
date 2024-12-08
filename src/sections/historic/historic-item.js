@@ -223,7 +223,12 @@ export default function HistoricItem({ historic, refreshList }) {
             variant="subtitle1"
             color={historic?.type === 2 ? theme.palette.info.main : theme.palette.success.main}
           >
-            Finalizado em: {format(new Date(historic.created_at), 'dd/MM/yyyy', { locale: ptBR })}
+            Finalizado em:{' '}
+            {format(
+              new Date(historic.executionDay ? historic.executionDay : historic.created_at),
+              'dd/MM/yyyy',
+              { locale: ptBR },
+            )}
           </Typography>
         </Box>
         <CardActions

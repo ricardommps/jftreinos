@@ -28,7 +28,7 @@ export default function CardHeader({ title, action, onOpenTable, type }) {
           (type === 1 && (
             <Stack>
               <Stack spacing={1.5} direction="row" mt={0.5} pr={2}>
-                <Typography>Tabela Pace km/h</Typography>
+                <Typography>Tabela Pace km-h</Typography>
                 <IconButton sx={{ padding: 0 }} onClick={onOpenTable}>
                   <Iconify icon="eva:info-outline" />
                 </IconButton>

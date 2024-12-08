@@ -48,7 +48,7 @@ export default function ProgramInfo({ programDetail }) {
         </IconButton>
       </Stack>
       <Stack spacing={1.5} direction="row">
-        <Typography>Tabela Pace km/h</Typography>
+        <Typography>Tabela Pace km-h</Typography>
         <IconButton sx={{ padding: 0 }} onClick={openTable.onTrue}>
           <Iconify icon="eva:info-outline" />
         </IconButton>
