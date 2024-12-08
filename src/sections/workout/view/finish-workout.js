@@ -10,8 +10,8 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import useWorkout from 'src/hooks/use-workout';
 import { useRouter } from 'src/routes/hook';
 import { paths } from 'src/routes/paths';
-import FinishGymTrainingForm from 'src/sections/home/trainings/finish-gym-training-form';
-import FinishTrainingForm from 'src/sections/home/trainings/finish-training-form';
+import FinishGymTrainingFormV2 from 'src/sections/home/trainings/finish-gym-training-form-vs2';
+import FinishTrainingFormVs2 from 'src/sections/home/trainings/finish-training-form-vs2';
 import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
 
@@ -75,14 +75,14 @@ export default function FinishWorkout({
           </Stack>
           <Stack pt={2} pb={2}>
             {!workout.running || unrealizedTraining ? (
-              <FinishGymTrainingForm
+              <FinishGymTrainingFormV2
                 workoutId={workout.id}
                 onClose={onClose}
                 unrealizedTraining={unrealizedTraining}
               />
             ) : (
               <>
-                <FinishTrainingForm
+                <FinishTrainingFormVs2
                   workoutId={workout.id}
                   onClose={onClose}
                   typeTrainingSelected={typeTrainingSelected}

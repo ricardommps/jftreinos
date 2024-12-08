@@ -20,6 +20,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Iconify from 'src/components/iconify/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { useBoolean } from 'src/hooks/use-boolean';
+import useHome from 'src/hooks/use-home';
 import useTraining from 'src/hooks/use-training';
 import { useRouter } from 'src/routes/hook';
 import DialogTablePaceSpeed from 'src/sections/home/dialog-table-pace-speed/dialog-table-pace-speed';
@@ -38,6 +39,7 @@ export default function TrainingView() {
   const params = useParams();
   const { id } = params;
   const { onGetTraining, training } = useTraining();
+  const { programDetail } = useHome();
   const openTable = useBoolean();
   const finishTraining = useBoolean();
   const openTypeTraining = useBoolean();
@@ -117,6 +119,7 @@ export default function TrainingView() {
       }
     }
   }, [training, setMediasStretches, setMedias, setMediasHeating]);
+
   return (
     <>
       <Stack spacing={1.5} direction="row" pl={2}>
@@ -362,6 +365,7 @@ export default function TrainingView() {
           type={training.type}
           unrealizedTraining={unrealizedTraining}
           typeTrainingSelected={typeTrainingSelected}
+          vs2={programDetail.vs2}
         />
       )}
       {openTable.value && (

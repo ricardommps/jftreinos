@@ -62,6 +62,7 @@ export default function HomeView() {
         flexDirection: 'column',
         justifyContent: 'space-between',
         position: 'relative',
+        pb: 10,
       }}
     >
       {ratingStatus?.loading && (

@@ -15,7 +15,9 @@ import { fDateCalender } from 'src/utils/format-time';
 import { getModuleName } from 'src/utils/modules';
 
 import FinishGymTrainingForm from './finish-gym-training-form';
+import FinishGymTrainingFormV2 from './finish-gym-training-form-vs2';
 import FinishTrainingForm from './finish-training-form';
+import FinishTrainingFormVs2 from './finish-training-form-vs2';
 
 export default function FinishTraining({
   open,
@@ -24,6 +26,7 @@ export default function FinishTraining({
   type,
   unrealizedTraining,
   typeTrainingSelected,
+  vs2,
 }) {
   const router = useRouter();
   const { finishedtraining, finishedtrainingDetailStatus } = useHome();
@@ -78,20 +81,39 @@ export default function FinishTraining({
           </Stack>
           <Stack pt={2} pb={2}>
             {type === 2 || unrealizedTraining ? (
-              <FinishGymTrainingForm
-                trainingId={training.id}
-                onClose={onClose}
-                unrealizedTraining={unrealizedTraining}
-              />
+              <>
+                {vs2 ? (
+                  <FinishGymTrainingFormV2
+                    trainingId={training.id}
+                    onClose={onClose}
+                    unrealizedTraining={unrealizedTraining}
+                  />
+                ) : (
+                  <FinishGymTrainingForm
+                    trainingId={training.id}
+                    onClose={onClose}
+                    unrealizedTraining={unrealizedTraining}
+                  />
+                )}
+              </>
             ) : (
               <>
                 <Typography>Métricas do treino</Typography>
-                <FinishTrainingForm
-                  trainingId={training.id}
-                  onClose={onClose}
-                  typeTrainingSelected={typeTrainingSelected}
-                  name={training.name}
-                />
+                {vs2 ? (
+                  <FinishTrainingFormVs2
+                    trainingId={training.id}
+                    onClose={onClose}
+                    typeTrainingSelected={typeTrainingSelected}
+                    name={training.name}
+                  />
+                ) : (
+                  <FinishTrainingForm
+                    trainingId={training.id}
+                    onClose={onClose}
+                    typeTrainingSelected={typeTrainingSelected}
+                    name={training.name}
+                  />
+                )}
               </>
             )}
           </Stack>
