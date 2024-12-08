@@ -56,6 +56,7 @@ export default function HistoryItem({ historyItem, workoutInfo }) {
       );
     }
   };
+
   return (
     <Stack component={Card} direction="row" sx={{ opacity: opacityCard(), mb: 2 }}>
       <Stack
@@ -153,13 +154,17 @@ export default function HistoryItem({ historyItem, workoutInfo }) {
           </>
         )}
 
-        {workoutInfo && (
+        {false && (
           <Button
             variant="outlined"
             color="info"
             fullWidth
             sx={{ marginTop: 2 }}
-            onClick={() => handleOpenWorkout(historyItem.workoutId)}
+            onClick={() =>
+              handleOpenWorkout(
+                historyItem.trainingid ? historyItem.trainingid : historyItem.workoutId,
+              )
+            }
           >
             Ver treino
           </Button>
