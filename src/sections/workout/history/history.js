@@ -31,7 +31,7 @@ export default function History({ open, onClose, history, title }) {
         <Box pb={2}>
           <Typography variant="body1">{title}</Typography>
         </Box>
-        {sortedItems.length && (
+        {sortedItems.length > 0 && (
           <>
             {sortedItems.map((item) => (
               <HistoryItem historyItem={item} key={item.id} />

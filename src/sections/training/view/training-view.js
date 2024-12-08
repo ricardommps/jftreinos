@@ -219,7 +219,7 @@ export default function TrainingView() {
 
                 {mediasStretches &&
                   mediasStretches.length > 0 &&
-                  training?.training?.stretchesOrder.length > 0 && (
+                  training?.training?.stretchesOrder?.length > 0 && (
                     <>
                       <Accordion
                         aria-controls="stretches-medias-content"
