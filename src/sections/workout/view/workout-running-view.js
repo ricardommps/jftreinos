@@ -81,10 +81,12 @@ export default function WorkoutRunningView() {
   const today = new Date();
 
   function getFilteredWorkouts(workouts, day) {
-    const daySplit = new Date(day).toISOString().split('T')[0];
+    const currentDate = new Date(day);
+    currentDate.setUTCHours(0, 1, 0, 0);
     return workouts.filter((workout) => {
-      const workoutDate = new Date(workout.datePublished).toISOString().split('T')[0];
-      return workoutDate === daySplit;
+      const datePublished = new Date(workout.datePublished);
+      datePublished.setUTCHours(0, 1, 0, 0);
+      return currentDate.toISOString() === datePublished.toISOString();
     });
   }
 
