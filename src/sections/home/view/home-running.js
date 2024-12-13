@@ -69,13 +69,27 @@ export default function HomeRunning({ workouts, workoutsStatus, program, loading
   const openCalendar = Boolean(anchorElCalendar);
   const idCalendarPopover = openCalendar ? 'date-calendar-popover' : undefined;
 
+  function toISOStringWithTimezone(date) {
+    const offsetMs = date.getTimezoneOffset() * 60 * 1000; // Offset do fuso horário em milissegundos
+    const localTime = new Date(date.getTime() - offsetMs); // Ajusta para o horário local
+
+    const isoString = localTime.toISOString();
+    return isoString.split('T')[0]; // Remove o 'Z' do final
+  }
+
   function getFilteredWorkouts(workouts, day) {
-    const currentDate = new Date(day);
-    currentDate.setUTCHours(0, 1, 0, 0);
+    const currentDate = toISOStringWithTimezone(new Date(day));
     return workouts.filter((workout) => {
-      const datePublished = new Date(workout.datePublished);
-      datePublished.setUTCHours(0, 1, 0, 0);
-      return currentDate.toISOString() === datePublished.toISOString();
+      const datePublished = toISOStringWithTimezone(new Date(workout.datePublished));
+      return currentDate === datePublished;
+    });
+  }
+
+  function getFilteredWorkoutStart(workouts) {
+    const currentDate = toISOStringWithTimezone(new Date());
+    return workouts.filter((workout) => {
+      const datePublished = toISOStringWithTimezone(new Date(workout.datePublished));
+      return currentDate === datePublished;
     });
   }
 
@@ -149,7 +163,7 @@ export default function HomeRunning({ workouts, workoutsStatus, program, loading
 
   useEffect(() => {
     if (workouts?.length > 0) {
-      setFilteredWorkouts(getFilteredWorkouts(workouts, today));
+      setFilteredWorkouts(getFilteredWorkoutStart(workouts, today));
     } else {
       setFilteredWorkouts([]); // Define como array vazio se não houver workouts
     }
