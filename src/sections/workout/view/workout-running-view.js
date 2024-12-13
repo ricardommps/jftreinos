@@ -80,13 +80,27 @@ export default function WorkoutRunningView() {
 
   const today = new Date();
 
+  function toISOStringWithTimezone(date) {
+    const offsetMs = date.getTimezoneOffset() * 60 * 1000; // Offset do fuso horário em milissegundos
+    const localTime = new Date(date.getTime() - offsetMs); // Ajusta para o horário local
+
+    const isoString = localTime.toISOString();
+    return isoString.split('T')[0]; // Remove o 'Z' do final
+  }
+
   function getFilteredWorkouts(workouts, day) {
-    const currentDate = new Date(day);
-    currentDate.setUTCHours(0, 1, 0, 0);
+    const currentDate = toISOStringWithTimezone(new Date(day));
     return workouts.filter((workout) => {
-      const datePublished = new Date(workout.datePublished);
-      datePublished.setUTCHours(0, 1, 0, 0);
-      return currentDate.toISOString() === datePublished.toISOString();
+      const datePublished = toISOStringWithTimezone(new Date(workout.datePublished));
+      return currentDate === datePublished;
+    });
+  }
+
+  function getFilteredWorkoutStart(workouts) {
+    const currentDate = toISOStringWithTimezone(new Date());
+    return workouts.filter((workout) => {
+      const datePublished = toISOStringWithTimezone(new Date(workout.datePublished));
+      return currentDate === datePublished;
     });
   }
 
@@ -179,7 +193,7 @@ export default function WorkoutRunningView() {
 
   useEffect(() => {
     if (workouts?.items?.length > 0) {
-      setFilteredWorkouts(getFilteredWorkouts(workouts.items, today));
+      setFilteredWorkouts(getFilteredWorkoutStart(workouts.items, today));
     } else {
       setFilteredWorkouts([]); // Define como array vazio se não houver workouts
     }
