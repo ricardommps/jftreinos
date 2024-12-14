@@ -4,14 +4,14 @@ import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import Typography from '@mui/material/Typography';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import Iconify from 'src/components/iconify';
 import Image from 'src/components/image';
 import PdfView from 'src/components/pdf-view/pdf-view';
 import { useBoolean } from 'src/hooks/use-boolean';
 import useHome from 'src/hooks/use-home';
+import { fDate } from 'src/utils/format-time';
 
 export default function ItemProgram({ program, onView }) {
   const { onClearViewPdf } = useHome();
@@ -41,13 +41,22 @@ export default function ItemProgram({ program, onView }) {
     onClearViewPdf();
     viewPdf.onFalse();
   };
-
+  console.log('----program---', program);
   const renderTexts = (
     <ListItemText
       sx={{
         p: (theme) => theme.spacing(2.5, 2.5, 2, 2.5),
       }}
-      primary={format(new Date(program.referenceMonth), 'MMMM/yyyy', { locale: ptBR })}
+      primary={
+        <>
+          {program.startDate && program.endDate && (
+            <Typography variant="subtitle2">{`${fDate(program.startDate, 'dd/MM/yyyy')} - ${fDate(
+              program.endDate,
+              'dd/MM/yyyy',
+            )}`}</Typography>
+          )}
+        </>
+      }
       secondary={program.name}
       primaryTypographyProps={{
         typography: 'caption',
