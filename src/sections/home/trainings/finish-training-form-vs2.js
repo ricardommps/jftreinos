@@ -35,6 +35,8 @@ export const OPTIONS = [
   { label: 'Km/h', value: 'km' },
 ];
 
+const urlRegex = /(https?:\/\/[^\s]+)/g;
+
 export default function FinishTrainingFormVs2({
   workoutId,
   onClose,
@@ -62,6 +64,7 @@ export default function FinishTrainingFormVs2({
   const [openTimeSelect, setOpenTimeSelect] = useState(false);
   const [openPaceSelect, setOpenPaceSelect] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorLink, setErrorLink] = useState(false);
 
   const defaultValues = useMemo(
     () => ({
@@ -112,7 +115,18 @@ export default function FinishTrainingFormVs2({
     return 0;
   };
 
+  const transformToLink = (inputText) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const result = inputText.replace(
+      urlRegex,
+      (url) => `<a href="${url}" target="_blank">${url}</a>`,
+    );
+
+    return result;
+  };
+
   const onSubmit = useCallback(async (data) => {
+    setLoading(true);
     try {
       const payload = Object.assign({}, data);
       if (payload.intensities) {
@@ -123,6 +137,7 @@ export default function FinishTrainingFormVs2({
       payload.distanceInMeters = Number(payload.distanceInMeters);
       payload.durationInSeconds = Number(payload.durationInSeconds);
       payload.rpe = Number(payload.rpe);
+      payload.link = !errorLink ? transformToLink(payload.link) : payload.link;
       payload.workoutId = Number(payload.workoutId);
       payload.paceInSeconds = Number(payload.paceInSeconds);
       payload.distance = undefined;
@@ -133,12 +148,14 @@ export default function FinishTrainingFormVs2({
         payload.unrealized = unrealizedTraining;
       }
       await onFinishedWorkout(payload);
+      setLoading(true);
     } catch (error) {
       enqueueSnackbar('Não foi possível executar esta operação. Tente novamente mais tarde.', {
         autoHideDuration: 8000,
         variant: 'error',
       });
       onClose();
+      setLoading(true);
     }
   }, []);
 
@@ -200,6 +217,19 @@ export default function FinishTrainingFormVs2({
     setValue('intensities', [...newIntensities]);
   };
 
+  const handleBlurLink = () => {
+    const link = values.link;
+    if (link.startsWith('http')) {
+      setErrorLink(false);
+      return;
+    }
+    if (!urlRegex.test(link)) {
+      setErrorLink(true);
+    } else {
+      setErrorLink(false);
+    }
+  };
+
   const enableIntensities =
     name === 'HIIT_CURTO' ||
     name === 'HIITT_LONGO' ||
@@ -214,6 +244,15 @@ export default function FinishTrainingFormVs2({
   useEffect(() => {
     updateIntensitiesItems();
   }, [values.quantity]);
+
+  useEffect(() => {
+    if (errorLink) {
+      enqueueSnackbar('Atenção, o link do treino não é um link válido!', {
+        autoHideDuration: 8000,
+        variant: 'warning',
+      });
+    }
+  }, [errorLink]);
 
   return (
     <>
@@ -389,7 +428,21 @@ export default function FinishTrainingFormVs2({
                 </Box>
               )}
 
-              <RHFTextField name="link" label="Link" variant="outlined" />
+              <RHFTextField
+                name="link"
+                label="Link"
+                variant="outlined"
+                multiline
+                rows={4}
+                onBlur={handleBlurLink}
+              />
+              {errorLink && (
+                <Box sx={{ marginTop: '5px' }}>
+                  <Alert variant="filled" severity="warning">
+                    {'Atenção, o link do treino não é um link válido!'}
+                  </Alert>
+                </Box>
+              )}
               <RPSSlider control={control} />
               <Stack>
                 <Typography>{`Trimp: ${values.trimp}`}</Typography>
