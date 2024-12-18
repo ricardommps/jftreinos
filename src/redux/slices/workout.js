@@ -117,6 +117,8 @@ const slice = createSlice({
 
 export default slice.reducer;
 
+let abortController = null;
+
 export function getWorkouts(programId, type) {
   return async (dispatch) => {
     const workoutType = type === 1 ? 'running' : 'gym';
@@ -162,13 +164,29 @@ export function getWorkout(id) {
 
 export function finishedWorkout(payload) {
   return async (dispatch) => {
-    dispatch(slice.actions.finishedWorkoutStart());
+    // Cancelar a requisição anterior, se existir
+    if (abortController) {
+      abortController.abort(); // Cancela a requisição anterior
+    }
+    // Criar um novo AbortController para a nova requisição
+    abortController = new AbortController();
     try {
-      const response = await axios.post(API_ENDPOINTS.finished.root, payload);
+      dispatch(slice.actions.finishedWorkoutStart());
+      const response = await axios.post(API_ENDPOINTS.finished.root, payload, {
+        signal: abortController.signal,
+      });
       dispatch(slice.actions.finishedWorkoutSuccess(response.data));
+      return response;
     } catch (error) {
-      dispatch(slice.actions.finishedWorkoutFailure(error));
-      throw error(error);
+      if (error.name === 'CanceledError') {
+        console.error(error.message);
+      } else {
+        dispatch(slice.actions.finishedWorkoutFailure(error));
+        throw error(error);
+      }
+    } finally {
+      // Resetar o CancelToken após a conclusão da requisição
+      abortController = null;
     }
   };
 }

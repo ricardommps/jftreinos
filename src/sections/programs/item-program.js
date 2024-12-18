@@ -41,7 +41,7 @@ export default function ItemProgram({ program, onView }) {
     onClearViewPdf();
     viewPdf.onFalse();
   };
-  console.log('----program---', program);
+
   const renderTexts = (
     <ListItemText
       sx={{
