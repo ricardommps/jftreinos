@@ -194,6 +194,7 @@ export default function WorkoutView() {
                     medias={medias}
                     mediaOrder={workout?.mediaOrder}
                     exerciseInfo={workout?.exerciseInfo}
+                    isWorkoutLoad={true}
                   />
 
                   {workout?.recovery && (
@@ -267,7 +268,7 @@ export default function WorkoutView() {
   );
 }
 
-function WorkoutSection({ title, description, medias, mediaOrder, exerciseInfo }) {
+function WorkoutSection({ title, description, medias, mediaOrder, exerciseInfo, isWorkoutLoad }) {
   if (!description && (!medias || medias.length === 0 || !mediaOrder?.length)) return null;
 
   return (
@@ -284,7 +285,12 @@ function WorkoutSection({ title, description, medias, mediaOrder, exerciseInfo }
           </Stack>
         )}
         {medias && medias.length > 0 && (
-          <CustomWorkoutView medias={medias} mediaOrder={mediaOrder} exerciseInfo={exerciseInfo} />
+          <CustomWorkoutView
+            medias={medias}
+            mediaOrder={mediaOrder}
+            exerciseInfo={exerciseInfo}
+            isWorkoutLoad={isWorkoutLoad}
+          />
         )}
       </AccordionDetails>
     </Accordion>

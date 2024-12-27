@@ -1,10 +1,61 @@
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import TextMaxLine from 'src/components/text-max-line';
-export default function WorkoutItemGroup({ media, exerciseInfo, index }) {
+import useTraining from 'src/hooks/use-training';
+export default function WorkoutItemGroup({ media, exerciseInfo, index, isWorkoutLoad }) {
+  const { onSaveWorkoutLoad, onGetWorkoutLoad, workoutLoad } = useTraining();
   const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [carga, setCarga] = useState(null);
+
+  const handleEditClick = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleCargaChange = (event) => {
+    setCarga(event.target.value);
+  };
+
+  const handleSaveLoad = useCallback(async () => {
+    try {
+      await onSaveWorkoutLoad(media.id, carga);
+      console.log('--DEBUG--onSaveWorkoutLoad----');
+      setIsEditing(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [media.id, carga]);
+
+  const initialize = useCallback(async () => {
+    try {
+      onGetWorkoutLoad(media.id);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [isWorkoutLoad]);
+
+  useEffect(() => {
+    if (isWorkoutLoad) {
+      initialize();
+    }
+  }, [initialize]);
+
+  useEffect(() => {
+    if (workoutLoad?.length > 0) {
+      if (workoutLoad[0].media_id === media.id) {
+        setCarga(workoutLoad[0].load);
+      }
+    }
+  }, [workoutLoad, exerciseInfoById]);
+
   const handleError = (e) => {
     console.log(e);
   };
@@ -50,6 +101,51 @@ export default function WorkoutItemGroup({ media, exerciseInfo, index }) {
           light={media.thumbnail}
           onError={(e) => handleError(e)}
         />
+        {isWorkoutLoad && (
+          <Stack>
+            <Alert
+              variant="outlined"
+              severity="info"
+              icon={false}
+              action={
+                <>
+                  {!isEditing ? (
+                    <Button color="inherit" size="small" onClick={handleEditClick}>
+                      Editar
+                    </Button>
+                  ) : (
+                    <Button color="inherit" size="small" onClick={handleSaveLoad}>
+                      Salvar
+                    </Button>
+                  )}
+                </>
+              }
+            >
+              <Stack direction="column" spacing={1}>
+                <Stack>
+                  {isEditing ? (
+                    <TextField
+                      value={carga}
+                      onChange={handleCargaChange}
+                      size="small"
+                      placeholder="Digita a carga"
+                    />
+                  ) : (
+                    <>
+                      <AlertTitle>
+                        <Stack direction="row" spacing={1}>
+                          <Typography> Carga: </Typography>
+                          <Typography fontWeight={'bold'}>{carga}</Typography>
+                        </Stack>
+                      </AlertTitle>
+                      {!carga && <>Clique em editar para definir a carga</>}
+                    </>
+                  )}
+                </Stack>
+              </Stack>
+            </Alert>
+          </Stack>
+        )}
       </Stack>
       <Stack flexDirection={'row'}>
         <Stack spacing={1} p={2}>

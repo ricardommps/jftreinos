@@ -4,7 +4,6 @@ import {
   getWorkout,
   getWorkouts,
   getWorkoutsByProgramId,
-  upDateWorkout,
 } from 'src/redux/slices/workout';
 import { useDispatch, useSelector } from 'src/redux/store';
 export default function useWorkout() {
@@ -20,12 +19,12 @@ export default function useWorkout() {
     finishedStatus,
   } = useSelector((state) => state.workout);
 
-  const onUpdateWorkout = useCallback(
-    async (payload, id) => {
-      await dispatch(upDateWorkout(payload, id));
-    },
-    [dispatch],
-  );
+  // const onUpdateWorkout = useCallback(
+  //   async (payload, id) => {
+  //     await dispatch(upDateWorkout(payload, id));
+  //   },
+  //   [dispatch],
+  // );
 
   const onListWorkouts = useCallback(
     async (programId, type) => {
@@ -58,7 +57,6 @@ export default function useWorkout() {
   return {
     onListWorkouts,
     onGetWorkout,
-    onUpdateWorkout,
     onFinishedWorkout,
     onListWorkoutsByProgramId,
     workouts,
