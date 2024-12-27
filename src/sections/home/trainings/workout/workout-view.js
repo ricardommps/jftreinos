@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import WorkoutItem from './workout-item';
 import WorkoutViewGroup from './workout-view-group';
 
-export default function WorkoutView({ medias, mediaOrder, exerciseInfo, type, workoutLoad }) {
+export default function WorkoutView({ medias, mediaOrder, exerciseInfo, isWorkoutLoad }) {
   return (
     <Box sx={{ p: 0 }}>
       <Stack spacing={2}>
@@ -19,7 +19,7 @@ export default function WorkoutView({ medias, mediaOrder, exerciseInfo, type, wo
                   key={`group-${index}`}
                   media={groupedMedias}
                   exerciseInfo={exerciseInfo}
-                  workoutLoad={workoutLoad}
+                  isWorkoutLoad={isWorkoutLoad}
                 />
               );
             }
@@ -31,7 +31,7 @@ export default function WorkoutView({ medias, mediaOrder, exerciseInfo, type, wo
                   key={media.id}
                   media={media}
                   exerciseInfo={exerciseInfo}
-                  workoutLoad={workoutLoad}
+                  isWorkoutLoad={isWorkoutLoad}
                 />
               );
             }
