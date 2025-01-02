@@ -25,7 +25,12 @@ import RPSSlider from './rpe-slider';
 dayjs.extend(localeData);
 dayjs.locale('pt-br');
 
-export default function FinishGymTrainingFormV2({ workoutId, onClose, unrealizedTraining }) {
+export default function FinishGymTrainingFormV2({
+  workoutId,
+  onClose,
+  unrealizedTraining,
+  checkList,
+}) {
   const { onFinishedWorkout } = useWorkout();
   const [loading, setLoading] = useState(false);
   const NewGymTrainingSchema = Yup.object().shape({
@@ -61,6 +66,7 @@ export default function FinishGymTrainingFormV2({ workoutId, onClose, unrealized
       const payload = Object.assign({}, data);
       payload.workoutId = Number(payload.workoutId);
       payload.rpe = Number(payload.rpe);
+      payload.checkList = checkList;
       if (unrealizedTraining) {
         payload.executionDay = convertDate(new Date());
         payload.unrealized = unrealizedTraining;

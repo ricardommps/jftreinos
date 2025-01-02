@@ -1,5 +1,6 @@
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -9,7 +10,14 @@ import { useCallback, useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import TextMaxLine from 'src/components/text-max-line';
 import useTraining from 'src/hooks/use-training';
-export default function WorkoutItemGroup({ media, exerciseInfo, index, isWorkoutLoad }) {
+export default function WorkoutItemGroup({
+  media,
+  exerciseInfo,
+  index,
+  isWorkoutLoad,
+  checkList,
+  handleCheckList,
+}) {
   const { onSaveWorkoutLoad, onGetWorkoutLoad, workoutLoad } = useTraining();
   const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
 
@@ -27,7 +35,6 @@ export default function WorkoutItemGroup({ media, exerciseInfo, index, isWorkout
   const handleSaveLoad = useCallback(async () => {
     try {
       await onSaveWorkoutLoad(media.id, carga);
-      console.log('--DEBUG--onSaveWorkoutLoad----');
       setIsEditing(false);
     } catch (error) {
       console.error(error);
@@ -66,6 +73,11 @@ export default function WorkoutItemGroup({ media, exerciseInfo, index, isWorkout
         borderRadius: 2,
         position: 'relative',
         bgcolor: 'background.neutral',
+        ...(exerciseInfoById?.id &&
+          checkList.includes(media.id) && {
+            border: (theme) => theme.palette.primary.main,
+            borderStyle: 'dashed',
+          }),
       }}
     >
       <Stack
@@ -232,6 +244,11 @@ export default function WorkoutItemGroup({ media, exerciseInfo, index, isWorkout
           )}
         </Stack>
       </Stack>
+      <Box p={2}>
+        <Button variant="outlined" onClick={() => handleCheckList(media.id)}>
+          {!checkList.includes(media.id) ? 'Marcar como feito' : 'Desmarcar como feito'}
+        </Button>
+      </Box>
     </Paper>
   );
 }

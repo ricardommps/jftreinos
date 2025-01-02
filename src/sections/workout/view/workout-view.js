@@ -52,7 +52,21 @@ export default function WorkoutView() {
   const [mediasHeating, setMediasHeating] = useState([]);
   const [medias, setMedias] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [checkList, setCheckList] = useState([]);
 
+  const handleCheckList = (value) => {
+    const currentIndex = checkList.indexOf(value);
+
+    const newCheckList = [...checkList];
+
+    if (currentIndex === -1) {
+      newCheckList.push(value);
+    } else {
+      newCheckList.splice(currentIndex, 1);
+    }
+
+    setCheckList(newCheckList);
+  };
   const onCloseTypeTraining = useCallback(() => {
     openTypeTraining.onFalse();
     setTypeTrainingSelected('indoor');
@@ -174,11 +188,13 @@ export default function WorkoutView() {
               <CardContent sx={{ padding: 2 }}>
                 <Stack spacing={2}>
                   <WorkoutSection
-                    title="Aquecimento"
+                    title="Aquecimento Teste"
                     description={workout?.heating}
                     medias={mediasHeating}
                     mediaOrder={workout?.heatingOrder}
                     exerciseInfo={workout?.exerciseInfo}
+                    checkList={checkList}
+                    handleCheckList={handleCheckList}
                   />
 
                   <WorkoutSection
@@ -186,6 +202,8 @@ export default function WorkoutView() {
                     medias={mediasStretches}
                     mediaOrder={workout?.stretchesOrder}
                     exerciseInfo={workout?.exerciseInfo}
+                    checkList={checkList}
+                    handleCheckList={handleCheckList}
                   />
 
                   <WorkoutSection
@@ -195,6 +213,8 @@ export default function WorkoutView() {
                     mediaOrder={workout?.mediaOrder}
                     exerciseInfo={workout?.exerciseInfo}
                     isWorkoutLoad={true}
+                    checkList={checkList}
+                    handleCheckList={handleCheckList}
                   />
 
                   {workout?.recovery && (
@@ -250,6 +270,7 @@ export default function WorkoutView() {
           workout={workout}
           unrealizedTraining={unrealizedTraining}
           typeTrainingSelected={typeTrainingSelected}
+          checkList={checkList}
         />
       )}
       {openTable.value && (
@@ -268,7 +289,16 @@ export default function WorkoutView() {
   );
 }
 
-function WorkoutSection({ title, description, medias, mediaOrder, exerciseInfo, isWorkoutLoad }) {
+function WorkoutSection({
+  title,
+  description,
+  medias,
+  mediaOrder,
+  exerciseInfo,
+  isWorkoutLoad,
+  checkList,
+  handleCheckList,
+}) {
   if (!description && (!medias || medias.length === 0 || !mediaOrder?.length)) return null;
 
   return (
@@ -290,6 +320,8 @@ function WorkoutSection({ title, description, medias, mediaOrder, exerciseInfo, 
             mediaOrder={mediaOrder}
             exerciseInfo={exerciseInfo}
             isWorkoutLoad={isWorkoutLoad}
+            checkList={checkList}
+            handleCheckList={handleCheckList}
           />
         )}
       </AccordionDetails>
