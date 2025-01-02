@@ -4,7 +4,14 @@ import Stack from '@mui/material/Stack';
 import WorkoutItem from './workout-item';
 import WorkoutViewGroup from './workout-view-group';
 
-export default function WorkoutView({ medias, mediaOrder, exerciseInfo, isWorkoutLoad }) {
+export default function WorkoutView({
+  medias,
+  mediaOrder,
+  exerciseInfo,
+  isWorkoutLoad,
+  handleCheckList,
+  checkList,
+}) {
   return (
     <Box sx={{ p: 0 }}>
       <Stack spacing={2}>
@@ -20,6 +27,8 @@ export default function WorkoutView({ medias, mediaOrder, exerciseInfo, isWorkou
                   media={groupedMedias}
                   exerciseInfo={exerciseInfo}
                   isWorkoutLoad={isWorkoutLoad}
+                  handleCheckList={handleCheckList}
+                  checkList={checkList}
                 />
               );
             }
@@ -32,6 +41,8 @@ export default function WorkoutView({ medias, mediaOrder, exerciseInfo, isWorkou
                   media={media}
                   exerciseInfo={exerciseInfo}
                   isWorkoutLoad={isWorkoutLoad}
+                  handleCheckList={handleCheckList}
+                  checkList={checkList}
                 />
               );
             }

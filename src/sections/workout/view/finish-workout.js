@@ -21,6 +21,7 @@ export default function FinishWorkout({
   workout,
   unrealizedTraining,
   typeTrainingSelected,
+  checkList,
 }) {
   const router = useRouter();
   const { finished, finishedStatus } = useWorkout();
@@ -79,6 +80,7 @@ export default function FinishWorkout({
                 workoutId={workout.id}
                 onClose={onClose}
                 unrealizedTraining={unrealizedTraining}
+                checkList={checkList}
               />
             ) : (
               <>
@@ -88,6 +90,7 @@ export default function FinishWorkout({
                   typeTrainingSelected={typeTrainingSelected}
                   name={workout.name}
                   unrealizedTraining={unrealizedTraining}
+                  checkList={checkList}
                 />
               </>
             )}

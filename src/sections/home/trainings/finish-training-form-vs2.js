@@ -43,6 +43,7 @@ export default function FinishTrainingFormVs2({
   typeTrainingSelected,
   name,
   unrealizedTraining,
+  checkList,
 }) {
   const theme = useTheme();
   const { onFinishedWorkout } = useWorkout();
@@ -143,6 +144,7 @@ export default function FinishTrainingFormVs2({
       payload.distance = undefined;
       payload.duration = undefined;
       payload.executionDay = convertDate(payload.executionDay);
+      payload.checkList = checkList;
       delete payload.quantity;
       if (unrealizedTraining) {
         payload.unrealized = unrealizedTraining;
