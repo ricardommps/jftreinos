@@ -73,7 +73,7 @@ export default function NotificationItem({ notification }) {
           onClick={handleAccept}
           loading={readAtStatus.loading}
         >
-          Aceitar
+          Marcar como lido
         </LoadingButton>
       )}
     </Stack>
