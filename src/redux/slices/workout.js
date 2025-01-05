@@ -153,7 +153,7 @@ export function getWorkout(id) {
   return async (dispatch) => {
     dispatch(slice.actions.getWorkoutStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.workout.root}/${id}`);
+      const response = await axios.get(`${API_ENDPOINTS.workout.root}/by-id/${id}`);
       dispatch(slice.actions.getWorkoutSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getWorkoutFailure(error));
