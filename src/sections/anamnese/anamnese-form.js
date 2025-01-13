@@ -504,7 +504,7 @@ export default function AnamneseForm({
             </RHFSelect>
             <Divider sx={{ borderBottomWidth: 5 }} />
             <Stack>
-              <Typography variant="subtitle2">1 - Massa corporal</Typography>
+              <Typography variant="subtitle2">1 - Massa corporal(peso corporal - Kg)</Typography>
               <RHFOutlinedInput
                 name="weight"
                 label="Massa corporal"
