@@ -25,7 +25,7 @@ export default function Header() {
         style={{ width: 'auto', height: 30 }}
         width={'auto'}
       />
-      {user.isYoungLife && (
+      {user?.isYoungLife && (
         <Image
           disabledEffect
           alt={'home'}

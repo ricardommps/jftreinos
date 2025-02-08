@@ -54,5 +54,9 @@ export const paths = {
         return readonly ? `${url}?readonly=true` : url;
       },
     },
+    invoice: {
+      root: `${ROOTS.DASHBOARD}/invoice`,
+      download: (id) => `${ROOTS.DASHBOARD}/invoice/${id}`,
+    },
   },
 };

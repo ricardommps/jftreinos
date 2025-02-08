@@ -1,27 +1,15 @@
-// scroll bar
-import 'simplebar-react/dist/simplebar.min.css';
-// lazy image
-import 'react-lazy-load-image-component/src/effects/blur.css';
-// slick-carousel
-import 'slick-carousel/slick/slick-theme.css';
-import 'slick-carousel/slick/slick.css';
-
 import PropTypes from 'prop-types';
-// auth
 import { AuthConsumer, AuthProvider } from 'src/auth/context/jwt';
 import MotionLazy from 'src/components/animate/motion-lazy';
-// components
 import ProgressBar from 'src/components/progress-bar';
 import { SettingsDrawer, SettingsProvider } from 'src/components/settings';
 import SnackbarProvider from 'src/components/snackbar/snackbar-provider';
 import { LocalizationProvider } from 'src/locales';
 import ReduxProvider from 'src/redux/redux-provider';
-// ----------------------------------------------------------------------
-// theme
 import ThemeProvider from 'src/theme';
 import { primaryFont } from 'src/theme/typography';
 
-// ----------------------------------------------------------------------
+import ErrorBoundary from './error-boundary';
 
 export const metadata = {
   title: 'Joana Foltz',
@@ -54,7 +42,6 @@ export const metadata = {
     },
   ],
 };
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={primaryFont.className}>
@@ -68,20 +55,22 @@ export default function RootLayout({ children }) {
             <LocalizationProvider>
               <SettingsProvider
                 defaultSettings={{
-                  themeMode: 'dark', // 'light' | 'dark'
-                  themeDirection: 'ltr', //  'rtl' | 'ltr'
-                  themeContrast: 'default', // 'default' | 'bold'
-                  themeLayout: 'mini', // 'vertical' | 'horizontal' | 'mini'
-                  themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+                  themeMode: 'dark',
+                  themeDirection: 'ltr',
+                  themeContrast: 'default',
+                  themeLayout: 'mini',
+                  themeColorPresets: 'default',
                   themeStretch: false,
                 }}
               >
                 <ThemeProvider>
                   <MotionLazy>
                     <SnackbarProvider>
-                      <SettingsDrawer />
-                      <ProgressBar />
-                      <AuthConsumer>{children}</AuthConsumer>
+                      <ErrorBoundary>
+                        <SettingsDrawer />
+                        <ProgressBar />
+                        <AuthConsumer>{children}</AuthConsumer>
+                      </ErrorBoundary>
                     </SnackbarProvider>
                   </MotionLazy>
                 </ThemeProvider>
