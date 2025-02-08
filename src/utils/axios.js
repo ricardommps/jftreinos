@@ -66,4 +66,7 @@ export const API_ENDPOINTS = {
   finished: {
     root: '/api/v2/finished',
   },
+  log: {
+    root: '/api/v2/log',
+  },
 };

@@ -1,5 +1,6 @@
 'use client';
 
+import LogRocket from 'logrocket';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useReducer } from 'react';
 // utils
@@ -55,6 +56,7 @@ const reducer = (state, action) => {
 const STORAGE_KEY = 'jftreinosaccessToken';
 
 export function AuthProvider({ children }) {
+  LogRocket.init('zzzhvz/jfassessoria');
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const initialize = useCallback(async () => {
@@ -112,6 +114,13 @@ export function AuthProvider({ children }) {
     const { accessToken, user } = response.data;
 
     setSession(accessToken);
+
+    if (user && user.id) {
+      await LogRocket.identify(user.id, {
+        name: user.name,
+        email: user.email,
+      });
+    }
 
     dispatch({
       type: 'LOGIN',
