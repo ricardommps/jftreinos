@@ -44,11 +44,18 @@ export const metadata = {
 };
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={primaryFont.className}>
+    <html lang="en" className={primaryFont.className} class="notranslate" translate="no">
       <meta
         name="viewport"
         content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
       />
+      <head>
+        <meta name="google" content="notranslate" />
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+        />
+      </head>
       <body>
         <AuthProvider>
           <ReduxProvider>
