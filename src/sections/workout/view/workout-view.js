@@ -125,7 +125,7 @@ export default function WorkoutView() {
 
     if (mediaOrder?.length && medias?.length) {
       const FILTER_TAGS = [...STRETCH_TAGS, ...HEATING_TAGS];
-      if (heatingOrder?.length) {
+      if (heatingOrder?.length > 0) {
         const filteredMedias = medias
           .filter((media) => !heatingOrder.includes(media.id)) // Remove mídias com IDs no array excluir
           .filter((media) => {
@@ -137,7 +137,7 @@ export default function WorkoutView() {
         setMedias(filteredMedias);
       } else {
         const filteredMedias = medias.filter((media) =>
-          media.tags.some((tag) => FILTER_TAGS.includes(tag)),
+          media.tags.some((tag) => !FILTER_TAGS.includes(tag)),
         );
         setMedias(filteredMedias);
       }
@@ -204,7 +204,7 @@ export default function WorkoutView() {
               <CardContent sx={{ padding: 2 }}>
                 <Stack spacing={2}>
                   <WorkoutSection
-                    title="Aquecimento Teste"
+                    title="Aquecimento"
                     description={workout?.heating}
                     medias={mediasHeating}
                     mediaOrder={workout?.heatingOrder}
