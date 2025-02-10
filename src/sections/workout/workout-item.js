@@ -66,6 +66,11 @@ export default function WorkoutItem({ workout, hideHistory }) {
         >
           <Stack direction="row" spacing={3}>
             <Stack flex={1}>
+              {workout.running && (
+                <TextMaxLine variant="subtitle1" line={1}>
+                  {getModuleName(workout.name)}
+                </TextMaxLine>
+              )}
               <TextMaxLine variant="subtitle2" line={1}>
                 {workout.subtitle}
               </TextMaxLine>
