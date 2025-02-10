@@ -1,3 +1,7 @@
+// slick-carousel
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+
 import PropTypes from 'prop-types';
 import { AuthConsumer, AuthProvider } from 'src/auth/context/jwt';
 import MotionLazy from 'src/components/animate/motion-lazy';

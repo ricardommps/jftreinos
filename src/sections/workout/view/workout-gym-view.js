@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Stack, Typography } from '@mui/material';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import Iconify from 'src/components/iconify/iconify';
@@ -64,9 +64,28 @@ export default function WorkoutGymView() {
               )} - ${fDate(workouts?.program.endDate, 'dd/MM/yyyy')}`}</Typography>
             )}
           </Stack>
-          <Box component="main" sx={{ p: 3 }}>
-            {workouts?.message && <Typography variant="subtitle1">{workouts.message}</Typography>}
-          </Box>
+
+          {workouts?.program?.additionalInformation && (
+            <Card sx={{ display: 'flex', alignItems: 'center', p: 3, m: 3 }}>
+              <Stack direction="column" alignItems="center" width={'100%'}>
+                <Typography variant="subtitle1" textAlign={'center'}>
+                  Informações adicionais
+                </Typography>
+                <Stack direction="column" alignItems="left" sx={{ mt: 2, mb: 1 }} width={'100%'}>
+                  <Typography variant="subtitle" textAlign={'left'} mt={3}>
+                    {workouts?.program?.additionalInformation}
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Card>
+          )}
+
+          {workouts?.message && (
+            <Box component="main" sx={{ p: 3 }}>
+              {workouts?.message && <Typography variant="subtitle1">{workouts.message}</Typography>}
+            </Box>
+          )}
+
           <Stack sx={{ p: 2 }}>
             {workouts?.items && workouts?.items.length > 0 ? (
               <>
