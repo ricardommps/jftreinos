@@ -3,6 +3,7 @@
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import InfoIcon from '@mui/icons-material/Info';
 import { Box, Button, Stack, Typography } from '@mui/material';
+import Card from '@mui/material/Card';
 import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
@@ -230,6 +231,20 @@ export default function WorkoutRunningView() {
               )} - ${fDate(workouts?.program.endDate, 'dd/MM/yyyy')}`}</Typography>
             )}
           </Stack>
+          {workouts?.program?.additionalInformation && (
+            <Card sx={{ display: 'flex', alignItems: 'center', p: 3, m: 3 }}>
+              <Stack direction="column" alignItems="center" width={'100%'}>
+                <Typography variant="subtitle1" textAlign={'center'}>
+                  Informações adicionais
+                </Typography>
+                <Stack direction="column" alignItems="left" sx={{ mt: 2, mb: 1 }} width={'100%'}>
+                  <Typography variant="subtitle" textAlign={'left'} mt={3}>
+                    {workouts?.program?.additionalInformation}
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Card>
+          )}
           <Box component="main" sx={{ p: 3 }}>
             {workouts?.message ? (
               <Typography variant="subtitle1">{workouts.message}</Typography>

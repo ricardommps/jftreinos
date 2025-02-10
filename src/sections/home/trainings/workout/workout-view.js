@@ -13,7 +13,6 @@ export default function WorkoutView({
   handleCheckList,
   checkList,
 }) {
-  // Memoiza o processamento do mediaOrder para evitar re-renders desnecessários
   const orderedMedias = useMemo(() => {
     return mediaOrder.map((orderItem) => {
       if (Array.isArray(orderItem)) {
@@ -25,7 +24,7 @@ export default function WorkoutView({
   }, [medias, mediaOrder]);
 
   return (
-    <Box sx={{ p: 0 }} className="notranslate">
+    <Box sx={{ p: 0 }}>
       <Stack spacing={2}>
         {orderedMedias.map((mediaGroup, index) => {
           if (Array.isArray(mediaGroup) && mediaGroup.length > 0) {

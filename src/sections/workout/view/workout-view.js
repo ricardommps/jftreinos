@@ -124,7 +124,23 @@ export default function WorkoutView() {
     }
 
     if (mediaOrder?.length && medias?.length) {
-      setMedias(medias.filter((item) => !item.tags.some((tag) => EXCLUDED_TAGS.includes(tag))));
+      const FILTER_TAGS = [...STRETCH_TAGS, ...HEATING_TAGS];
+      if (heatingOrder?.length) {
+        const filteredMedias = medias
+          .filter((media) => !heatingOrder.includes(media.id)) // Remove mídias com IDs no array excluir
+          .filter((media) => {
+            const hasStretchOrHeating = media.tags.some(
+              (tag) => STRETCH_TAGS.includes(tag) || HEATING_TAGS.includes(tag),
+            );
+            return !hasStretchOrHeating || media.tags.length > 1; // Mantém se tiver outras tags além dessas
+          });
+        setMedias(filteredMedias);
+      } else {
+        const filteredMedias = medias.filter((media) =>
+          media.tags.some((tag) => FILTER_TAGS.includes(tag)),
+        );
+        setMedias(filteredMedias);
+      }
     }
   }, [workout]);
 
@@ -300,7 +316,6 @@ function WorkoutSection({
   handleCheckList,
 }) {
   if (!description && (!medias || medias.length === 0 || !mediaOrder?.length)) return null;
-
   return (
     <Accordion defaultExpanded elevation={0} sx={{ '&:before': { display: 'none' } }}>
       <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
