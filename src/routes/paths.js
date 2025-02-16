@@ -56,7 +56,7 @@ export const paths = {
     },
     invoice: {
       root: `${ROOTS.DASHBOARD}/invoice`,
-      download: (id) => `${ROOTS.DASHBOARD}/invoice/${id}`,
+      download: (id) => `${ROOTS.DASHBOARD}/invoice/download/${id}`,
     },
   },
 };

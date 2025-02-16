@@ -14,6 +14,10 @@ module.exports = {
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
+    if (!config.resolve.alias) {
+      config.resolve.alias = {};
+    }
+    config.resolve.alias.canvas = false;
     return config;
   },
 };
