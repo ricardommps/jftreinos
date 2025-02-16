@@ -71,6 +71,7 @@
     "react-hook-form": "^7.44.3",
     "react-image-crop": "^11.0.5",
     "react-lazy-load-image-component": "^1.6.0",
+    "react-pdf": "^9.2.1",
     "react-player": "^2.13.0",
     "react-redux": "^8.0.7",
     "react-simple-wheel-picker": "^1.2.0",

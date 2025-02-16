@@ -1,11 +1,13 @@
 // @mui
 import { LoadingButton } from '@mui/lab';
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import PropTypes from 'prop-types';
 import useANotifications from 'src/hooks/use-notifications';
+import { RouterLink } from 'src/routes/components';
 // components
 // utils
 import { fToNow } from 'src/utils/format-time';
@@ -17,6 +19,29 @@ export default function NotificationItem({ notification }) {
   const handleAccept = () => {
     onReadAt(notification.id);
   };
+  const renderAvatar = (
+    <>
+      {notification.type === 'invoice' && (
+        <Stack
+          alignItems="center"
+          justifyContent="center"
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            bgcolor: 'background.neutral',
+            marginRight: 2,
+          }}
+        >
+          <Box
+            component="img"
+            src={'/assets/icons/notification/ic_mail.svg'}
+            sx={{ width: 24, height: 24 }}
+          />
+        </Stack>
+      )}
+    </>
+  );
 
   const renderText = (
     <ListItemText
@@ -53,6 +78,22 @@ export default function NotificationItem({ notification }) {
     />
   );
 
+  const paymentAction = (
+    <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+      <Link
+        component={RouterLink}
+        href={`/dashboard${notification.link}`}
+        onClick={handleAccept}
+        variant="body2"
+        color="inherit"
+        underline="always"
+        sx={{ alignSelf: 'flex-end' }}
+      >
+        Baixar comprovante
+      </Link>
+    </Stack>
+  );
+
   const content = (
     <Stack alignItems="flex-start">
       <Box
@@ -66,7 +107,7 @@ export default function NotificationItem({ notification }) {
       >
         {notification.content}
       </Box>
-      {!notification.readAt && (
+      {!notification.readAt && notification.type !== 'invoice' && (
         <LoadingButton
           size="small"
           variant="contained"
@@ -89,10 +130,11 @@ export default function NotificationItem({ notification }) {
       }}
     >
       {renderUnReadBadge}
-
+      {renderAvatar}
       <Stack sx={{ flexGrow: 1 }}>
         {renderText}
         {content}
+        {notification.type === 'invoice' && paymentAction}
       </Stack>
     </ListItemButton>
   );

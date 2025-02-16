@@ -69,4 +69,10 @@ export const API_ENDPOINTS = {
   log: {
     root: '/api/v2/log',
   },
+  invoice: {
+    root: '/api/v2/invoice',
+    my: '/api/v2/invoice/my',
+    totalPaid: '/api/v2/invoice/total-paid',
+    invoices: '/api/v2/invoice/listAll',
+  },
 };

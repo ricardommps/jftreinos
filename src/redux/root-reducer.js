@@ -4,6 +4,7 @@ import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import anamneseReducer from './slices/anamnese';
 import calendarReducer from './slices/calendar';
 import homereducer from './slices/home';
+import invoiceReducer from './slices/invoice';
 import metricsReducer from './slices/metrics';
 import notificatiosReducer from './slices/notification';
 import ratingReducer from './slices/rating';
@@ -45,4 +46,5 @@ export const rootReducer = combineReducers({
   anamnese: anamneseReducer,
   notifications: notificatiosReducer,
   workout: workoutReducer,
+  invoice: invoiceReducer,
 });
