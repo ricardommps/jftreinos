@@ -1,6 +1,8 @@
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import { alpha, styled, useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types'; // @mui
 
 //
@@ -52,6 +54,8 @@ export default function CarouselArrows({
   children,
   leftButtonProps,
   rightButtonProps,
+  currentSlide,
+  size,
   sx,
   ...other
 }) {
@@ -79,7 +83,6 @@ export default function CarouselArrows({
             <LeftIcon icon={icon} isRTL={isRTL} />
           </StyledIconButton>
         )}
-
         {children}
 
         {onPrev && (
@@ -106,7 +109,12 @@ export default function CarouselArrows({
       <StyledIconButton filled={filled} shape={shape} onClick={onPrev} {...leftButtonProps}>
         <LeftIcon icon={icon} isRTL={isRTL} />
       </StyledIconButton>
-
+      <Box px={3}>
+        <Typography>
+          {' '}
+          {currentSlide} de {size}
+        </Typography>
+      </Box>
       <StyledIconButton filled={filled} shape={shape} onClick={onNext} {...rightButtonProps}>
         <RightIcon icon={icon} isRTL={isRTL} />
       </StyledIconButton>
@@ -123,5 +131,7 @@ CarouselArrows.propTypes = {
   onPrev: PropTypes.func,
   rightButtonProps: PropTypes.object,
   shape: PropTypes.oneOf(['circular', 'rounded']),
+  currentSlide: PropTypes.number,
+  size: PropTypes.number,
   sx: PropTypes.object,
 };

@@ -245,7 +245,7 @@ export default function WorkoutItemGroup({
         </Stack>
       </Stack>
       <Box p={2}>
-        <Button variant="outlined" onClick={() => handleCheckList(media.id)}>
+        <Button variant="contained" onClick={() => handleCheckList(media.id)}>
           {!checkList.includes(media.id) ? 'Marcar como feito' : 'Desmarcar como feito'}
         </Button>
       </Box>
