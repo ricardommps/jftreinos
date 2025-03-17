@@ -1,6 +1,7 @@
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import InfoIcon from '@mui/icons-material/Info';
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import Stack from '@mui/material/Stack';
@@ -189,6 +190,20 @@ export default function HomeRunning({ workouts, workoutsStatus, program, loading
           )}`}</Typography>
         )}
       </Stack>
+      {program?.additionalInformation && (
+        <Card sx={{ display: 'flex', alignItems: 'center', p: 3, m: 3 }}>
+          <Stack direction="column" alignItems="center" width={'100%'}>
+            <Typography variant="subtitle1" textAlign={'center'}>
+              Informações adicionais
+            </Typography>
+            <Stack direction="column" alignItems="left" sx={{ mt: 2, mb: 1 }} width={'100%'}>
+              <Typography variant="subtitle" textAlign={'left'} mt={3}>
+                {program?.additionalInformation}
+              </Typography>
+            </Stack>
+          </Stack>
+        </Card>
+      )}
       <Box sx={{ mx: 3 }} pt={3} pb={'100px'}>
         {loading && <LoadingProgress />}
         {(!workoutsStatus.loading || !loading) && !workoutsStatus.empty && workouts && (
