@@ -3,9 +3,6 @@ import { addHours } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { getModuleName } from 'src/utils/training-modules';
 
-const stretchTags = ['Alongamento ativo', 'Alongamento passivo', 'Alongamentos'];
-const heatingTags = ['Aquecimento'];
-
 Font.register({
   family: 'Roboto',
   fonts: [{ src: '/fonts/Roboto-Regular.ttf' }, { src: '/fonts/Roboto-Bold.ttf' }],
@@ -285,8 +282,6 @@ export default function ProgramPdf({ program, currentExtrapolation }) {
     return null;
   };
   const workouts = [...program.workouts].sort(sortFunction);
-
-  const workoutView = () => {};
 
   return (
     <Document>
