@@ -204,7 +204,6 @@ export default function AnamneseForm({
       then: (schema) => schema.required('Campo obrigatório'),
       otherwise: (schema) => schema.nullable(),
     }),
-
     // Condicionais sobre assessoria de corrida
     lookingForRacingAdvice: Yup.bool().required('Campo obrigatório'),
     runningExperience: Yup.string().when('lookingForRacingAdvice', {
@@ -281,6 +280,7 @@ export default function AnamneseForm({
     isVegan: anamnese?.isVegan || false,
     physicalActivity: anamnese?.physicalActivity || '',
     intentionsStartingSportsConsultancy: anamnese?.intentionsStartingSportsConsultancy || '',
+    daysTheWeekSportsConsultancy: anamnese?.daysTheWeekSportsConsultancy || '',
     lookingForRacingAdvice: anamnese?.lookingForRacingAdvice || false,
     runningExperience: anamnese?.runningExperience || 'Nunca corri antes',
     longestRunningDistance: anamnese?.longestRunningDistance || '',
@@ -635,7 +635,19 @@ export default function AnamneseForm({
             />
           </Stack>
           <Stack>
-            <Typography variant="subtitle2">18 - Está buscando assessoria de corrida?</Typography>
+            <Typography variant="subtitle2">
+              18 - Quantos e quais dias da semana pretendes treinar? Quando for tens em média quanto
+              tempo para a sessão?
+            </Typography>
+            <RHFTextField
+              name="daysTheWeekSportsConsultancy"
+              variant="outlined"
+              multiline
+              rows={3}
+            />
+          </Stack>
+          <Stack>
+            <Typography variant="subtitle2">19 - Está buscando assessoria de corrida?</Typography>
             <Stack direction="row" spacing={2}>
               <RHFRadioGroup row spacing={4} name="lookingForRacingAdvice" options={YesNoOptions} />
             </Stack>
@@ -648,7 +660,7 @@ export default function AnamneseForm({
               <Divider sx={{ borderBottomWidth: 5 }} />
               <Stack>
                 <Typography variant="subtitle2">
-                  19 - Sobre sua experiência com a prática de corrida:
+                  20 - Sobre sua experiência com a prática de corrida:
                 </Typography>
                 <Stack spacing={2}>
                   <RHFRadioGroup
@@ -661,19 +673,19 @@ export default function AnamneseForm({
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  20 - Se você corre, qual foi sua maior distância percorrida?
+                  21 - Se você corre, qual foi sua maior distância percorrida?
                 </Typography>
                 <RHFTextField name="longestRunningDistance" variant="outlined" multiline rows={3} />
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  21 - Se você corre, qual foi sua melhor marca e em qual distância ela aconteceu?
+                  22 - Se você corre, qual foi sua melhor marca e em qual distância ela aconteceu?
                 </Typography>
                 <RHFTextField name="bestRunningTime" variant="outlined" multiline rows={3} />
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  22 - Sobre seu treino de fortalecimento:
+                  23 - Sobre seu treino de fortalecimento:
                 </Typography>
                 <Stack spacing={1}>
                   <RHFRadioGroup
@@ -686,7 +698,7 @@ export default function AnamneseForm({
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  23 - Sobre sua experiência com competições de corrida:
+                  24 - Sobre sua experiência com competições de corrida:
                 </Typography>
                 <Stack spacing={2}>
                   <RHFRadioGroup
@@ -699,7 +711,7 @@ export default function AnamneseForm({
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  24 - Por que você está procurando uma assessoria de corrida?
+                  25 - Por que você está procurando uma assessoria de corrida?
                 </Typography>
                 <RHFTextField
                   name="youLookingForRaceConsultancy"
@@ -710,7 +722,7 @@ export default function AnamneseForm({
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  25 - Você pretende participar de provas de corrida no futuro?
+                  26 - Você pretende participar de provas de corrida no futuro?
                 </Typography>
                 <Stack direction="row" spacing={2}>
                   <RHFRadioGroup
@@ -723,7 +735,7 @@ export default function AnamneseForm({
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  26 - Você já tem alguma prova de corrida em seu calendário futuro? Se sim, qual
+                  27 - Você já tem alguma prova de corrida em seu calendário futuro? Se sim, qual
                   distância pretende correr? E qual a data do(s) evento(s)?
                 </Typography>
                 <RHFTextField
@@ -735,14 +747,14 @@ export default function AnamneseForm({
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  27 - Quantos dias da semana você pretende e pode correr? E quanto tempo você tem
+                  28 - Quantos dias da semana você pretende e pode correr? E quanto tempo você tem
                   para as sessões?
                 </Typography>
                 <RHFTextField name="daysOfTheWeekRun" variant="outlined" multiline rows={3} />
               </Stack>
               <Stack>
                 <Typography variant="subtitle2">
-                  28 - Você possui relógio de corrida? Se sim, qual?
+                  29 - Você possui relógio de corrida? Se sim, qual?
                 </Typography>
                 <RHFTextField name="hasRunningClock" variant="outlined" multiline rows={3} />
               </Stack>

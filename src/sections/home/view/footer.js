@@ -2,12 +2,19 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PaidIcon from '@mui/icons-material/Paid';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useCallback, useEffect } from 'react';
+import useHome from 'src/hooks/use-home';
 import useInvoice from 'src/hooks/use-invoice';
 import { useRouter } from 'src/routes/hook';
 import { paths } from 'src/routes/paths';
@@ -16,6 +23,12 @@ export default function Footer() {
   const theme = useTheme();
   const router = useRouter();
   const { invoiceTotalPaid, onGetTotalPaind } = useInvoice();
+  const { alertOverdue, onShowAlertOverdue, onHideAlertOverdue, alertOverdueHide } = useHome();
+
+  const handleClose = () => {
+    onHideAlertOverdue();
+  };
+
   const handleOpenMetrics = useCallback(() => {
     router.push(paths.dashboard.metrics.root());
   }, [router]);
@@ -29,6 +42,7 @@ export default function Footer() {
   }, [router]);
 
   const handleOpenInvoice = useCallback(() => {
+    onHideAlertOverdue();
     router.push(paths.dashboard.invoice.root);
   }, [router]);
 
@@ -43,6 +57,12 @@ export default function Footer() {
   useEffect(() => {
     initialize();
   }, []);
+
+  useEffect(() => {
+    if (invoiceTotalPaid.totalOverdue > 0 && !alertOverdueHide) {
+      onShowAlertOverdue();
+    }
+  }, [invoiceTotalPaid.totalOverdue, alertOverdueHide]);
 
   return (
     <Stack
@@ -146,7 +166,7 @@ export default function Footer() {
           Anamnese
         </Typography>
       </Box>
-      {invoiceTotalPaid.totalPaid > 0 && (
+      {(invoiceTotalPaid.totalPaid > 0 || invoiceTotalPaid.totalOverdue > 0) && (
         <Box
           sx={{
             display: 'flex',
@@ -174,6 +194,36 @@ export default function Footer() {
             Faturas
           </Typography>
         </Box>
+      )}
+      {invoiceTotalPaid.totalOverdue > 0 && (
+        <Dialog
+          fullWidth
+          maxWidth="xs"
+          open={alertOverdue}
+          transitionDuration={{
+            enter: theme.transitions.duration.shortest,
+            exit: theme.transitions.duration.shortest - 80,
+          }}
+        >
+          <DialogTitle>Faturas vencidas</DialogTitle>
+          <DialogContent>
+            <Alert variant="outlined" severity="error">
+              <Typography sx={{ mb: 3 }}>
+                Você possui débitos pendentes. Realize o pagamento para evitar a interrupção do
+                serviço.
+              </Typography>
+            </Alert>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="outlined" color="error" onClick={handleClose}>
+              Fechar
+            </Button>
+
+            <Button variant="contained" color="success" onClick={handleOpenInvoice}>
+              Ver faturas
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
     </Stack>
   );

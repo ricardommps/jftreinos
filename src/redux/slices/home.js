@@ -47,6 +47,8 @@ const initialState = {
     loading: false,
     error: null,
   },
+  alertOverdue: false,
+  alertOverdueHide: false,
 };
 
 const slice = createSlice({
@@ -244,6 +246,14 @@ const slice = createSlice({
       state.uploadStatus.loading = false;
       state.uploadStatus.error = null;
     },
+    showAlertOverdue(state) {
+      state.alertOverdue = true;
+    },
+
+    hideAlertOverdue(state) {
+      state.alertOverdue = false;
+      state.alertOverdueHide = true;
+    },
   },
 });
 
@@ -377,5 +387,17 @@ export function clearViewPdf() {
 export function clearFinishedtraining() {
   return async (dispatch) => {
     dispatch(slice.actions.clearFinishedtraining());
+  };
+}
+
+export function showAlertOverdueAction() {
+  return async (dispatch) => {
+    dispatch(slice.actions.showAlertOverdue());
+  };
+}
+
+export function hideAlertOverdueAction() {
+  return async (dispatch) => {
+    dispatch(slice.actions.hideAlertOverdue());
   };
 }

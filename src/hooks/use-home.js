@@ -7,6 +7,8 @@ import {
   getFinishedListReq,
   getProgramDetail,
   getViewPdf,
+  hideAlertOverdueAction,
+  showAlertOverdueAction,
   viewedFeedBack,
 } from 'src/redux/slices/home';
 import { useDispatch, useSelector } from 'src/redux/store';
@@ -27,6 +29,8 @@ export default function useHome() {
     viewedError,
     viewPdf,
     viewPdfStatus,
+    alertOverdue,
+    alertOverdueHide,
   } = useSelector((state) => state.home);
 
   const onListPrograms = useCallback(async () => {
@@ -62,8 +66,8 @@ export default function useHome() {
   );
 
   const onViewPdf = useCallback(
-    (programId) => {
-      dispatch(getViewPdf(programId));
+    async (programId) => {
+      await dispatch(getViewPdf(programId));
     },
     [dispatch],
   );
@@ -74,6 +78,14 @@ export default function useHome() {
 
   const onClearFinishedtraining = useCallback(() => {
     dispatch(clearFinishedtraining());
+  }, [dispatch]);
+
+  const onShowAlertOverdue = useCallback(() => {
+    dispatch(showAlertOverdueAction());
+  }, [dispatch]);
+
+  const onHideAlertOverdue = useCallback(() => {
+    dispatch(hideAlertOverdueAction());
   }, [dispatch]);
 
   return {
@@ -99,5 +111,9 @@ export default function useHome() {
     viewPdfStatus,
     onClearViewPdf,
     onClearFinishedtraining,
+    onShowAlertOverdue,
+    onHideAlertOverdue,
+    alertOverdue,
+    alertOverdueHide,
   };
 }

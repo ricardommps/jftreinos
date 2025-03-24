@@ -94,7 +94,7 @@ export default function HistoryItem({ historyItem, workoutInfo }) {
             <Typography variant="caption">{`Seu comentário: ${historyItem.comments}`}</Typography>
           )}
           {rederFeedback()}
-          <Stack direction="row" spacing={3}>
+          <Stack direction="row" spacing={3} flexWrap={'wrap'}>
             {historyItem.distanceInMeters && (
               <Stack direction="row" alignItems="center">
                 <Iconify icon="game-icons:path-distance" width={20} sx={{ mr: 0.5 }} />

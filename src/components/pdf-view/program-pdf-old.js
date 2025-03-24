@@ -1,9 +1,10 @@
 import { Document, Font, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 import { addHours } from 'date-fns';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { getModuleName } from 'src/utils/training-modules';
 
-import WorkoutViewPdf from './workoutViewPdf';
+const stretchTags = ['Alongamento ativo', 'Alongamento passivo', 'Alongamentos'];
+const heatingTags = ['Aquecimento'];
 
 Font.register({
   family: 'Roboto',
@@ -61,14 +62,6 @@ const useStyles = () =>
           marginBottom: 20,
           flex: 1,
         },
-        tableRow: {
-          padding: 10,
-          flexDirection: 'row',
-          borderBottomWidth: 1,
-          borderStyle: 'solid',
-          borderColor: '#DFE3E8',
-          marginBottom: 10,
-        },
         tableRowA: {
           display: 'flex',
           flexDirection: 'row',
@@ -98,7 +91,6 @@ const useStyles = () =>
           fontSize: 14,
           color: '#0084B4',
           fontFamily: 'Roboto',
-          flex: 1,
         },
         serviceName: {
           fontSize: 10,
@@ -116,7 +108,6 @@ const useStyles = () =>
           width: '30%',
           textAlign: 'left',
           fontFamily: 'Roboto',
-          flex: 1,
         },
         tableExtrapolation: {
           display: 'table',
@@ -214,6 +205,13 @@ const useStyles = () =>
 export default function ProgramPdf({ program, currentExtrapolation }) {
   const styles = useStyles();
 
+  const [mediasStretches, setMediasStretches] = useState([]);
+  const [mediasHeating, setMediasHeating] = useState([]);
+  const [medias, setMedias] = useState([]);
+
+  function isOdd(num) {
+    return num % 2;
+  }
   function sortFunction(a, b) {
     if (a.datePublished && b.datePublished) {
       var dateA = new Date(a.datePublished).getTime();
@@ -271,20 +269,34 @@ export default function ProgramPdf({ program, currentExtrapolation }) {
     );
   };
 
+  const renderExerciseInfo = (exerciseInfo, media) => {
+    const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
+    if (exerciseInfoById) {
+      return (
+        <View style={styles.column}>
+          {exerciseInfoById.reps && <Text>Range de repetições: {exerciseInfoById.reps}</Text>}
+          {exerciseInfoById.reset && (
+            <Text>Intervalo de recuperação: {exerciseInfoById.reset}</Text>
+          )}
+          {exerciseInfoById.rir && <Text>Repetições reserva: {exerciseInfoById.rir}</Text>}
+        </View>
+      );
+    }
+    return null;
+  };
   const workouts = [...program.workouts].sort(sortFunction);
+
+  const workoutView = () => {};
 
   return (
     <Document>
-      <Page size="A4" renderMode="svg" break>
+      <Page size="A4" renderMode="svg">
         <View style={styles.header} fixed>
           <View style={styles.headerLeft}>
-            <Image source="/logo/logo-preta.png" style={{ width: 30, height: 'auto' }} />
+            <Image source="/logo/logo_sum.png" style={{ width: 60, height: 'auto' }} />
           </View>
           <View style={styles.headerRight}>
-            <Text>Joana Foltz Muller</Text>
-            <Text>031842-G/SC</Text>
-            <Text>(49) 99805-8840</Text>
-            <Text>@_joanaf</Text>
+            <Text>Sum sapiens</Text>
           </View>
         </View>
 
@@ -319,19 +331,46 @@ export default function ProgramPdf({ program, currentExtrapolation }) {
           <Text style={styles.tableTopLabel}>{program.name}</Text>
         </View>
         <View style={styles.table}>
-          <View style={styles.tableRow} fixed>
+          <View style={styles.tableRowB}>
             <Text style={styles.tableHeadingC}>Módulo</Text>
             <Text style={styles.tableHeadingB}>Exercícios</Text>
           </View>
           {workouts.length > 0 &&
-            workouts.map((workout) => (
-              <View style={styles.tableRow} key={workout.id}>
+            workouts.map((item, index) => (
+              <View style={isOdd(index) ? styles.tableRowA : styles.tableRowB} key={item.id}>
                 <View style={styles.serviceAmount}>
-                  <Text>{getModuleName(workout.name)}</Text>
-                  {workout.subtitle && <Text>{workout.subtitle}</Text>}
+                  <Text>{getModuleName(item.name)}</Text>
+                  {item.subtitle && <Text>{item.subtitle}</Text>}
                 </View>
                 <View style={styles.serviceDescription}>
-                  <WorkoutViewPdf workout={workout} />
+                  <View>
+                    {(item.description?.length > 0 || item.medias.length > 0) && (
+                      <Text style={{ fontWeight: 'bold', fontSize: 14, fontFamily: 'Roboto' }}>
+                        Parte principal
+                      </Text>
+                    )}
+                    {item.description?.length > 0 && (
+                      <Text style={{ paddingBottom: 10 }}>{item.description}</Text>
+                    )}
+                    {item.medias.length > 0 && (
+                      <>
+                        {item.medias.map((media, index) => (
+                          <View key={index}>
+                            <Text>{media.title}</Text>
+                            {renderExerciseInfo(item.exerciseInfo, media)}
+                          </View>
+                        ))}
+                      </>
+                    )}
+                  </View>
+                  {item.recovery && (
+                    <View style={{ paddingBottom: 10 }}>
+                      <Text style={{ fontWeight: 'bold', fontSize: 14, fontFamily: 'Roboto' }}>
+                        Desaquecimento
+                      </Text>
+                      <Text>{item.recovery}</Text>
+                    </View>
+                  )}
                 </View>
               </View>
             ))}
