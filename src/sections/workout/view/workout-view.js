@@ -316,6 +316,7 @@ function WorkoutSection({
   handleCheckList,
 }) {
   if (!description && (!medias || medias.length === 0 || !mediaOrder?.length)) return null;
+
   return (
     <Accordion defaultExpanded elevation={0} sx={{ '&:before': { display: 'none' } }}>
       <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
