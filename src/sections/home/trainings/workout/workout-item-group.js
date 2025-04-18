@@ -242,6 +242,22 @@ export default function WorkoutItemGroup({
               </TextMaxLine>
             </Stack>
           )}
+          {exerciseInfoById?.comments && exerciseInfoById?.comments.length > 0 && (
+            <Stack>
+              <Typography
+                sx={{
+                  fontSize: '0.75rem',
+                  textTransform: 'uppercase',
+                  color: 'text.secondary',
+                }}
+              >
+                Observações:
+              </Typography>
+              <TextMaxLine variant="subtitle2" line={2}>
+                {exerciseInfoById?.comments}
+              </TextMaxLine>
+            </Stack>
+          )}
         </Stack>
       </Stack>
       <Box p={2}>
