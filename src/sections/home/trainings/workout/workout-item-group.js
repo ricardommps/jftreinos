@@ -7,7 +7,6 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useCallback, useEffect, useState } from 'react';
-import ReactPlayer from 'react-player';
 import TextMaxLine from 'src/components/text-max-line';
 import useTraining from 'src/hooks/use-training';
 export default function WorkoutItemGroup({
@@ -40,6 +39,12 @@ export default function WorkoutItemGroup({
       console.error(error);
     }
   }, [media.id, carga]);
+
+  const getYoutubeId = (url) => {
+    if (!url) return null;
+    const match = url.match(/(?:\?v=|\/embed\/|\.be\/|\/shorts\/)([\w-]{11})/);
+    return match ? match[1] : null;
+  };
 
   const initialize = useCallback(async () => {
     try {
@@ -105,13 +110,18 @@ export default function WorkoutItemGroup({
             {media.title}
           </TextMaxLine>
         </Stack>
-        <ReactPlayer
-          className="react-player"
-          url={media.videoUrl}
-          width="100%"
-          height={200}
-          light={media.thumbnail}
-          onError={(e) => handleError(e)}
+        <iframe
+          src={`https://www.youtube.com/embed/${getYoutubeId(
+            media.videoUrl,
+          )}?controls=0&disablekb=1&modestbranding=1&rel=0&fs=0&vq=hd720&hd=1`}
+          style={{
+            width: '100%',
+            height: '400px', // Altura fixa maior
+            borderRadius: 12,
+          }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          title={media.title}
         />
         {isWorkoutLoad && (
           <Stack>

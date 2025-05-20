@@ -7,7 +7,6 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useCallback, useEffect, useState } from 'react';
-import ReactPlayer from 'react-player';
 import TextMaxLine from 'src/components/text-max-line';
 import useTraining from 'src/hooks/use-training';
 
@@ -20,9 +19,6 @@ export default function WorkoutItem({
 }) {
   const { onSaveWorkoutLoad, onGetWorkoutLoad, workoutLoad } = useTraining();
   const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
-  const handleError = (e) => {
-    console.log(e);
-  };
 
   const [isEditing, setIsEditing] = useState(false);
   const [carga, setCarga] = useState(null);
@@ -44,6 +40,11 @@ export default function WorkoutItem({
     }
   }, [media.id, carga]);
 
+  const getYoutubeId = (url) => {
+    if (!url) return null;
+    const match = url.match(/(?:\?v=|\/embed\/|\.be\/|\/shorts\/)([\w-]{11})/);
+    return match ? match[1] : null;
+  };
   const initialize = useCallback(async () => {
     try {
       onGetWorkoutLoad(media.id);
@@ -90,13 +91,18 @@ export default function WorkoutItem({
         <TextMaxLine variant="subtitle2" line={2}>
           {media.title}
         </TextMaxLine>
-        <ReactPlayer
-          className="react-player"
-          url={media.videoUrl}
-          width="100%"
-          height={100}
-          light={media.thumbnail}
-          onError={(e) => handleError(e)}
+        <iframe
+          src={`https://www.youtube.com/embed/${getYoutubeId(
+            media.videoUrl,
+          )}?controls=0&disablekb=1&modestbranding=1&rel=0&fs=0&vq=hd720&hd=1`}
+          style={{
+            width: '100%',
+            height: '400px', // Altura fixa maior
+            borderRadius: 12,
+          }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          title={media.title}
         />
         {isWorkoutLoad && (
           <Stack>
