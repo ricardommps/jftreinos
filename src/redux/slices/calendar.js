@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 
 const eventsFormated = (dataEvents) => {
   const newData = dataEvents.map((event) => ({
@@ -38,7 +38,9 @@ export default slice.reducer;
 export function getEvents(programId) {
   return async (dispatch) => {
     try {
-      const response = await axios.get(`${API_ENDPOINTS.home.trainingsByProgramId}/${programId}`);
+      const response = await jfAppApi.get(
+        `${API_ENDPOINTS.home.trainingsByProgramId}/${programId}`,
+      );
       const newResponse = eventsFormated(response.data);
       dispatch(slice.actions.getEventsSuccess(newResponse));
     } catch (error) {

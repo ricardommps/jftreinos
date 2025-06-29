@@ -1,10 +1,9 @@
 'use client';
 
-import LogRocket from 'logrocket';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useReducer } from 'react';
 // utils
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 
 //
 import { AuthContext } from './auth-context';
@@ -56,7 +55,6 @@ const reducer = (state, action) => {
 const STORAGE_KEY = 'jftreinosaccessToken';
 
 export function AuthProvider({ children }) {
-  LogRocket.init('zzzhvz/jfassessoria');
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const initialize = useCallback(async () => {
@@ -65,7 +63,7 @@ export function AuthProvider({ children }) {
       if (jftreinosaccessToken && isValidToken(jftreinosaccessToken)) {
         setSession(jftreinosaccessToken);
 
-        const response = await axios.get(API_ENDPOINTS.auth.me);
+        const response = await jfAppApi.get(API_ENDPOINTS.auth.me);
 
         const { user } = response.data;
 
@@ -109,18 +107,11 @@ export function AuthProvider({ children }) {
       password,
     };
 
-    const response = await axios.post(API_ENDPOINTS.auth.login, data);
+    const response = await jfAppApi.post(API_ENDPOINTS.auth.login, data);
 
     const { accessToken, user } = response.data;
 
     setSession(accessToken);
-
-    if (user && user.id) {
-      await LogRocket.identify(user.id, {
-        name: user.name,
-        email: user.email,
-      });
-    }
 
     dispatch({
       type: 'LOGIN',
@@ -139,7 +130,7 @@ export function AuthProvider({ children }) {
       lastName,
     };
 
-    const response = await axios.post(API_ENDPOINTS.auth.register, data);
+    const response = await jfAppApi.post(API_ENDPOINTS.auth.register, data);
 
     const { accessToken, user } = response.data;
 

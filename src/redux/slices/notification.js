@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 
 const initialState = {
   notifications: [],
@@ -72,7 +72,7 @@ export function getNotificationsReq() {
   return async (dispatch) => {
     dispatch(slice.actions.getNotificationsStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.notifications.all}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.notifications.all}`);
       dispatch(slice.actions.getNotificationsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getNotificationsFailure(error));
@@ -84,7 +84,9 @@ export function readAtReq(notificationId) {
   return async (dispatch) => {
     dispatch(slice.actions.readAtStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.notifications.readAt}/${notificationId}`);
+      const response = await jfAppApi.get(
+        `${API_ENDPOINTS.notifications.readAt}/${notificationId}`,
+      );
       dispatch(slice.actions.readAtSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.readAteFailure(error));

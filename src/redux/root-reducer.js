@@ -8,10 +8,12 @@ import homereducer from './slices/home';
 import invoiceReducer from './slices/invoice';
 import metricsReducer from './slices/metrics';
 import notificatiosReducer from './slices/notification';
+import programReducer from './slices/program';
 import ratingReducer from './slices/rating';
 import trainingReducer from './slices/training';
 import userReducer from './slices/user';
 import workoutReducer from './slices/workout';
+import workoutsReducer from './slices/workouts';
 
 export const createNoopStorage = () => ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -49,4 +51,6 @@ export const rootReducer = combineReducers({
   workout: workoutReducer,
   invoice: invoiceReducer,
   finished: finishedReducer,
+  workouts: workoutsReducer,
+  program: programReducer,
 });

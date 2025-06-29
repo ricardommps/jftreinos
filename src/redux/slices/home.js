@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 const initialState = {
   programs: null,
   programsStatus: {
@@ -263,7 +263,7 @@ export function getAllPrograms() {
   return async (dispatch) => {
     dispatch(slice.actions.getProgramsStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.home.programs}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.home.programs}`);
       dispatch(slice.actions.getProgramsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getProgramsFailure(error));
@@ -275,7 +275,7 @@ export function getProgramDetail(programId) {
   return async (dispatch) => {
     dispatch(slice.actions.getProgramDetailStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.home.programDetail}/${programId}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.home.programDetail}/${programId}`);
       dispatch(getTrainings(response.data.id));
       dispatch(slice.actions.getProgramDetailSuccess(response.data));
     } catch (error) {
@@ -288,7 +288,7 @@ export function finishedtrainingReq(finishedData) {
   return async (dispatch) => {
     dispatch(slice.actions.finishedtrainingStart());
     try {
-      const response = await axios.post(`${API_ENDPOINTS.home.finishedtraining}`, finishedData);
+      const response = await jfAppApi.post(`${API_ENDPOINTS.home.finishedtraining}`, finishedData);
       dispatch(slice.actions.finishedtrainingSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.finishedtrainingFailure(error));
@@ -300,7 +300,9 @@ export function getTrainings(programId) {
   return async (dispatch) => {
     dispatch(slice.actions.getTrainingsStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.home.trainingsByProgramId}/${programId}`);
+      const response = await jfAppApi.get(
+        `${API_ENDPOINTS.home.trainingsByProgramId}/${programId}`,
+      );
       dispatch(slice.actions.getTrainingsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getTrainingsFailure(error));
@@ -312,10 +314,10 @@ export function getFinishedListReq(timestampFrom, timestampTo) {
   return async (dispatch) => {
     dispatch(slice.actions.getFinishedListStart());
     try {
-      const finishedTraining = await axios.get(
+      const finishedTraining = await jfAppApi.get(
         `${API_ENDPOINTS.home.finishedList}?timestampFrom=${timestampFrom}&timestampTo=${timestampTo}`,
       );
-      const finished = await axios.get(
+      const finished = await jfAppApi.get(
         `${API_ENDPOINTS.finished.root}/listByUser?timestampFrom=${timestampFrom}&timestampTo=${timestampTo}`,
       );
       const response = [...finished.data, ...finishedTraining.data];
@@ -330,7 +332,7 @@ export function viewedFeedBack(id) {
   return async (dispatch) => {
     dispatch(slice.actions.viewedFeedBackStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.home.viewedFeedback}/${id}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.home.viewedFeedback}/${id}`);
       dispatch(slice.actions.viewedFeedBackSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.viewedFeedBackFailure(error));
@@ -342,7 +344,7 @@ export function getViewPdf(programId) {
   return async (dispatch) => {
     dispatch(slice.actions.getViewPdfStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.home.viewPdf}/${programId}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.home.viewPdf}/${programId}`);
       dispatch(slice.actions.getViewPdfSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getViewPdfFailure(error));
@@ -354,7 +356,7 @@ export function getMyData() {
   return async (dispatch) => {
     dispatch(slice.actions.getMyDataStart());
     try {
-      const response = await axios.get(API_ENDPOINTS.myData);
+      const response = await jfAppApi.get(API_ENDPOINTS.myData);
       dispatch(slice.actions.getMyDataSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getMyDataFailure(error));
@@ -366,7 +368,7 @@ export function uploadFile(formData) {
   return async (dispatch) => {
     dispatch(slice.actions.uploadStart());
     try {
-      const response = await axios.patch(API_ENDPOINTS.upload, formData, {
+      const response = await jfAppApi.patch(API_ENDPOINTS.upload, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

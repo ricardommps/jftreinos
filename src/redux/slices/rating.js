@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 
 const initialState = {
   rating: null,
@@ -44,7 +44,7 @@ export function saveRating(rating) {
   return async (dispatch) => {
     dispatch(slice.actions.ratingStart());
     try {
-      const response = await axios.post(`${API_ENDPOINTS.rating.root}`, rating);
+      const response = await jfAppApi.post(`${API_ENDPOINTS.rating.root}`, rating);
       dispatch(slice.actions.ratingSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.ratingFailure(error));
@@ -56,7 +56,7 @@ export function getRating() {
   return async (dispatch) => {
     dispatch(slice.actions.ratingStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.rating.root}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.rating.root}`);
       dispatch(slice.actions.ratingSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.ratingFailure(error));

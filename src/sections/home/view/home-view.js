@@ -54,6 +54,7 @@ export default function HomeView() {
   }, [rating]);
 
   const hasTrainings = programs?.some((item) => item.trainings.length > 0);
+  console.log('---HomeView---', programs);
   return (
     <Box
       sx={{

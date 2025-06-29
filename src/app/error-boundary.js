@@ -5,9 +5,9 @@ import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { m } from 'framer-motion';
-import LogRocket from 'logrocket';
+//import LogRocket from 'logrocket';
 import { Component } from 'react';
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 
 class ErrorCatcher extends Component {
   state = { hasError: false, error: null };
@@ -22,7 +22,7 @@ class ErrorCatcher extends Component {
     // Função assíncrona para lidar com o erro
     const handleError = async () => {
       try {
-        await axios.post(`${API_ENDPOINTS.log.root}`, {
+        await jfAppApi.post(`${API_ENDPOINTS.log.root}`, {
           typeLog: 'error',
           errorStr: error.toString(),
           errorMessage: errorInfo,
@@ -33,9 +33,6 @@ class ErrorCatcher extends Component {
       }
 
       // Captura a exceção no LogRocket após um pequeno delay
-      setTimeout(() => {
-        LogRocket.captureException(error, { extra: errorInfo });
-      }, 100);
     };
 
     handleError(); // Chamada da função assíncrona

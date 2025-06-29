@@ -10,6 +10,7 @@ import ItemProgram from 'src/sections/programs/item-program';
 import Footer from './footer';
 
 export default function HomeSelectProgram({ programs }) {
+  console.log('--HomeSelectProgram-', programs);
   const theme = useTheme();
   const router = useRouter();
   const handleOpenMetrics = useCallback(() => {
