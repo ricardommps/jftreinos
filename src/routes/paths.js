@@ -53,6 +53,10 @@ export const paths = {
         const url = `${ROOTS.DASHBOARD}/workout/${id}`;
         return readonly ? `${url}?readonly=true` : url;
       },
+      new: (id, readonly = false) => {
+        const url = `${ROOTS.DASHBOARD}/workout/new/${id}`;
+        return readonly ? `${url}?readonly=true` : url;
+      },
     },
     invoice: {
       root: `${ROOTS.DASHBOARD}/invoice`,

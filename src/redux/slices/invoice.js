@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 
 const initialState = {
   invoice: [],
@@ -78,7 +78,7 @@ export function getInvoiceReq(invoiceId) {
   return async (dispatch) => {
     dispatch(slice.actions.getInvoiceStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.invoice.my}/${invoiceId}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.invoice.my}/${invoiceId}`);
       dispatch(slice.actions.getInvoiceSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getInvoiceFailure(error));
@@ -90,7 +90,7 @@ export function getTotalPaindReq() {
   return async (dispatch) => {
     dispatch(slice.actions.getTotalPaindStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.invoice.totalPaid}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.invoice.totalPaid}`);
       dispatch(slice.actions.getTotalPaindSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getTotalPaindFailure(error));
@@ -102,7 +102,7 @@ export function getInvoicesReq() {
   return async (dispatch) => {
     dispatch(slice.actions.getInvoicesStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.invoice.invoices}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.invoice.invoices}`);
       dispatch(slice.actions.getInvoicesSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getInvoicesFailure(error));

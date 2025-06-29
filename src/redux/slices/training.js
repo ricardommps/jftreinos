@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 
 const initialState = {
   training: null,
@@ -112,7 +112,7 @@ export function getTraining(id) {
   return async (dispatch) => {
     dispatch(slice.actions.getTrainingStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.training}/${id}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.training}/${id}`);
       dispatch(slice.actions.getTrainingSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getTrainingFailure(error));
@@ -124,7 +124,7 @@ export function getWorkoutLoad(id) {
   return async (dispatch) => {
     dispatch(slice.actions.getWorkoutLoadStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.workoutLoad}/${id}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.workoutLoad}/${id}`);
       dispatch(slice.actions.getWorkoutLoadSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getWorkoutLoadFailure(error));
@@ -136,7 +136,7 @@ export function saveWorkoutLoadReq(id, load) {
   return async (dispatch) => {
     dispatch(slice.actions.saveWorkoutLoadStart());
     try {
-      const response = await axios.post(`${API_ENDPOINTS.workoutLoad}/${id}`, { load: load });
+      const response = await jfAppApi.post(`${API_ENDPOINTS.workoutLoad}/${id}`, { load: load });
       dispatch(slice.actions.saveWorkoutLoadSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.saveWorkoutLoadFailure(error));

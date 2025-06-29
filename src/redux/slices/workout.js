@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 
 const initialState = {
   workoutAction: null,
@@ -124,7 +124,9 @@ export function getWorkouts(programId, type) {
     const workoutType = type === 1 ? 'running' : 'gym';
     dispatch(slice.actions.getWorkoutsStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.workout.root}/${workoutType}/${programId}`);
+      const response = await jfAppApi.get(
+        `${API_ENDPOINTS.workout.root}/${workoutType}/${programId}`,
+      );
       dispatch(slice.actions.getWorkoutsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getWorkoutsFailure(error));
@@ -138,7 +140,7 @@ export function getWorkoutsByProgramId(programId, type) {
     const workoutType = type === 1 ? 'running' : 'gym';
     dispatch(slice.actions.getWorkoutsStart());
     try {
-      const response = await axios.get(
+      const response = await jfAppApi.get(
         `${API_ENDPOINTS.workout.root}/${workoutType}/${programId}/user`,
       );
       dispatch(slice.actions.getWorkoutsSuccess(response.data));
@@ -153,7 +155,7 @@ export function getWorkout(id) {
   return async (dispatch) => {
     dispatch(slice.actions.getWorkoutStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.workout.root}/by-id/${id}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.workout.root}/by-id/${id}`);
       dispatch(slice.actions.getWorkoutSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getWorkoutFailure(error));
@@ -172,7 +174,7 @@ export function finishedWorkout(payload) {
     abortController = new AbortController();
     try {
       dispatch(slice.actions.finishedWorkoutStart());
-      const response = await axios.post(API_ENDPOINTS.finished.root, payload, {
+      const response = await jfAppApi.post(API_ENDPOINTS.finished.root, payload, {
         signal: abortController.signal,
       });
       dispatch(slice.actions.finishedWorkoutSuccess(response.data));

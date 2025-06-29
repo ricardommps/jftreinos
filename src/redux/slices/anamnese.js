@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 
 const initialState = {
   checkEmail: null,
@@ -118,7 +118,7 @@ export function getCheckEmailReq(customerEmail) {
   return async (dispatch) => {
     dispatch(slice.actions.getCheckEmailStart());
     try {
-      const response = await axios.post(`${API_ENDPOINTS.customer.checkEmail}`, customerEmail);
+      const response = await jfAppApi.post(`${API_ENDPOINTS.customer.checkEmail}`, customerEmail);
       dispatch(slice.actions.getCheckEmailSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getCheckEmailFailure(error));
@@ -182,7 +182,7 @@ export function createAnamneseReq(anamnese, token, id) {
             hasRunningClock: anamnese?.hasRunningClock,
           },
         };
-        const response = await axios.post(
+        const response = await jfAppApi.post(
           `${API_ENDPOINTS.anamnese.createRegisteredUser}`,
           payload,
           {
@@ -193,7 +193,7 @@ export function createAnamneseReq(anamnese, token, id) {
         );
         dispatch(slice.actions.createAnamneseSuccess(response.data));
       } else {
-        const response = await axios.post(`${API_ENDPOINTS.anamnese.create}`, anamnese);
+        const response = await jfAppApi.post(`${API_ENDPOINTS.anamnese.create}`, anamnese);
         dispatch(slice.actions.createAnamneseSuccess(response.data));
       }
     } catch (error) {
@@ -206,7 +206,7 @@ export function anamneseLoginReq(payload) {
   return async (dispatch) => {
     dispatch(slice.actions.anamneseLoginStart());
     try {
-      const response = await axios.post(`${API_ENDPOINTS.auth.anamneseLogin}`, payload);
+      const response = await jfAppApi.post(`${API_ENDPOINTS.auth.anamneseLogin}`, payload);
       dispatch(slice.actions.anamneseLoginSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.anamneseLoginFailure(error));
