@@ -48,7 +48,6 @@ export function getProgram(id) {
       const response = await jfApi.get(`${JF_APP_ENDPOINTS.program}/${id}`);
       dispatch(slice.actions.getProgramSuccess(response.data));
     } catch (error) {
-      console.log('----error', error);
       dispatch(slice.actions.getProgramFailure(error.message || error));
     }
   };

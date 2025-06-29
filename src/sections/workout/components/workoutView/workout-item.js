@@ -11,7 +11,6 @@ import TextMaxLine from 'src/components/text-max-line';
 import useTraining from 'src/hooks/use-training';
 
 export default function WorkoutItem({ media, mediaInfo, isWorkoutLoad, checkList = [] }) {
-  console.log('---MEDIA---', media);
   const { onSaveWorkoutLoad, onGetWorkoutLoad, workoutLoad } = useTraining();
   const [exerciseInfoById, setexErciseInfoById] = useState(null);
   const [isEditing, setIsEditing] = useState(false);

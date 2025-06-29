@@ -12,7 +12,6 @@ import { fDate } from 'src/utils/format-time';
 import WorkoutItem from '../../workout-item';
 
 export default function WorkoutsGym({ workouts, loading }) {
-  console.log('-WorkoutsGym--', workouts);
   if (workouts?.message) {
     return (
       <Box component="main" sx={{ p: 3 }}>
