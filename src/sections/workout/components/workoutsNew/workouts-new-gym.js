@@ -12,7 +12,6 @@ import { fDate } from 'src/utils/format-time';
 import WorkoutNewItem from './workout-new-item';
 
 export default function WorkoutsNewGym({ workouts, program, loading }) {
-  console.log('---workouts---', workouts);
   const [anchorElCalendar, setAnchorElCalendar] = useState(null);
   const openCalendar = Boolean(anchorElCalendar);
   const idCalendarPopover = openCalendar ? 'date-calendar-popover' : undefined;

@@ -108,7 +108,6 @@ export function getWorkouts(programId, type) {
       );
       dispatch(slice.actions.getWorkoutsSuccess(response.data));
     } catch (error) {
-      console.log('----error', error);
       dispatch(slice.actions.getWorkoutsFailure(error.message || error));
     }
   };
@@ -121,7 +120,6 @@ export function getWorkoutItem(id) {
       const response = await jfApi.get(`${JF_APP_ENDPOINTS.workouts}/workout?id=${id}`);
       dispatch(slice.actions.getWorkoutItemSuccess(response.data));
     } catch (error) {
-      console.log('----error', error);
       dispatch(slice.actions.getWorkoutItemFailure(error.message || error));
     }
   };
@@ -134,7 +132,6 @@ export function finishedRequest(payload) {
       const response = await jfApi.post(JF_APP_ENDPOINTS.finished, payload);
       dispatch(slice.actions.finishedSuccess(response.data));
     } catch (error) {
-      console.log('----error', error);
       dispatch(slice.actions.finishedFailure(error.message || error));
     }
   };
