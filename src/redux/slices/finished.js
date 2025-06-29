@@ -1,9 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios, { API_ENDPOINTS } from 'src/utils/axios';
+import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
 
 const initialState = {
   finished: null,
   finishedStatus: {
+    loading: false,
+    error: null,
+    empty: false,
+  },
+  volume: [],
+  valumeStatus: {
     loading: false,
     error: null,
     empty: false,
@@ -38,6 +44,30 @@ const slice = createSlice({
       state.finishedStatus.error = null;
       state.finishedStatus.empty = false;
     },
+    getVolumeStart(state) {
+      state.volume = null;
+      state.valumeStatus.loading = true;
+      state.valumeStatus.error = null;
+      state.valumeStatus.empty = false;
+    },
+    getVolumeFailure(state, action) {
+      state.volume = null;
+      state.valumeStatus.loading = false;
+      state.valumeStatus.error = action.payload;
+      state.valumeStatus.empty = false;
+    },
+    getVolumeSuccess(state, action) {
+      state.volume = action.payload;
+      state.valumeStatus.loading = false;
+      state.valumeStatus.error = false;
+      state.valumeStatus.empty = false;
+    },
+    clearVolume(state) {
+      state.volume = [];
+      state.valumeStatus.loading = false;
+      state.valumeStatus.error = null;
+      state.valumeStatus.empty = false;
+    },
   },
 });
 
@@ -47,7 +77,7 @@ export function getFinishedReq(id) {
   return async (dispatch) => {
     dispatch(slice.actions.getFinishedStart());
     try {
-      const response = await axios.get(`${API_ENDPOINTS.finished.root}/${id}`);
+      const response = await jfAppApi.get(`${API_ENDPOINTS.finished.root}/${id}`);
       dispatch(slice.actions.getFinishedSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getFinishedFailure(error));
@@ -58,5 +88,25 @@ export function getFinishedReq(id) {
 export function clearFinishedStateReq() {
   return async (dispatch) => {
     dispatch(slice.actions.clearFinishedState());
+  };
+}
+
+export function getVolume(programId, startDate, endDate) {
+  return async (dispatch) => {
+    dispatch(slice.actions.getVolumeStart());
+    try {
+      const response = await jfAppApi.get(
+        `${API_ENDPOINTS.finished.volume}?programId=${programId}&startDate=${startDate}&endDate=${endDate}`,
+      );
+      dispatch(slice.actions.getVolumeSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.getVolumeFailure(error));
+    }
+  };
+}
+
+export function clearVolume() {
+  return async (dispatch) => {
+    dispatch(slice.actions.clearVolume());
   };
 }

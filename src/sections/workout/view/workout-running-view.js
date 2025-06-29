@@ -13,11 +13,14 @@ import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import Iconify from 'src/components/iconify/iconify';
 import LoadingProgress from 'src/components/loading-progress';
+import { useBoolean } from 'src/hooks/use-boolean';
+import useFinished from 'src/hooks/use-finished';
 import useWorkout from 'src/hooks/use-workout';
 import { useRouter } from 'src/routes/hook';
 import ProgramInfo from 'src/sections/programs/program-info';
 import { fDate } from 'src/utils/format-time';
 
+import TrainingVolume from '../components/trainingVolume/trainingVolume';
 import WorkoutItem from '../workout-item';
 
 const HighlightedDay = styled(PickersDay)(({ status }) => {
@@ -65,7 +68,10 @@ export default function WorkoutRunningView() {
   const params = useParams();
   const { id } = params;
 
+  const volume = useBoolean();
+
   const { onListWorkoutsByProgramId, workouts } = useWorkout();
+  const { onClearVolumeState } = useFinished();
 
   const [anchorElCalendar, setAnchorElCalendar] = useState(null);
   const [anchorElProgramDetais, setAnchorElProgramDetais] = useState(null);
@@ -179,6 +185,7 @@ export default function WorkoutRunningView() {
     try {
       setLoading(true);
       await onListWorkoutsByProgramId(id, 1);
+      await onClearVolumeState();
     } catch (error) {
       console.error(error);
     } finally {
@@ -249,19 +256,34 @@ export default function WorkoutRunningView() {
             {workouts?.message ? (
               <Typography variant="subtitle1">{workouts.message}</Typography>
             ) : (
-              <Stack direction={'row'} alignItems={'center'}>
-                <Typography sx={{ flex: 1 }}>
-                  {fDate(new Date(selectedDate || new Date()), "dd 'de' MMMM, yyyy")}
-                </Typography>
-                <IconButton
-                  onClick={handleOpenCalendar}
-                  sx={{ color: (theme) => theme.palette.text.primary }}
-                >
-                  <CalendarMonthIcon />
-                </IconButton>
-              </Stack>
+              <>
+                <Stack direction={'row'} alignItems={'center'}>
+                  <Typography sx={{ flex: 1 }}>
+                    {fDate(new Date(selectedDate || new Date()), "dd 'de' MMMM, yyyy")}
+                  </Typography>
+                  <IconButton
+                    onClick={handleOpenCalendar}
+                    sx={{ color: (theme) => theme.palette.text.primary }}
+                  >
+                    <CalendarMonthIcon />
+                  </IconButton>
+                </Stack>
+                <Stack alignItems="center" sx={{ mt: 3 }} spacing={2}>
+                  <Button
+                    color="inherit"
+                    variant="contained"
+                    sx={{ mb: 1, minWidth: '45%', marginLeft: '8px' }}
+                    onClick={volume.onTrue}
+                  >
+                    Volume
+                  </Button>
+                </Stack>
+              </>
             )}
           </Box>
+          {volume.value && (
+            <TrainingVolume open={volume.value} onClose={volume.onFalse} programId={id} />
+          )}
           <Popover
             id={idCalendarPopover}
             open={openCalendar}
@@ -348,9 +370,11 @@ export default function WorkoutRunningView() {
             ) : (
               <>
                 {!workouts?.message && (
-                  <Stack alignItems={'center'}>
-                    <Typography variant="subtitle1">Nenhum treino</Typography>
-                  </Stack>
+                  <>
+                    <Stack alignItems={'center'}>
+                      <Typography variant="subtitle1">Nenhum treino</Typography>
+                    </Stack>
+                  </>
                 )}
               </>
             )}
