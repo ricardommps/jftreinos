@@ -27,6 +27,11 @@ const formatDate = (value) => {
   return isValid(date) ? format(date, 'yyyy-MM-dd') : '';
 };
 
+const formatDateBr = (value) => {
+  const date = new Date(value);
+  return isValid(date) ? format(date, 'dd/MM/yyyy') : '';
+};
+
 export default function TrainingVolume({ open, onClose, programId }) {
   const theme = useTheme();
   const { onGetVolume, onClearVolumeState, volume } = useFinished();
@@ -149,7 +154,7 @@ export default function TrainingVolume({ open, onClose, programId }) {
 
           {startDate && endDate && !error && (
             <Alert severity="success" sx={{ mt: 2 }}>
-              Período: {formatDate(startDate)} até {formatDate(endDate)}
+              Período: {formatDateBr(startDate)} até {formatDateBr(endDate)}
               <br />
               {Array.isArray(volume?.data) && <>Total de treinos: {volume.data.length}</>}
             </Alert>
