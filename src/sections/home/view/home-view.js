@@ -11,6 +11,7 @@ import LoadingProgress from 'src/components/loading-progress';
 import useAnamnese from 'src/hooks/use-anamnese';
 import useHome from 'src/hooks/use-home';
 import useRating from 'src/hooks/use-rating';
+import useWorkout from 'src/hooks/use-workout';
 
 import HomeOld from './home-old';
 import HomeSelectProgram from './home-select-program';
@@ -20,6 +21,7 @@ import HomeSingleProgramView from './home-single-program';
 export default function HomeView() {
   const { user, refreshMe } = useAuthContext();
   const { onClearAnamneseState } = useAnamnese();
+  const { onClearStateWorkout } = useWorkout();
   const { onListPrograms, programs } = useHome();
   const { rating, ratingStatus } = useRating();
 
@@ -29,6 +31,7 @@ export default function HomeView() {
     try {
       setLoading(true);
       await onListPrograms();
+      await onClearStateWorkout();
     } catch (error) {
       console.error(error);
     } finally {

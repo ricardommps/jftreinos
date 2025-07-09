@@ -68,7 +68,7 @@ export default function WorkoutNewItem({ workout, hideHistory }) {
             <Stack flex={1}>
               {workout.running && (
                 <TextMaxLine variant="subtitle1" line={1}>
-                  {getModuleName(workout.name)}
+                  {getModuleName(workout.name || workout.title)}
                 </TextMaxLine>
               )}
               <TextMaxLine variant="subtitle2" line={1}>
@@ -114,7 +114,7 @@ export default function WorkoutNewItem({ workout, hideHistory }) {
 
           <Divider sx={{ borderStyle: 'dashed', my: 2 }} />
           <Stack direction="row" alignItems="center" spacing={3}>
-            {(!workout.running || workout.finished) && (
+            {!workout.running && (
               <>
                 {workout?.history && !hideHistory ? (
                   <Stack alignItems="flex-start" justifyContent="space-between">

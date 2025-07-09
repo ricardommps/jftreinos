@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import {
+  clearStateWorkout,
   finishedWorkout,
   getWorkout,
   getWorkouts,
@@ -26,6 +27,10 @@ export default function useWorkout() {
   //   [dispatch],
   // );
 
+  const onClearStateWorkout = useCallback(async () => {
+    await dispatch(clearStateWorkout());
+  }, [dispatch]);
+
   const onListWorkouts = useCallback(
     async (programId, type) => {
       await dispatch(getWorkouts(programId, type));
@@ -48,8 +53,8 @@ export default function useWorkout() {
   );
 
   const onFinishedWorkout = useCallback(
-    async (payload) => {
-      await dispatch(finishedWorkout(payload));
+    async (payload, newVersion = false) => {
+      await dispatch(finishedWorkout(payload, newVersion));
     },
     [dispatch],
   );
@@ -67,5 +72,6 @@ export default function useWorkout() {
     workousStatus,
     finished,
     finishedStatus,
+    onClearStateWorkout,
   };
 }

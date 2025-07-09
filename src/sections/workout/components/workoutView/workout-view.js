@@ -5,7 +5,14 @@ import { useEffect, useMemo, useState } from 'react';
 import WorkoutNewViewGroup from '../workoutsNew/workout-new-view-group';
 import WorkoutItem from './workout-item';
 
-export default function WorkoutView({ medias = [], mediaOrder = [], mediaInfo, isWorkoutLoad }) {
+export default function WorkoutView({
+  medias = [],
+  mediaOrder = [],
+  mediaInfo,
+  isWorkoutLoad,
+  checkList = [],
+  handleCheckList,
+}) {
   const [isMounted, setIsMounted] = useState(false);
   const mediaMap = useMemo(() => {
     const map = new Map();
@@ -60,11 +67,19 @@ export default function WorkoutView({ medias = [], mediaOrder = [], mediaInfo, i
                 media={item}
                 mediaInfo={mediaInfo}
                 isWorkoutLoad={isWorkoutLoad}
+                checkList={checkList}
+                handleCheckList={handleCheckList}
               />
             );
           } else {
             return (
-              <WorkoutItem media={item[0]} mediaInfo={mediaInfo} isWorkoutLoad={isWorkoutLoad} />
+              <WorkoutItem
+                media={item[0]}
+                mediaInfo={mediaInfo}
+                isWorkoutLoad={isWorkoutLoad}
+                checkList={checkList}
+                handleCheckList={handleCheckList}
+              />
             );
           }
         })}

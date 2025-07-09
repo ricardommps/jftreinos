@@ -21,8 +21,11 @@ import Scrollbar from 'src/components/scrollbar';
 import { useBoolean } from 'src/hooks/use-boolean';
 import useWorkouts from 'src/hooks/use-workouts';
 import { useRouter } from 'src/routes/hook';
+import DialogTablePaceSpeed from 'src/sections/home/dialog-table-pace-speed/dialog-table-pace-speed';
+import TypeTraining from 'src/sections/home/trainings/type-training';
 
 import WorkoutView from '../components/workoutView/workout-view';
+import FinishWorkout from './finish-workout';
 
 export default function WorkoutNewView() {
   const router = useRouter();
@@ -32,6 +35,7 @@ export default function WorkoutNewView() {
 
   const finishTraining = useBoolean();
   const openTypeTraining = useBoolean();
+  const openTable = useBoolean();
 
   const isReadonly = searchParams.get('readonly');
 
@@ -39,6 +43,22 @@ export default function WorkoutNewView() {
 
   const [loading, setLoading] = useState(false);
   const [unrealizedTraining, setUnrealizedTraining] = useState(false);
+  const [typeTrainingSelected, setTypeTrainingSelected] = useState('indoor');
+  const [checkList, setCheckList] = useState([]);
+
+  const handleCheckList = (value) => {
+    const currentIndex = checkList.indexOf(value);
+
+    const newCheckList = [...checkList];
+
+    if (currentIndex === -1) {
+      newCheckList.push(value);
+    } else {
+      newCheckList.splice(currentIndex, 1);
+    }
+
+    setCheckList(newCheckList);
+  };
 
   const handleGoBack = () => router.back();
 
@@ -46,16 +66,21 @@ export default function WorkoutNewView() {
     setUnrealizedTraining(event.target.checked);
   };
 
+  const onCloseTypeTraining = useCallback(() => {
+    openTypeTraining.onFalse();
+    setTypeTrainingSelected('indoor');
+  }, []);
+
   const handleOpenFinishTraining = () => {
-    // if (unrealizedTraining) {
-    //   onOpenFinishTraining();
-    //   return;
-    // }
-    // if (!workout.running) {
-    //   onOpenFinishTraining();
-    // } else {
-    //   openTypeTraining.onTrue();
-    // }
+    if (unrealizedTraining) {
+      onOpenFinishTraining();
+      return;
+    }
+    if (!workoutItem.running) {
+      onOpenFinishTraining();
+    } else {
+      openTypeTraining.onTrue();
+    }
   };
 
   const onOpenFinishTraining = useCallback(() => {
@@ -67,14 +92,14 @@ export default function WorkoutNewView() {
     if (!workoutItem.running && !isReadonly) {
       return (
         <Button variant="contained" color="inherit" onClick={handleOpenFinishTraining}>
-          Finalizar treino v2
+          Finalizar treino
         </Button>
       );
     }
     if (workoutItem.running && !workoutItem?.finished && !isReadonly) {
       return (
         <Button variant="contained" color="inherit" onClick={handleOpenFinishTraining}>
-          Finalizar treino v2
+          Finalizar treino
         </Button>
       );
     }
@@ -119,7 +144,7 @@ export default function WorkoutNewView() {
                     workoutItem?.title !== 'FORCA' && (
                       <Stack direction="row" alignItems="center" spacing={1.5} mt={0.5} pr={2}>
                         <Typography>Tabela Pace km-h</Typography>
-                        <IconButton sx={{ padding: 0 }}>
+                        <IconButton sx={{ padding: 0 }} onClick={openTable.onTrue}>
                           <Iconify icon="eva:info-outline" />
                         </IconButton>
                       </Stack>
@@ -139,6 +164,8 @@ export default function WorkoutNewView() {
                             mediaOrder={item.mediaOrder}
                             exerciseInfo={item.mediaInfo}
                             isWorkoutLoad={item.isWorkoutLoad}
+                            checkList={checkList}
+                            handleCheckList={handleCheckList}
                           />
                         ))}
                       </>
@@ -175,11 +202,44 @@ export default function WorkoutNewView() {
           </>
         )}
       </Card>
+      {finishTraining.value && (
+        <FinishWorkout
+          open={finishTraining.value}
+          onClose={finishTraining.onFalse}
+          workout={workoutItem}
+          unrealizedTraining={unrealizedTraining}
+          typeTrainingSelected={typeTrainingSelected}
+          checkList={checkList}
+          newVersion={true}
+        />
+      )}
+      {openTypeTraining.value && (
+        <TypeTraining
+          open={openTypeTraining.value}
+          onClose={onCloseTypeTraining}
+          typeTrainingSelected={typeTrainingSelected}
+          setTypeTrainingSelected={setTypeTrainingSelected}
+          onOpenFinishTraining={onOpenFinishTraining}
+          newVersion={true}
+        />
+      )}
+      {openTable.value && (
+        <DialogTablePaceSpeed open={openTable.value} onClose={openTable.onFalse} />
+      )}
     </>
   );
 }
 
-function WorkoutSection({ title, description, medias, mediaOrder, exerciseInfo, isWorkoutLoad }) {
+function WorkoutSection({
+  title,
+  description,
+  medias,
+  mediaOrder,
+  exerciseInfo,
+  isWorkoutLoad,
+  checkList,
+  handleCheckList,
+}) {
   // if (!description && (!medias || medias.length === 0 || !mediaOrder?.length)) return null;
 
   return (
@@ -201,6 +261,8 @@ function WorkoutSection({ title, description, medias, mediaOrder, exerciseInfo, 
             mediaOrder={mediaOrder}
             mediaInfo={exerciseInfo}
             isWorkoutLoad={isWorkoutLoad}
+            checkList={checkList}
+            handleCheckList={handleCheckList}
           />
         )}
       </AccordionDetails>
