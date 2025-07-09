@@ -8,7 +8,13 @@ import Carousel, { CarouselArrows, useCarousel } from 'src/components/carousel';
 
 import WorkoutItem from '../../components/workoutView/workout-item';
 
-export default function WorkoutNewViewGroup({ media, mediaInfo, isWorkoutLoad, checkList = [] }) {
+export default function WorkoutNewViewGroup({
+  media,
+  mediaInfo,
+  isWorkoutLoad,
+  checkList = [],
+  handleCheckList,
+}) {
   const theme = useTheme();
   const [currentSlide, setCurrentSlide] = useState(1);
   const handleType = () => {
@@ -99,6 +105,7 @@ export default function WorkoutNewViewGroup({ media, mediaInfo, isWorkoutLoad, c
             mediaInfo={mediaInfo}
             isWorkoutLoad={isWorkoutLoad}
             checkList={checkList}
+            handleCheckList={handleCheckList}
           />
         ))}
       </Carousel>

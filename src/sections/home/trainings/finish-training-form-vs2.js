@@ -44,6 +44,7 @@ export default function FinishTrainingFormVs2({
   name,
   unrealizedTraining,
   checkList,
+  newVersion = false,
 }) {
   const theme = useTheme();
   const { onFinishedWorkout } = useWorkout();
@@ -139,7 +140,6 @@ export default function FinishTrainingFormVs2({
       payload.durationInSeconds = Number(payload.durationInSeconds);
       payload.rpe = Number(payload.rpe);
       payload.link = !errorLink ? transformToLink(payload.link) : payload.link;
-      payload.workoutId = Number(payload.workoutId);
       payload.paceInSeconds = Number(payload.paceInSeconds);
       payload.distance = undefined;
       payload.duration = undefined;
@@ -149,7 +149,13 @@ export default function FinishTrainingFormVs2({
       if (unrealizedTraining) {
         payload.unrealized = unrealizedTraining;
       }
-      await onFinishedWorkout(payload);
+      if (!newVersion) {
+        payload.workoutId = Number(payload.workoutId);
+      } else {
+        payload.workoutsId = payload.workoutId;
+        delete payload.workoutId;
+      }
+      await onFinishedWorkout(payload, newVersion);
       setLoading(true);
     } catch (error) {
       enqueueSnackbar('Não foi possível executar esta operação. Tente novamente mais tarde.', {

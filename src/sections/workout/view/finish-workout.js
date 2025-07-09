@@ -22,6 +22,7 @@ export default function FinishWorkout({
   unrealizedTraining,
   typeTrainingSelected,
   checkList,
+  newVersion = false,
 }) {
   const router = useRouter();
   const { finished, finishedStatus } = useWorkout();
@@ -61,7 +62,7 @@ export default function FinishWorkout({
           <Stack>
             <ListItemText
               sx={{ mb: 1 }}
-              primary={getModuleName(workout.name)}
+              primary={getModuleName(workout.name || workout.title)}
               secondary={fDateCalender(workout.datePublished)}
               primaryTypographyProps={{
                 typography: 'h6',
@@ -81,6 +82,7 @@ export default function FinishWorkout({
                 onClose={onClose}
                 unrealizedTraining={unrealizedTraining}
                 checkList={checkList}
+                newVersion={newVersion}
               />
             ) : (
               <>
@@ -88,9 +90,10 @@ export default function FinishWorkout({
                   workoutId={workout.id}
                   onClose={onClose}
                   typeTrainingSelected={typeTrainingSelected}
-                  name={workout.name}
+                  name={workout.name || workout.title}
                   unrealizedTraining={unrealizedTraining}
                   checkList={checkList}
+                  newVersion={newVersion}
                 />
               </>
             )}

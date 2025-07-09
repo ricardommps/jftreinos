@@ -10,7 +10,13 @@ import { useCallback, useEffect, useState } from 'react';
 import TextMaxLine from 'src/components/text-max-line';
 import useTraining from 'src/hooks/use-training';
 
-export default function WorkoutItem({ media, mediaInfo, isWorkoutLoad, checkList = [] }) {
+export default function WorkoutItem({
+  media,
+  mediaInfo,
+  isWorkoutLoad,
+  checkList,
+  handleCheckList,
+}) {
   const { onSaveWorkoutLoad, onGetWorkoutLoad, workoutLoad } = useTraining();
   const [exerciseInfoById, setexErciseInfoById] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -256,8 +262,8 @@ export default function WorkoutItem({ media, mediaInfo, isWorkoutLoad, checkList
         </Stack>
       </Stack>
       <Box p={2}>
-        <Button variant="contained">
-          {!checkList.includes(media.id) ? 'Marcar como feito' : 'Desmarcar como feito'}
+        <Button variant="contained" onClick={() => handleCheckList(media.id)}>
+          {!checkList.includes(media.id) ? 'Marcar como feito new' : 'Desmarcar como feito'}
         </Button>
       </Box>
     </Paper>

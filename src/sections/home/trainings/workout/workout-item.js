@@ -254,7 +254,7 @@ export default function WorkoutItem({
       </Stack>
       <Box p={2}>
         <Button variant="contained" onClick={() => handleCheckList(media.id)}>
-          {!checkList.includes(media.id) ? 'Marcar como feito' : 'Desmarcar como feito'}
+          {!checkList.includes(media.id) ? 'Marcar como feito old' : 'Desmarcar como feito'}
         </Button>
       </Box>
     </Paper>

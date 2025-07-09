@@ -30,6 +30,7 @@ export default function FinishGymTrainingFormV2({
   onClose,
   unrealizedTraining,
   checkList,
+  newVersion,
 }) {
   const { onFinishedWorkout } = useWorkout();
   const [loading, setLoading] = useState(false);
@@ -64,7 +65,6 @@ export default function FinishGymTrainingFormV2({
     try {
       setLoading(true);
       const payload = Object.assign({}, data);
-      payload.workoutId = Number(payload.workoutId);
       payload.rpe = Number(payload.rpe);
       payload.checkList = checkList;
       if (unrealizedTraining) {
@@ -73,8 +73,13 @@ export default function FinishGymTrainingFormV2({
       } else {
         payload.executionDay = convertDate(payload.executionDay);
       }
-
-      await onFinishedWorkout(payload);
+      if (!newVersion) {
+        payload.workoutId = Number(payload.workoutId);
+      } else {
+        payload.workoutsId = payload.workoutId;
+        delete payload.workoutId;
+      }
+      await onFinishedWorkout(payload, newVersion);
     } catch (error) {
       enqueueSnackbar('Não foi possível executar esta operação. Tente novamente mais tarde.', {
         autoHideDuration: 8000,

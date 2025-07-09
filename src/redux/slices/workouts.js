@@ -101,11 +101,12 @@ export function getWorkouts(programId, type) {
   return async (dispatch) => {
     try {
       dispatch(slice.actions.getWorkoutsStart());
-      const response = await jfApi.get(
-        `${JF_APP_ENDPOINTS.workouts}/list?programId=${programId}${
-          type === 1 ? '&running=true' : '&running=false'
-        }`,
-      );
+
+      const url = `${JF_APP_ENDPOINTS.workouts}/list?programId=${programId}${
+        type === 1 ? '&running=true' : '&running=false'
+      }&published=true`;
+
+      const response = await jfApi.get(url);
       dispatch(slice.actions.getWorkoutsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.getWorkoutsFailure(error.message || error));

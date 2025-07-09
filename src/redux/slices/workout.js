@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { API_ENDPOINTS, jfAppApi } from 'src/utils/axios';
+import { API_ENDPOINTS, JF_APP_ENDPOINTS, jfApi, jfAppApi } from 'src/utils/axios';
 
 const initialState = {
   workoutAction: null,
@@ -30,6 +30,21 @@ const slice = createSlice({
   name: 'workout',
   initialState,
   reducers: {
+    clearStateWorkout(state) {
+      state.workouts = null;
+      state.workoutStatus.error = null;
+      state.workoutStatus.loading = false;
+      state.workoutStatus.empty = false;
+
+      state.workoutAction = null;
+      state.workoutActionStatus.error = null;
+      state.workoutActionStatus.loading = false;
+
+      state.workouts = null;
+      state.workoutsStatus.error = null;
+      state.workoutsStatus.loading = false;
+      state.workoutsStatus.empty = false;
+    },
     getWorkoutsStart(state) {
       state.finished = null;
       state.finishedStatus.error = null;
@@ -164,31 +179,49 @@ export function getWorkout(id) {
   };
 }
 
-export function finishedWorkout(payload) {
+export function finishedWorkout(payload, newVersion) {
   return async (dispatch) => {
     // Cancelar a requisição anterior, se existir
     if (abortController) {
-      abortController.abort(); // Cancela a requisição anterior
+      abortController.abort();
     }
-    // Criar um novo AbortController para a nova requisição
+
+    // Criar um novo AbortController
     abortController = new AbortController();
+
     try {
       dispatch(slice.actions.finishedWorkoutStart());
-      const response = await jfAppApi.post(API_ENDPOINTS.finished.root, payload, {
-        signal: abortController.signal,
-      });
+
+      let response;
+
+      if (newVersion) {
+        response = await jfApi.post(JF_APP_ENDPOINTS.finished, payload, {
+          signal: abortController.signal,
+        });
+      } else {
+        response = await jfAppApi.post(API_ENDPOINTS.finished.root, payload, {
+          signal: abortController.signal,
+        });
+      }
+
       dispatch(slice.actions.finishedWorkoutSuccess(response.data));
       return response;
     } catch (error) {
       if (error.name === 'CanceledError') {
-        console.error(error.message);
+        console.warn('Requisição cancelada:', error.message);
       } else {
         dispatch(slice.actions.finishedWorkoutFailure(error));
-        throw error(error);
+        throw error; // apenas relança o erro
       }
     } finally {
-      // Resetar o CancelToken após a conclusão da requisição
+      // Resetar o AbortController
       abortController = null;
     }
+  };
+}
+
+export function clearStateWorkout() {
+  return async (dispatch) => {
+    dispatch(slice.actions.clearStateWorkout());
   };
 }
