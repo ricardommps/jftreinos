@@ -80,7 +80,7 @@ export default function FinishTrainingFormVs2({
       workoutId,
       unitmeasurement: typeTrainingSelected === 'indoor' ? OPTIONS[0].value : null,
       intensities: [{ intensitie: 0 }],
-      typetraining: typeTrainingSelected,
+      outdoor: typeTrainingSelected === 'indoor' ? false : true,
       quantity: 1,
       distanceInMeters: 0,
       durationInSeconds: 0,
