@@ -23,7 +23,6 @@ export default function HistoryItem({ historyItem, workoutInfo }) {
   const opacityCard = () => {
     return 1;
   };
-
   const handleOpenWorkout = useCallback(
     (id) => {
       const url = paths.dashboard.workout.root(id, true);
@@ -70,7 +69,7 @@ export default function HistoryItem({ historyItem, workoutInfo }) {
             <ListItemText
               primary={
                 <Stack spacing={1} direction="row" alignItems="center" sx={{ typography: 'h6' }}>
-                  {getModuleName(historyItem.trainingname)}
+                  {getModuleName(historyItem.trainingName)}
                 </Stack>
               }
               secondary={historyItem.trainingsubtitle}
@@ -123,14 +122,13 @@ export default function HistoryItem({ historyItem, workoutInfo }) {
             )}
           </Stack>
         </Stack>
-        {historyItem.typetraining ? (
+        {historyItem.type === 1 ? (
           <>
-            {historyItem.typetraining === 'outdoor' && (
+            {historyItem.outdoor ? (
               <Typography variant="caption" sx={{ pt: 2 }}>
                 Treino Outdoor
               </Typography>
-            )}
-            {historyItem.typetraining === 'indoor' && (
+            ) : (
               <Typography variant="caption" sx={{ pt: 2 }}>
                 Treino Indoor
               </Typography>
