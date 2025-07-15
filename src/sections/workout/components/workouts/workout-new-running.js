@@ -74,7 +74,7 @@ export default function WorkoutsNewRunning({ workouts, programId }) {
             volume={volume}
           />
           {volume.value && (
-            <TrainingVolume open={volume.value} onClose={volume.onFalse} programId={program.id} />
+            <TrainingVolume open={volume.value} onClose={volume.onFalse} programId={programId} />
           )}
           <Box sx={{ p: 2 }}>
             {filteredWorkouts && filteredWorkouts.length > 0 ? (

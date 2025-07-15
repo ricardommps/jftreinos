@@ -23,6 +23,7 @@ import useWorkouts from 'src/hooks/use-workouts';
 import { useRouter } from 'src/routes/hook';
 import DialogTablePaceSpeed from 'src/sections/home/dialog-table-pace-speed/dialog-table-pace-speed';
 import TypeTraining from 'src/sections/home/trainings/type-training';
+import { getModuleName } from 'src/utils/training-modules';
 
 import WorkoutView from '../components/workoutView/workout-view';
 import FinishWorkout from './finish-workout';
@@ -139,7 +140,8 @@ export default function WorkoutNewView() {
             {workoutItem && (
               <>
                 <CardHeader
-                  title={workoutItem?.subtitle}
+                  title={getModuleName(workoutItem?.title)}
+                  subheader={workoutItem?.subtitle}
                   action={
                     workoutItem?.title !== 'FORCA' && (
                       <Stack direction="row" alignItems="center" spacing={1.5} mt={0.5} pr={2}>
