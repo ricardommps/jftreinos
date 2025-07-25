@@ -29,7 +29,9 @@ const Footer = styled('div')(() => ({
 }));
 export default function StretcheItem({ media, exerciseInfo }) {
   const details = useBoolean();
-  const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
+  const exerciseInfoById = exerciseInfo?.filter(
+    (item) => item.id === media.id || item.mediaId === media.id,
+  )[0];
   return (
     <Card sx={{ marginBottom: 3 }}>
       <ListItem

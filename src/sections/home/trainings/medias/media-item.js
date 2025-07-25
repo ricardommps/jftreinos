@@ -28,7 +28,9 @@ const Footer = styled('div')(() => ({
 import MediaDetails from './media-details';
 export default function MediaItem({ media, exerciseInfo }) {
   const details = useBoolean();
-  const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
+  const exerciseInfoById = exerciseInfo?.filter(
+    (item) => item.id === media.id || item.mediaId === media.id,
+  )[0];
   return (
     <>
       <ListItem

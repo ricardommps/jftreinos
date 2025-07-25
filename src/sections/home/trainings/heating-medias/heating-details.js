@@ -14,7 +14,9 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
 export default function HeatinDetails({ open, onClose, media, exerciseInfo }) {
-  const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
+  const exerciseInfoById = exerciseInfo?.filter(
+    (item) => item.id === media.id || item.mediaId === media.id,
+  )[0];
 
   const [isEditing, setIsEditing] = useState(false);
   const [carga, setCarga] = useState('10kg');
