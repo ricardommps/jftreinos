@@ -18,7 +18,9 @@ export default function WorkoutItemGroup({
   handleCheckList,
 }) {
   const { onSaveWorkoutLoad, onGetWorkoutLoad, workoutLoad } = useTraining();
-  const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
+  const exerciseInfoById = exerciseInfo?.filter(
+    (item) => item.id === media.id || item.mediaId === media.id,
+  )[0];
 
   const [isEditing, setIsEditing] = useState(false);
   const [carga, setCarga] = useState(null);

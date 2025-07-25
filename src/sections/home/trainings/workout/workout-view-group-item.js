@@ -19,7 +19,9 @@ import {
 } from '../styles';
 
 export default function WorkoutViewGroupItem({ media, exerciseInfo, workoutLoad }) {
-  const exerciseInfoById = exerciseInfo?.filter((item) => item.id === media.id)[0];
+  const exerciseInfoById = exerciseInfo?.filter(
+    (item) => item.id === media.id || item.mediaId === media.id,
+  )[0];
   const details = useBoolean();
   return (
     <>
