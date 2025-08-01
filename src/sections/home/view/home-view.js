@@ -15,7 +15,6 @@ import useWorkout from 'src/hooks/use-workout';
 
 import HomeOld from './home-old';
 import HomeSelectProgram from './home-select-program';
-import HomeSingleProgramView from './home-single-program';
 // ----------------------------------------------------------------------
 
 export default function HomeView() {
@@ -81,8 +80,7 @@ export default function HomeView() {
         <HomeOld programs={programs} />
       ) : (
         <>
-          {programs && programs.length === 1 && <HomeSingleProgramView program={programs[0]} />}
-          {programs && programs.length > 1 && <HomeSelectProgram programs={programs} />}
+          <HomeSelectProgram programs={programs} />
         </>
       )}
     </Box>
