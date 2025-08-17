@@ -162,7 +162,7 @@ const ItemPreviewWithCrop = withRequestPreSendUpdate((props) => {
                   <Image
                     disabledEffect
                     alt={'home'}
-                    src={`/assets/logo/logo-crop.png`}
+                    src={`/assets/logo/logo.png`}
                     style={{ width: 'auto', height: 60 }}
                     width={'auto'}
                   />

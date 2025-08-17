@@ -68,7 +68,7 @@ export default function Template1({ imgSrc }) {
             <Image
               disabledEffect
               alt={'home'}
-              src={`/assets/logo/logo-crop.png`}
+              src={`/assets/logo/logo.png`}
               style={{ width: 'auto', height: 20 }}
               width={'auto'}
             />
