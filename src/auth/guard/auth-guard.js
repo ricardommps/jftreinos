@@ -13,12 +13,16 @@ const loginPaths = {
   jwt: paths.auth.jwt.login,
 };
 
+const migrationAppPath = {
+  migration: paths.dashboard.appMigration.root,
+};
+
 // ----------------------------------------------------------------------
 
 export default function AuthGuard({ children }) {
   const router = useRouter();
 
-  const { authenticated, method } = useAuthContext();
+  const { authenticated, method, migrationApp } = useAuthContext();
 
   const [checked, setChecked] = useState(false);
 
@@ -32,6 +36,12 @@ export default function AuthGuard({ children }) {
 
       router.replace(href);
     } else {
+      if (migrationApp) {
+        const migrationPath = migrationAppPath.migration();
+        router.replace(migrationPath);
+      } else {
+        setChecked(true);
+      }
       setChecked(true);
     }
   }, [authenticated, method, router]);

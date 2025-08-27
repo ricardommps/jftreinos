@@ -165,6 +165,7 @@ export function AuthProvider({ children }) {
       loading: status === 'loading',
       authenticated: status === 'authenticated',
       unauthenticated: status === 'unauthenticated',
+      migrationApp: state?.user?.cpf,
       //
       login,
       register,

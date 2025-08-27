@@ -26,6 +26,9 @@ export const paths = {
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
+    appMigration: {
+      root: () => `${ROOTS.DASHBOARD}/app-migration`,
+    },
     home: {
       root: `${ROOTS.DASHBOARD}/home`,
       details: (id) => `${ROOTS.DASHBOARD}/home/${id}`,
