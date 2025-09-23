@@ -40,7 +40,7 @@ export default function AppMigration() {
             color="secondary"
             size="large"
             startIcon={<AppleIcon />}
-            href="https://apps.apple.com/app/idSEU_APP_ID"
+            href="https://apps.apple.com/app/foltz/id6750486916"
             target="_blank"
             sx={{ borderRadius: 2 }}
           >
