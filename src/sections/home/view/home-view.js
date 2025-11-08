@@ -23,7 +23,7 @@ export default function HomeView() {
   const [loading, setLoading] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
-  console.log('--isIOS--', isIOS);
+
   const initialize = useCallback(async () => {
     try {
       setLoading(true);
