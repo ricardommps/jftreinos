@@ -21,7 +21,7 @@ export default function HomeView() {
   const { rating, ratingStatus } = useRating();
 
   const [loading, setLoading] = useState(false);
-  const [openNotification, setOpenNotification] = useState(true);
+  const [openNotification, setOpenNotification] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   console.log('--isIOS--', isIOS);
   const initialize = useCallback(async () => {
@@ -59,6 +59,7 @@ export default function HomeView() {
       const ua = navigator.userAgent || navigator.vendor || window.opera;
       if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
         setIsIOS(true);
+        setOpenNotification(true);
       }
     }
   }, []);
