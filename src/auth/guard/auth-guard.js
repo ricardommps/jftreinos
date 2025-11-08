@@ -22,7 +22,7 @@ const migrationAppPath = {
 export default function AuthGuard({ children }) {
   const router = useRouter();
 
-  const { authenticated, method, migrationApp } = useAuthContext();
+  const { authenticated, method } = useAuthContext();
 
   const [checked, setChecked] = useState(false);
 
@@ -36,12 +36,6 @@ export default function AuthGuard({ children }) {
 
       router.replace(href);
     } else {
-      if (migrationApp) {
-        const migrationPath = migrationAppPath.migration();
-        router.replace(migrationPath);
-      } else {
-        setChecked(true);
-      }
       setChecked(true);
     }
   }, [authenticated, method, router]);
