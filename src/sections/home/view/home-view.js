@@ -1,13 +1,10 @@
 'use client';
 
-// @mui
-import { Backdrop, CircularProgress } from '@mui/material';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { Backdrop, Box, CircularProgress, Stack, Typography } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { useAuthContext } from 'src/auth/hooks';
 import LoadingProgress from 'src/components/loading-progress';
+import NewAppNotification from 'src/components/new-app-notification/new-app-notification';
 import useAnamnese from 'src/hooks/use-anamnese';
 import useHome from 'src/hooks/use-home';
 import useRating from 'src/hooks/use-rating';
@@ -15,7 +12,6 @@ import useWorkout from 'src/hooks/use-workout';
 
 import HomeOld from './home-old';
 import HomeSelectProgram from './home-select-program';
-// ----------------------------------------------------------------------
 
 export default function HomeView() {
   const { user, refreshMe } = useAuthContext();
@@ -25,7 +21,9 @@ export default function HomeView() {
   const { rating, ratingStatus } = useRating();
 
   const [loading, setLoading] = useState(false);
-
+  const [openNotification, setOpenNotification] = useState(true);
+  const [isIOS, setIsIOS] = useState(false);
+  console.log('--isIOS--', isIOS);
   const initialize = useCallback(async () => {
     try {
       setLoading(true);
@@ -36,13 +34,13 @@ export default function HomeView() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [onListPrograms, onClearStateWorkout]);
 
   useEffect(() => {
     if (user) {
       initialize();
     }
-  }, [user]);
+  }, [user, initialize]);
 
   useEffect(() => {
     refreshMe();
@@ -55,34 +53,53 @@ export default function HomeView() {
     }
   }, [rating]);
 
-  const hasTrainings = programs?.some((item) => item.trainings.length > 0);
+  useEffect(() => {
+    // Detecta se é iOS
+    if (typeof navigator !== 'undefined') {
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+        setIsIOS(true);
+      }
+    }
+  }, []);
+
+  const hasTrainings = programs && programs.some((item) => item.trainings.length > 0);
+
   return (
-    <Box
-      sx={{
-        overflow: 'hidden', // Remove a rolagem
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        position: 'relative',
-        pb: 10,
-      }}
-    >
-      {ratingStatus?.loading && (
-        <Backdrop open sx={{ zIndex: (theme) => theme.zIndex.modal + 1 }}>
-          <CircularProgress color="primary" />
-        </Backdrop>
+    <>
+      <Box
+        sx={{
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          position: 'relative',
+          pb: 10,
+        }}
+      >
+        {ratingStatus && ratingStatus.loading && (
+          <Backdrop open sx={{ zIndex: (theme) => theme.zIndex.modal + 1 }}>
+            <CircularProgress color="primary" />
+          </Backdrop>
+        )}
+
+        <Stack textAlign="center">
+          <Typography variant="h5">Olá, {user && user.name}</Typography>
+        </Stack>
+
+        {loading && <LoadingProgress />}
+
+        {programs && hasTrainings ? (
+          <HomeOld programs={programs} />
+        ) : (
+          !openNotification && <HomeSelectProgram programs={programs} />
+        )}
+      </Box>
+
+      {/* Renderiza notificação apenas em iOS */}
+      {isIOS && openNotification && (
+        <NewAppNotification open={openNotification} onClose={() => setOpenNotification(false)} />
       )}
-      <Stack textAlign={'center'}>
-        <Typography variant="h5">Olá, {user?.name}</Typography>
-      </Stack>
-      {loading && <LoadingProgress />}
-      {programs && hasTrainings ? (
-        <HomeOld programs={programs} />
-      ) : (
-        <>
-          <HomeSelectProgram programs={programs} />
-        </>
-      )}
-    </Box>
+    </>
   );
 }
