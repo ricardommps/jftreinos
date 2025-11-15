@@ -69,7 +69,7 @@ export default function HomeView() {
       if (/Android/i.test(ua)) {
         setPlatform('android');
         // Se quiser exibir também para Android, descomente:
-        // setOpenNotification(true);
+        setOpenNotification(true);
         return;
       }
     }
