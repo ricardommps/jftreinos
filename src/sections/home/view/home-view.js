@@ -22,7 +22,7 @@ export default function HomeView() {
 
   const [loading, setLoading] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
+  const [platform, setPlatform] = useState(null); // 'ios' | 'android' | null
 
   const initialize = useCallback(async () => {
     try {
@@ -53,16 +53,28 @@ export default function HomeView() {
     }
   }, [rating]);
 
+  // Detecta plataforma
   useEffect(() => {
-    // Detecta se é iOS
     if (typeof navigator !== 'undefined') {
       const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+      // iOS
       if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
-        setIsIOS(true);
+        setPlatform('ios');
         setOpenNotification(true);
+        return;
+      }
+
+      // Android (caso queira usar futuramente)
+      if (/Android/i.test(ua)) {
+        setPlatform('android');
+        // Se quiser exibir também para Android, descomente:
+        // setOpenNotification(true);
+        return;
       }
     }
   }, []);
+  console.log('--platform--', platform);
 
   const hasTrainings = programs && programs.some((item) => item.trainings.length > 0);
 
@@ -97,9 +109,13 @@ export default function HomeView() {
         )}
       </Box>
 
-      {/* Renderiza notificação apenas em iOS */}
-      {isIOS && openNotification && (
-        <NewAppNotification open={openNotification} onClose={() => setOpenNotification(false)} />
+      {/* Renderiza a notificação se houver plataforma válida */}
+      {platform && openNotification && (
+        <NewAppNotification
+          open={openNotification}
+          onClose={() => setOpenNotification(false)}
+          platform={platform} // <= novo requisito
+        />
       )}
     </>
   );
