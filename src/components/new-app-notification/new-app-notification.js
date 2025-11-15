@@ -5,12 +5,26 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { m } from 'framer-motion';
+import PropTypes from 'prop-types';
 
-export default function NewAppNotification({ open, onClose }) {
+export default function NewAppNotification({ open, onClose, platform }) {
   const theme = useTheme();
 
-  const handleOpenAppStore = () => {
-    window.open('https://apps.apple.com/br/app/6750486916', '_blank');
+  const platformConfig = {
+    ios: {
+      storeName: 'App Store',
+      link: 'https://apps.apple.com/br/app/6750486916',
+    },
+    android: {
+      storeName: 'Google Play',
+      link: 'https://play.google.com/store/apps/details?id=com.jftreinos.jfapp',
+    },
+  };
+
+  const cfg = platformConfig[platform];
+
+  const handleOpenStore = () => {
+    window.open(cfg.link, '_blank');
   };
 
   return (
@@ -30,7 +44,6 @@ export default function NewAppNotification({ open, onClose }) {
         },
       }}
     >
-      {/* Logo animada */}
       <Fade in={open} timeout={1000}>
         <Box
           component={m.img}
@@ -39,11 +52,7 @@ export default function NewAppNotification({ open, onClose }) {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          sx={{
-            width: 160,
-            height: 'auto',
-            mt: 6,
-          }}
+          sx={{ width: 160, height: 'auto', mt: 6 }}
         />
       </Fade>
 
@@ -72,18 +81,44 @@ export default function NewAppNotification({ open, onClose }) {
                 color: '#4dabf7',
                 '&:hover': { color: '#82cfff' },
               }}
-              onClick={handleOpenAppStore}
+              onClick={handleOpenStore}
             >
               aqui
             </Link>{' '}
-            para acessar a App Store e baixar a nova versão e aproveitar todas as novidades que
-            preparamos para você.
+            para acessar a {cfg.storeName} e baixar a nova versão e aproveitar todas as novidades
+            que preparamos para você.
           </Typography>
 
           <Typography sx={{ mb: 3, fontSize: 18, lineHeight: 1.6 }}>
             Se você já tem o app instalado, atualize para a versão mais recente para continuar
             acessando normalmente.
           </Typography>
+
+          {/* ⭐ SOMENTE ANDROID: bloco de texto extra */}
+          {platform === 'android' && (
+            <Typography sx={{ mb: 3, fontSize: 18, lineHeight: 1.6 }}>
+              Se tiver qualquer dificuldade para acessar o app pela Google Play,{' '}
+              <Link
+                component="button"
+                underline="always"
+                sx={{
+                  fontWeight: 'bold',
+                  fontSize: 18,
+                  color: '#4dabf7',
+                  '&:hover': { color: '#82cfff' },
+                }}
+                onClick={() =>
+                  window.open(
+                    'https://wa.me/5548991781646?text=Olá!%20Estou%20com%20dificuldades%20para%20acessar%20o%20app%20pela%20Google%20Play.',
+                    '_blank',
+                  )
+                }
+              >
+                clique aqui
+              </Link>{' '}
+              e solicite seu acesso. Estamos aqui para ajudar!
+            </Typography>
+          )}
 
           <Typography sx={{ fontSize: 18, lineHeight: 1.6 }}>
             Ah, e atenção: agora o login deve ser feito com o mesmo e-mail utilizado na versão web.
@@ -118,3 +153,9 @@ export default function NewAppNotification({ open, onClose }) {
     </Dialog>
   );
 }
+
+NewAppNotification.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  platform: PropTypes.oneOf(['ios', 'android']).isRequired,
+};
