@@ -37,6 +37,7 @@ export default function NewAppNotification({ open, onClose, platform }) {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center', // ⬅️ Centraliza verticalmente
         },
       }}
     >
@@ -48,7 +49,7 @@ export default function NewAppNotification({ open, onClose, platform }) {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          sx={{ width: 160, height: 'auto', mt: 6 }}
+          sx={{ width: 160, height: 'auto' }} // ⬅️ removido o mt: 6
         />
       </Fade>
 
@@ -74,7 +75,7 @@ export default function NewAppNotification({ open, onClose, platform }) {
               onClick={handleOpenStore}
             >
               aqui
-            </Link>{' '}
+            </Link>
           </Typography>
         </DialogContent>
 
